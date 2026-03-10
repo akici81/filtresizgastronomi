@@ -1,15 +1,10 @@
-import { useEffect, useState } from "react";
+import '../styles/globals.css';
+import { AuthProvider } from '../hooks/useAuth';
 
-function MyApp({ Component, pageProps }) {
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
-  return <Component {...pageProps} />;
+export default function App({ Component, pageProps }) {
+  return (
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
 }
-
-export default MyApp;
