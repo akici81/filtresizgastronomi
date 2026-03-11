@@ -4,8 +4,6 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/layout/Layout';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
-import { COLORS } from '../../lib/constants';
-
 const PRICE_LABELS = { budget: '₺ Ekonomik', moderate: '₺₺ Orta', expensive: '₺₺₺ Pahalı', luxury: '₺₺₺₺ Lüks' };
 
 const DAYS_TR = { monday: 'Pazartesi', tuesday: 'Salı', wednesday: 'Çarşamba', thursday: 'Perşembe', friday: 'Cuma', saturday: 'Cumartesi', sunday: 'Pazar' };
@@ -99,13 +97,13 @@ export default function RestaurantDetail() {
     setSubmitting(false);
   }
 
-  if (loading) return <Layout><div style={{ textAlign: 'center', padding: '120px 24px', color: COLORS.muted }}>Yükleniyor...</div></Layout>;
+  if (loading) return <Layout><div style={{ textAlign: 'center', padding: '120px 24px', color: 'var(--muted)' }}>Yükleniyor...</div></Layout>;
   if (!restaurant) return (
     <Layout>
       <div style={{ textAlign: 'center', padding: '120px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>🏪</div>
         <h2>Restoran bulunamadı</h2>
-        <button onClick={() => router.push('/restaurants')} style={{ marginTop: 16, background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: 'pointer' }}>Tüm Restoranlar</button>
+        <button onClick={() => router.push('/restaurants')} style={{ marginTop: 16, background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', borderRadius: 6, cursor: 'pointer' }}>Tüm Restoranlar</button>
       </div>
     </Layout>
   );
@@ -126,22 +124,22 @@ export default function RestaurantDetail() {
       <div style={{ position: 'relative', height: 480, overflow: 'hidden' }}>
         {restaurant.cover_image_url || restaurant.image_url
           ? <img src={restaurant.cover_image_url || restaurant.image_url} alt={restaurant.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #1a0000, #0d0d0d)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>🏪</div>}
+          : <div style={{ width: '100%', height: '100%', background: 'var(--hero-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>🏪</div>}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)' }} />
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 40px 40px' }}>
           <div style={{ maxWidth: 900, margin: '0 auto' }}>
             <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-              {restaurant.is_premium && <Badge color={COLORS.red}>⭐ Premium</Badge>}
+              {restaurant.is_premium && <Badge color={'var(--red)'}>⭐ Premium</Badge>}
               {restaurant.is_verified && <Badge color="#10b981">✓ Doğrulandı</Badge>}
             </div>
             <h1 style={{ fontSize: 48, fontWeight: 900, margin: '0 0 12px', letterSpacing: '-0.02em' }}>{restaurant.name}</h1>
             <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
               {restaurant.cities?.name && (
-                <span onClick={() => router.push(`/city/${restaurant.cities.slug}`)} style={{ fontSize: 14, color: COLORS.dim, cursor: 'pointer' }}>
+                <span onClick={() => router.push(`/city/${restaurant.cities.slug}`)} style={{ fontSize: 14, color: 'var(--dim)', cursor: 'pointer' }}>
                   📍 {restaurant.cities.name}{restaurant.district ? `, ${restaurant.district}` : ''}
                 </span>
               )}
-              {restaurant.cuisine_type && <span style={{ fontSize: 14, color: COLORS.dim }}>{restaurant.cuisine_type}</span>}
+              {restaurant.cuisine_type && <span style={{ fontSize: 14, color: 'var(--dim)' }}>{restaurant.cuisine_type}</span>}
               {restaurant.price_range && <span style={{ fontSize: 14, color: '#f59e0b' }}>{PRICE_LABELS[restaurant.price_range]}</span>}
               {restaurant.rating_avg > 0 && (
                 <span style={{ fontSize: 14, color: '#f59e0b' }}>
@@ -153,7 +151,7 @@ export default function RestaurantDetail() {
         </div>
         <button
           onClick={toggleFavorite}
-          style={{ position: 'absolute', top: 24, right: 24, background: isFavorited ? COLORS.red : 'rgba(0,0,0,0.6)', border: `1px solid ${isFavorited ? COLORS.red : 'rgba(255,255,255,0.2)'}`, backdropFilter: 'blur(8px)', color: COLORS.white, width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
+          style={{ position: 'absolute', top: 24, right: 24, background: isFavorited ? 'var(--red)' : 'rgba(0,0,0,0.6)', border: `1px solid ${isFavorited ? 'var(--red)' : 'rgba(255,255,255,0.2)'}`, backdropFilter: 'blur(8px)', color: 'var(--text)', width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
         >
           {isFavorited ? '♥' : '♡'}
         </button>
@@ -164,21 +162,21 @@ export default function RestaurantDetail() {
           {/* Sol */}
           <div>
             {restaurant.short_description && (
-              <p style={{ fontSize: 18, color: COLORS.dim, lineHeight: 1.7, marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
+              <p style={{ fontSize: 18, color: 'var(--dim)', lineHeight: 1.7, marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${'var(--border)'}` }}>
                 {restaurant.short_description}
               </p>
             )}
 
             {restaurant.description && (
-              <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
+              <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${'var(--border)'}` }}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 20 }}>Hakkında</h2>
-                <div style={{ fontSize: 15, color: COLORS.dim, lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: restaurant.description }} />
+                <div style={{ fontSize: 15, color: 'var(--dim)', lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: restaurant.description }} />
               </div>
             )}
 
             {/* Galeri */}
             {gallery.length > 0 && (
-              <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
+              <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${'var(--border)'}` }}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 20 }}>Galeri</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {gallery.map((img, i) => (
@@ -191,15 +189,15 @@ export default function RestaurantDetail() {
             {/* Yorumlar */}
             <div>
               <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 24 }}>
-                Değerlendirmeler {reviews.length > 0 && <span style={{ color: COLORS.muted, fontWeight: 400, fontSize: 16 }}>({reviews.length})</span>}
+                Değerlendirmeler {reviews.length > 0 && <span style={{ color: 'var(--muted)', fontWeight: 400, fontSize: 16 }}>({reviews.length})</span>}
               </h2>
               {user ? (
-                <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24, marginBottom: 32 }}>
+                <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 24, marginBottom: 32 }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Değerlendirme Yaz</h3>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
                     {[1, 2, 3, 4, 5].map(star => (
                       <span key={star} onClick={() => setReviewForm(p => ({ ...p, rating: star }))}
-                        style={{ fontSize: 28, cursor: 'pointer', color: star <= reviewForm.rating ? '#f59e0b' : COLORS.border, transition: 'color 0.15s' }}>★</span>
+                        style={{ fontSize: 28, cursor: 'pointer', color: star <= reviewForm.rating ? '#f59e0b' : 'var(--border)', transition: 'color 0.15s' }}>★</span>
                     ))}
                   </div>
                   <textarea
@@ -207,40 +205,40 @@ export default function RestaurantDetail() {
                     onChange={e => setReviewForm(p => ({ ...p, comment: e.target.value }))}
                     placeholder="Bu restoran hakkında düşüncelerinizi paylaşın..."
                     rows={4}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: '12px 16px', color: COLORS.white, fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
+                    style={{ width: '100%', background: 'var(--subtle-bg)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, padding: '12px 16px', color: 'var(--text)', fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
                   />
                   {reviewMsg.text && (
                     <div style={{ color: reviewMsg.type === 'error' ? '#ef4444' : '#10b981', fontSize: 13, marginTop: 8 }}>{reviewMsg.text}</div>
                   )}
                   <button onClick={submitReview} disabled={submitting}
-                    style={{ marginTop: 12, background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: submitting ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 700, opacity: submitting ? 0.7 : 1 }}>
+                    style={{ marginTop: 12, background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', borderRadius: 6, cursor: submitting ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 700, opacity: submitting ? 0.7 : 1 }}>
                     {submitting ? 'Gönderiliyor...' : 'Gönder'}
                   </button>
                 </div>
               ) : (
-                <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24, marginBottom: 32, textAlign: 'center' }}>
-                  <p style={{ color: COLORS.dim, marginBottom: 16 }}>Değerlendirme yapmak için giriş yapın</p>
-                  <button onClick={() => router.push('/login')} style={{ background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>Giriş Yap</button>
+                <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 24, marginBottom: 32, textAlign: 'center' }}>
+                  <p style={{ color: 'var(--dim)', marginBottom: 16 }}>Değerlendirme yapmak için giriş yapın</p>
+                  <button onClick={() => router.push('/login')} style={{ background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>Giriş Yap</button>
                 </div>
               )}
               {reviews.length === 0
-                ? <div style={{ textAlign: 'center', padding: '40px 0', color: COLORS.muted }}>Henüz değerlendirme yok.</div>
+                ? <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--muted)' }}>Henüz değerlendirme yok.</div>
                 : <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {reviews.map(review => (
-                    <div key={review.id} style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 20 }}>
+                    <div key={review.id} style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 20 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}>
+                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--red)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}>
                             {(review.profiles?.full_name || review.profiles?.username || 'U')[0].toUpperCase()}
                           </div>
                           <div>
                             <div style={{ fontSize: 14, fontWeight: 600 }}>{review.profiles?.full_name || review.profiles?.username}</div>
-                            <div style={{ fontSize: 11, color: COLORS.muted }}>{new Date(review.created_at).toLocaleDateString('tr-TR')}</div>
+                            <div style={{ fontSize: 11, color: 'var(--muted)' }}>{new Date(review.created_at).toLocaleDateString('tr-TR')}</div>
                           </div>
                         </div>
                         <div style={{ color: '#f59e0b' }}>{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</div>
                       </div>
-                      <p style={{ margin: 0, fontSize: 14, color: COLORS.dim, lineHeight: 1.6 }}>{review.content}</p>
+                      <p style={{ margin: 0, fontSize: 14, color: 'var(--dim)', lineHeight: 1.6 }}>{review.content}</p>
                     </div>
                   ))}
                 </div>}
@@ -249,7 +247,7 @@ export default function RestaurantDetail() {
 
           {/* Sağ Sidebar */}
           <div>
-            <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24, marginBottom: 24, position: 'sticky', top: 80 }}>
+            <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 24, marginBottom: 24, position: 'sticky', top: 80 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Bilgiler</h3>
               {[
                 restaurant.cities?.name && { label: 'Şehir', value: `${restaurant.cities.name}${restaurant.district ? ` / ${restaurant.district}` : ''}` },
@@ -259,15 +257,15 @@ export default function RestaurantDetail() {
                 restaurant.email && { label: 'E-posta', value: restaurant.email },
                 restaurant.website && { label: 'Website', value: restaurant.website },
               ].filter(Boolean).map(item => (
-                <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${COLORS.border}` }}>
-                  <span style={{ fontSize: 13, color: COLORS.muted }}>{item.label}</span>
+                <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${'var(--border)'}` }}>
+                  <span style={{ fontSize: 13, color: 'var(--muted)' }}>{item.label}</span>
                   <span style={{ fontSize: 13, fontWeight: 600, maxWidth: 160, textAlign: 'right', wordBreak: 'break-all' }}>{item.value}</span>
                 </div>
               ))}
 
               {restaurant.address && (
-                <div style={{ marginTop: 16, fontSize: 13, color: COLORS.dim, lineHeight: 1.5 }}>
-                  <span style={{ color: COLORS.muted, display: 'block', marginBottom: 4 }}>ADRES</span>
+                <div style={{ marginTop: 16, fontSize: 13, color: 'var(--dim)', lineHeight: 1.5 }}>
+                  <span style={{ color: 'var(--muted)', display: 'block', marginBottom: 4 }}>ADRES</span>
                   {restaurant.address}
                 </div>
               )}
@@ -275,10 +273,10 @@ export default function RestaurantDetail() {
               {/* Çalışma Saatleri */}
               {workingHours && Object.keys(workingHours).length > 0 && (
                 <div style={{ marginTop: 20 }}>
-                  <div style={{ fontSize: 11, color: COLORS.muted, letterSpacing: '0.1em', marginBottom: 10 }}>ÇALIŞMA SAATLERİ</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.1em', marginBottom: 10 }}>ÇALIŞMA SAATLERİ</div>
                   {Object.entries(workingHours).map(([day, hours]) => (
-                    <div key={day} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, padding: '5px 0', borderBottom: `1px solid ${COLORS.border}` }}>
-                      <span style={{ color: COLORS.muted }}>{DAYS_TR[day] || day}</span>
+                    <div key={day} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, padding: '5px 0', borderBottom: `1px solid ${'var(--border)'}` }}>
+                      <span style={{ color: 'var(--muted)' }}>{DAYS_TR[day] || day}</span>
                       <span>{hours || 'Kapalı'}</span>
                     </div>
                   ))}
@@ -287,7 +285,7 @@ export default function RestaurantDetail() {
 
               {restaurant.reservation_required && restaurant.reservation_link && (
                 <a href={restaurant.reservation_link} target="_blank" rel="noopener noreferrer"
-                  style={{ display: 'block', marginTop: 16, background: COLORS.red, color: COLORS.white, padding: '12px', borderRadius: 8, textAlign: 'center', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                  style={{ display: 'block', marginTop: 16, background: 'var(--red)', color: 'var(--text)', padding: '12px', borderRadius: 8, textAlign: 'center', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
                   Rezervasyon Yap
                 </a>
               )}
@@ -297,37 +295,37 @@ export default function RestaurantDetail() {
                 <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
                   {restaurant.instagram && (
                     <a href={`https://instagram.com/${restaurant.instagram}`} target="_blank" rel="noopener noreferrer"
-                      style={{ fontSize: 12, color: COLORS.dim, textDecoration: 'none' }}>Instagram</a>
+                      style={{ fontSize: 12, color: 'var(--dim)', textDecoration: 'none' }}>Instagram</a>
                   )}
                   {restaurant.facebook && (
                     <a href={restaurant.facebook} target="_blank" rel="noopener noreferrer"
-                      style={{ fontSize: 12, color: COLORS.dim, textDecoration: 'none' }}>Facebook</a>
+                      style={{ fontSize: 12, color: 'var(--dim)', textDecoration: 'none' }}>Facebook</a>
                   )}
                   {restaurant.twitter && (
                     <a href={`https://twitter.com/${restaurant.twitter}`} target="_blank" rel="noopener noreferrer"
-                      style={{ fontSize: 12, color: COLORS.dim, textDecoration: 'none' }}>Twitter</a>
+                      style={{ fontSize: 12, color: 'var(--dim)', textDecoration: 'none' }}>Twitter</a>
                   )}
                 </div>
               )}
             </div>
 
             {features.length > 0 && (
-              <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24, marginBottom: 24 }}>
+              <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 24, marginBottom: 24 }}>
                 <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Özellikler</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {features.map(f => (
-                    <span key={f} style={{ fontSize: 11, padding: '4px 10px', background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`, borderRadius: 20, color: COLORS.dim }}>{f}</span>
+                    <span key={f} style={{ fontSize: 11, padding: '4px 10px', background: 'var(--input-bg)', border: `1px solid ${'var(--border)'}`, borderRadius: 20, color: 'var(--dim)' }}>{f}</span>
                   ))}
                 </div>
               </div>
             )}
 
             {paymentMethods.length > 0 && (
-              <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24 }}>
+              <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 24 }}>
                 <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Ödeme Yöntemleri</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {paymentMethods.map(p => (
-                    <span key={p} style={{ fontSize: 11, padding: '4px 10px', background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`, borderRadius: 20, color: COLORS.dim }}>{p}</span>
+                    <span key={p} style={{ fontSize: 11, padding: '4px 10px', background: 'var(--input-bg)', border: `1px solid ${'var(--border)'}`, borderRadius: 20, color: 'var(--dim)' }}>{p}</span>
                   ))}
                 </div>
               </div>

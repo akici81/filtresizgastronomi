@@ -4,8 +4,6 @@ import { useRouter } from 'next/router';
 import Layout from '../components/layout/Layout';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../hooks/useAuth';
-import { COLORS } from '../lib/constants';
-
 const TABS = [
   { key: 'profile',  label: 'Profil Bilgileri', icon: '👤' },
   { key: 'account',  label: 'Hesap & Güvenlik',  icon: '🔒' },
@@ -13,12 +11,12 @@ const TABS = [
 ];
 
 const inp = {
-  width: '100%', background: 'rgba(255,255,255,0.05)', border: `1px solid ${COLORS.border}`,
-  borderRadius: 6, color: COLORS.white, padding: '10px 14px', fontSize: 14, outline: 'none',
+  width: '100%', background: 'var(--input-bg)', border: `1px solid ${'var(--border)'}`,
+  borderRadius: 6, color: 'var(--text)', padding: '10px 14px', fontSize: 14, outline: 'none',
   boxSizing: 'border-box',
 };
 
-const label = { fontSize: 12, color: COLORS.muted, marginBottom: 6, display: 'block', fontWeight: 600, letterSpacing: '0.05em' };
+const label = { fontSize: 12, color: 'var(--muted)', marginBottom: 6, display: 'block', fontWeight: 600, letterSpacing: '0.05em' };
 
 export default function HesapPage() {
   const router = useRouter();
@@ -121,7 +119,7 @@ export default function HesapPage() {
   }
 
   if (authLoading) return (
-    <Layout><div style={{ textAlign: 'center', padding: '120px 24px', color: COLORS.muted }}>Yükleniyor...</div></Layout>
+    <Layout><div style={{ textAlign: 'center', padding: '120px 24px', color: 'var(--muted)' }}>Yükleniyor...</div></Layout>
   );
 
   return (
@@ -130,18 +128,18 @@ export default function HesapPage() {
 
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '48px 24px' }}>
         <h1 style={{ margin: '0 0 8px', fontSize: 24, fontWeight: 900 }}>⚙️ Hesap Ayarları</h1>
-        <p style={{ margin: '0 0 32px', fontSize: 14, color: COLORS.muted }}>Profil bilgilerini ve hesap ayarlarını yönet.</p>
+        <p style={{ margin: '0 0 32px', fontSize: 14, color: 'var(--muted)' }}>Profil bilgilerini ve hesap ayarlarını yönet.</p>
 
         {/* Sekmeler */}
-        <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${COLORS.border}`, marginBottom: 32 }}>
+        <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${'var(--border)'}`, marginBottom: 32 }}>
           {TABS.map(tab => (
             <button key={tab.key} onClick={() => { setActiveTab(tab.key); setMsg(null); }}
               style={{
                 background: 'transparent', border: 'none', cursor: 'pointer',
                 padding: '10px 20px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6,
-                color: activeTab === tab.key ? COLORS.white : COLORS.dim,
+                color: activeTab === tab.key ? 'var(--text)' : 'var(--dim)',
                 fontWeight: activeTab === tab.key ? 700 : 400,
-                borderBottom: activeTab === tab.key ? `2px solid ${COLORS.red}` : '2px solid transparent',
+                borderBottom: activeTab === tab.key ? `2px solid ${'var(--red)'}` : '2px solid transparent',
                 marginBottom: -1,
               }}>
               <span>{tab.icon}</span>{tab.label}
@@ -165,7 +163,7 @@ export default function HesapPage() {
 
             {/* Avatar */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-              <div style={{ width: 80, height: 80, borderRadius: '50%', overflow: 'hidden', background: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, flexShrink: 0, border: `3px solid ${COLORS.border}` }}>
+              <div style={{ width: 80, height: 80, borderRadius: '50%', overflow: 'hidden', background: 'var(--red)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, flexShrink: 0, border: `3px solid ${'var(--border)'}` }}>
                 {form.avatar_url
                   ? <img src={form.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   : (form.full_name || form.username || 'U')[0].toUpperCase()}
@@ -173,7 +171,7 @@ export default function HesapPage() {
               <div>
                 <input type="file" ref={fileRef} accept="image/*" style={{ display: 'none' }} onChange={e => uploadAvatar(e.target.files[0])} />
                 <button onClick={() => fileRef.current.click()} disabled={avatarUploading}
-                  style={{ background: 'rgba(255,255,255,0.08)', border: `1px solid ${COLORS.border}`, color: COLORS.white, padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontSize: 13, marginRight: 8 }}>
+                  style={{ background: 'var(--input-bg)', border: `1px solid ${'var(--border)'}`, color: 'var(--text)', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontSize: 13, marginRight: 8 }}>
                   {avatarUploading ? 'Yükleniyor...' : '📷 Fotoğraf Yükle'}
                 </button>
                 {form.avatar_url && (
@@ -182,7 +180,7 @@ export default function HesapPage() {
                     Kaldır
                   </button>
                 )}
-                <p style={{ margin: '6px 0 0', fontSize: 11, color: COLORS.muted }}>JPG veya PNG. Maks 2MB.</p>
+                <p style={{ margin: '6px 0 0', fontSize: 11, color: 'var(--muted)' }}>JPG veya PNG. Maks 2MB.</p>
               </div>
             </div>
 
@@ -195,7 +193,7 @@ export default function HesapPage() {
               <div>
                 <span style={label}>KULLANICI ADI</span>
                 <div style={{ position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: COLORS.muted, fontSize: 14 }}>@</span>
+                  <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 14 }}>@</span>
                   <input style={{ ...inp, paddingLeft: 28 }} value={form.username} onChange={e => setField('username', e.target.value.replace(/[^a-z0-9_]/gi, '').toLowerCase())} placeholder="kullanici_adi" />
                 </div>
               </div>
@@ -207,7 +205,7 @@ export default function HesapPage() {
               <textarea style={{ ...inp, resize: 'vertical', minHeight: 100, lineHeight: 1.6 }}
                 value={form.bio} onChange={e => setField('bio', e.target.value)}
                 placeholder="Kendin hakkında kısa bir şeyler yaz..." maxLength={300} />
-              <div style={{ textAlign: 'right', fontSize: 11, color: COLORS.muted, marginTop: 4 }}>{form.bio.length}/300</div>
+              <div style={{ textAlign: 'right', fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>{form.bio.length}/300</div>
             </div>
 
             {/* Website */}
@@ -217,7 +215,7 @@ export default function HesapPage() {
             </div>
 
             <button onClick={saveProfile} disabled={saving}
-              style={{ alignSelf: 'flex-start', background: saving ? 'rgba(232,0,13,0.5)' : COLORS.red, border: 'none', color: COLORS.white, padding: '12px 28px', borderRadius: 6, cursor: saving ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 700 }}>
+              style={{ alignSelf: 'flex-start', background: saving ? 'rgba(232,0,13,0.5)' : 'var(--red)', border: 'none', color: 'var(--text)', padding: '12px 28px', borderRadius: 6, cursor: saving ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 700 }}>
               {saving ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
           </div>
@@ -228,17 +226,17 @@ export default function HesapPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
 
             {/* E-posta (readonly) */}
-            <div style={{ padding: 20, background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10 }}>
+            <div style={{ padding: 20, background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 10 }}>
               <h3 style={{ margin: '0 0 16px', fontSize: 15, fontWeight: 700 }}>E-posta Adresi</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <input style={{ ...inp, flex: 1, opacity: 0.6 }} value={user?.email || ''} readOnly />
                 <span style={{ fontSize: 11, color: '#22c55e', whiteSpace: 'nowrap' }}>✓ Doğrulandı</span>
               </div>
-              <p style={{ margin: '8px 0 0', fontSize: 12, color: COLORS.muted }}>E-posta değiştirmek için destek ile iletişime geç.</p>
+              <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--muted)' }}>E-posta değiştirmek için destek ile iletişime geç.</p>
             </div>
 
             {/* Şifre Değiştir */}
-            <div style={{ padding: 20, background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10 }}>
+            <div style={{ padding: 20, background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 10 }}>
               <h3 style={{ margin: '0 0 16px', fontSize: 15, fontWeight: 700 }}>Şifre Değiştir</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
@@ -250,14 +248,14 @@ export default function HesapPage() {
                   <input type="password" style={inp} value={pwForm.confirm} onChange={e => setPwForm(p => ({ ...p, confirm: e.target.value }))} placeholder="Şifreyi tekrar gir" />
                 </div>
                 <button onClick={changePassword} disabled={saving}
-                  style={{ alignSelf: 'flex-start', background: saving ? 'rgba(232,0,13,0.5)' : COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>
+                  style={{ alignSelf: 'flex-start', background: saving ? 'rgba(232,0,13,0.5)' : 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>
                   {saving ? 'Değiştiriliyor...' : 'Şifreyi Değiştir'}
                 </button>
               </div>
             </div>
 
             {/* Rol Bilgisi */}
-            <div style={{ padding: 20, background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10 }}>
+            <div style={{ padding: 20, background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 10 }}>
               <h3 style={{ margin: '0 0 12px', fontSize: 15, fontWeight: 700 }}>Hesap Bilgileri</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
@@ -265,9 +263,9 @@ export default function HesapPage() {
                   { label: 'Üye tarihi', value: profile?.created_at ? new Date(profile.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : '-' },
                   { label: 'Doğrulama', value: profile?.is_verified ? '✓ Doğrulanmış Hesap' : 'Doğrulanmamış' },
                 ].map(item => (
-                  <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: `1px solid ${COLORS.border}` }}>
-                    <span style={{ fontSize: 13, color: COLORS.muted }}>{item.label}</span>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: item.label === 'Doğrulama' && profile?.is_verified ? '#22c55e' : COLORS.white }}>{item.value}</span>
+                  <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: `1px solid ${'var(--border)'}` }}>
+                    <span style={{ fontSize: 13, color: 'var(--muted)' }}>{item.label}</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: item.label === 'Doğrulama' && profile?.is_verified ? '#22c55e' : 'var(--text)' }}>{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -278,7 +276,7 @@ export default function HesapPage() {
         {/* ===================== SOSYAL MEDYA ===================== */}
         {activeTab === 'social' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <p style={{ margin: '0 0 8px', fontSize: 13, color: COLORS.muted }}>Sosyal medya hesaplarını profiline ekle.</p>
+            <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted)' }}>Sosyal medya hesaplarını profiline ekle.</p>
 
             {[
               { key: 'instagram', label: 'INSTAGRAM', prefix: 'instagram.com/', placeholder: 'kullanici_adi' },
@@ -288,12 +286,12 @@ export default function HesapPage() {
             ].map(s => (
               <div key={s.key}>
                 <span style={label}>{s.label}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: `1px solid ${COLORS.border}`, borderRadius: 6, overflow: 'hidden' }}>
-                  <span style={{ padding: '10px 12px', fontSize: 12, color: COLORS.muted, background: 'rgba(255,255,255,0.03)', borderRight: `1px solid ${COLORS.border}`, whiteSpace: 'nowrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: `1px solid ${'var(--border)'}`, borderRadius: 6, overflow: 'hidden' }}>
+                  <span style={{ padding: '10px 12px', fontSize: 12, color: 'var(--muted)', background: 'var(--subtle-bg)', borderRight: `1px solid ${'var(--border)'}`, whiteSpace: 'nowrap' }}>
                     {s.prefix}
                   </span>
                   <input
-                    style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: 'none', color: COLORS.white, padding: '10px 14px', fontSize: 14, outline: 'none' }}
+                    style={{ flex: 1, background: 'var(--input-bg)', border: 'none', color: 'var(--text)', padding: '10px 14px', fontSize: 14, outline: 'none' }}
                     value={form[s.key]} onChange={e => setField(s.key, e.target.value)} placeholder={s.placeholder}
                   />
                 </div>
@@ -301,7 +299,7 @@ export default function HesapPage() {
             ))}
 
             <button onClick={saveProfile} disabled={saving}
-              style={{ alignSelf: 'flex-start', marginTop: 8, background: saving ? 'rgba(232,0,13,0.5)' : COLORS.red, border: 'none', color: COLORS.white, padding: '12px 28px', borderRadius: 6, cursor: saving ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 700 }}>
+              style={{ alignSelf: 'flex-start', marginTop: 8, background: saving ? 'rgba(232,0,13,0.5)' : 'var(--red)', border: 'none', color: 'var(--text)', padding: '12px 28px', borderRadius: 6, cursor: saving ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 700 }}>
               {saving ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
           </div>

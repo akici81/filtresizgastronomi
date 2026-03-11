@@ -4,8 +4,6 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/layout/Layout';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
-import { COLORS } from '../../lib/constants';
-
 export default function ChefDetail() {
   const router = useRouter();
   const { slug } = router.query;
@@ -69,7 +67,7 @@ export default function ChefDetail() {
 
   if (loading) return (
     <Layout>
-      <div style={{ textAlign: 'center', padding: '120px 24px', color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: '120px 24px', color: 'var(--muted)' }}>Yükleniyor...</div>
     </Layout>
   );
 
@@ -78,7 +76,7 @@ export default function ChefDetail() {
       <div style={{ textAlign: 'center', padding: '120px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>👨‍🍳</div>
         <h2>Şef bulunamadı</h2>
-        <button onClick={() => router.push('/chefs')} style={{ marginTop: 16, background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: 'pointer' }}>
+        <button onClick={() => router.push('/chefs')} style={{ marginTop: 16, background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', borderRadius: 6, cursor: 'pointer' }}>
           Tüm Şefler
         </button>
       </div>
@@ -101,11 +99,11 @@ export default function ChefDetail() {
       <div style={{ position: 'relative', height: 420, overflow: 'hidden' }}>
         {chef.cover_image_url
           ? <img src={chef.cover_image_url} alt={chef.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #1a0000, #0d0d0d)' }} />}
+          : <div style={{ width: '100%', height: '100%', background: 'var(--hero-bg)' }} />}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)' }} />
         <button
           onClick={toggleFavorite}
-          style={{ position: 'absolute', top: 24, right: 24, background: isFavorited ? COLORS.red : 'rgba(0,0,0,0.6)', border: `1px solid ${isFavorited ? COLORS.red : 'rgba(255,255,255,0.2)'}`, backdropFilter: 'blur(8px)', color: COLORS.white, width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ position: 'absolute', top: 24, right: 24, background: isFavorited ? 'var(--red)' : 'rgba(0,0,0,0.6)', border: `1px solid ${isFavorited ? 'var(--red)' : 'rgba(255,255,255,0.2)'}`, backdropFilter: 'blur(8px)', color: 'var(--text)', width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           {isFavorited ? '♥' : '♡'}
         </button>
@@ -114,17 +112,17 @@ export default function ChefDetail() {
       {/* Profil Bölümü */}
       <div style={{ maxWidth: 900, margin: '-80px auto 0', padding: '0 24px', position: 'relative', zIndex: 10 }}>
         <div style={{ display: 'flex', gap: 32, alignItems: 'flex-end', marginBottom: 48 }}>
-          <div style={{ width: 140, height: 140, borderRadius: '50%', overflow: 'hidden', border: `4px solid ${COLORS.bg}`, flexShrink: 0 }}>
+          <div style={{ width: 140, height: 140, borderRadius: '50%', overflow: 'hidden', border: `4px solid ${'var(--bg)'}`, flexShrink: 0 }}>
             {chef.image_url
               ? <img src={chef.image_url} alt={chef.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <div style={{ width: '100%', height: '100%', background: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48, fontWeight: 700 }}>{chef.name[0]}</div>}
+              : <div style={{ width: '100%', height: '100%', background: 'var(--red)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48, fontWeight: 700 }}>{chef.name[0]}</div>}
           </div>
           <div style={{ paddingBottom: 8 }}>
             <h1 style={{ fontSize: 36, fontWeight: 900, margin: '0 0 6px' }}>{chef.name}</h1>
-            {chef.title && <div style={{ fontSize: 15, color: COLORS.red, marginBottom: 8 }}>{chef.title}</div>}
+            {chef.title && <div style={{ fontSize: 15, color: 'var(--red)', marginBottom: 8 }}>{chef.title}</div>}
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              {chef.cities?.name && <span style={{ fontSize: 13, color: COLORS.dim }}>📍 {chef.cities.name}</span>}
-              {chef.experience_years && <span style={{ fontSize: 13, color: COLORS.dim }}>⏱ {chef.experience_years} yıl deneyim</span>}
+              {chef.cities?.name && <span style={{ fontSize: 13, color: 'var(--dim)' }}>📍 {chef.cities.name}</span>}
+              {chef.experience_years && <span style={{ fontSize: 13, color: 'var(--dim)' }}>⏱ {chef.experience_years} yıl deneyim</span>}
             </div>
           </div>
         </div>
@@ -133,14 +131,14 @@ export default function ChefDetail() {
           {/* Sol */}
           <div>
             {chef.short_bio && (
-              <p style={{ fontSize: 17, color: COLORS.dim, lineHeight: 1.7, marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
+              <p style={{ fontSize: 17, color: 'var(--dim)', lineHeight: 1.7, marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${'var(--border)'}` }}>
                 {chef.short_bio}
               </p>
             )}
 
             {chef.bio && (
               <Section title="Biyografi">
-                <div style={{ fontSize: 15, color: COLORS.dim, lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: chef.bio }} />
+                <div style={{ fontSize: 15, color: 'var(--dim)', lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: chef.bio }} />
               </Section>
             )}
 
@@ -149,11 +147,11 @@ export default function ChefDetail() {
               <Section title="Kariyer">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {careerHistory.map((c, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 16, padding: '14px 0', borderBottom: `1px solid ${COLORS.border}` }}>
-                      <div style={{ fontSize: 12, color: COLORS.muted, minWidth: 90, flexShrink: 0 }}>{c.years}</div>
+                    <div key={i} style={{ display: 'flex', gap: 16, padding: '14px 0', borderBottom: `1px solid ${'var(--border)'}` }}>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', minWidth: 90, flexShrink: 0 }}>{c.years}</div>
                       <div>
                         <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{c.position}</div>
-                        <div style={{ fontSize: 13, color: COLORS.dim }}>{c.place}</div>
+                        <div style={{ fontSize: 13, color: 'var(--dim)' }}>{c.place}</div>
                       </div>
                     </div>
                   ))}
@@ -170,7 +168,7 @@ export default function ChefDetail() {
                       <span style={{ fontSize: 20 }}>🏆</span>
                       <div>
                         <div style={{ fontSize: 14, fontWeight: 700 }}>{a.title}</div>
-                        <div style={{ fontSize: 12, color: COLORS.muted }}>{a.organization}{a.year ? ` — ${a.year}` : ''}</div>
+                        <div style={{ fontSize: 12, color: 'var(--muted)' }}>{a.organization}{a.year ? ` — ${a.year}` : ''}</div>
                       </div>
                     </div>
                   ))}
@@ -180,7 +178,7 @@ export default function ChefDetail() {
 
             {chef.education && (
               <Section title="Eğitim">
-                <div style={{ fontSize: 15, color: COLORS.dim, lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: chef.education }} />
+                <div style={{ fontSize: 15, color: 'var(--dim)', lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: chef.education }} />
               </Section>
             )}
 
@@ -201,9 +199,9 @@ export default function ChefDetail() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {restaurants.map(r => (
                     <div key={r.id} onClick={() => router.push(`/restaurant/${r.slug}`)}
-                      style={{ display: 'flex', gap: 16, padding: 16, background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10, cursor: 'pointer', transition: 'border-color 0.15s' }}
+                      style={{ display: 'flex', gap: 16, padding: 16, background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 10, cursor: 'pointer', transition: 'border-color 0.15s' }}
                       onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(232,0,13,0.4)'}
-                      onMouseLeave={e => e.currentTarget.style.borderColor = COLORS.border}>
+                      onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}>
                       <div style={{ width: 60, height: 60, borderRadius: 8, overflow: 'hidden', flexShrink: 0 }}>
                         {r.image_url
                           ? <img src={r.image_url} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -211,7 +209,7 @@ export default function ChefDetail() {
                       </div>
                       <div>
                         <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>{r.name}</div>
-                        {r.cuisine_type && <div style={{ fontSize: 12, color: COLORS.dim }}>{r.cuisine_type}</div>}
+                        {r.cuisine_type && <div style={{ fontSize: 12, color: 'var(--dim)' }}>{r.cuisine_type}</div>}
                         {r.rating_avg > 0 && <div style={{ fontSize: 12, color: '#f59e0b', marginTop: 4 }}>★ {Number(r.rating_avg).toFixed(1)}</div>}
                       </div>
                     </div>
@@ -223,33 +221,33 @@ export default function ChefDetail() {
 
           {/* Sağ Sidebar */}
           <div>
-            <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24, marginBottom: 20 }}>
+            <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 24, marginBottom: 20 }}>
               <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16 }}>Bilgiler</h3>
               {[
                 chef.cities?.name && { label: 'Şehir', value: chef.cities.name },
                 chef.experience_years && { label: 'Deneyim', value: `${chef.experience_years} yıl` },
                 awards.length > 0 && { label: 'Ödül', value: `${awards.length} ödül` },
               ].filter(Boolean).map(item => (
-                <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${COLORS.border}` }}>
-                  <span style={{ fontSize: 12, color: COLORS.muted }}>{item.label}</span>
+                <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${'var(--border)'}` }}>
+                  <span style={{ fontSize: 12, color: 'var(--muted)' }}>{item.label}</span>
                   <span style={{ fontSize: 12, fontWeight: 600 }}>{item.value}</span>
                 </div>
               ))}
             </div>
 
             {specialties.length > 0 && (
-              <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24, marginBottom: 20 }}>
+              <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 24, marginBottom: 20 }}>
                 <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16 }}>Uzmanlıklar</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {specialties.map(s => (
-                    <span key={s} style={{ fontSize: 11, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: COLORS.red }}>{s}</span>
+                    <span key={s} style={{ fontSize: 11, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: 'var(--red)' }}>{s}</span>
                   ))}
                 </div>
               </div>
             )}
 
             {(chef.instagram || chef.twitter || chef.youtube || chef.tiktok || chef.website) && (
-              <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24 }}>
+              <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, padding: 24 }}>
                 <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16 }}>Sosyal Medya</h3>
                 {chef.instagram && <SocialLink href={`https://instagram.com/${chef.instagram.replace('@', '')}`} label="Instagram" handle={chef.instagram} />}
                 {chef.twitter && <SocialLink href={`https://twitter.com/${chef.twitter.replace('@', '')}`} label="Twitter" handle={chef.twitter} />}
@@ -268,7 +266,7 @@ export default function ChefDetail() {
 
 function Section({ title, children }) {
   return (
-    <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
+    <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${'var(--border)'}` }}>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>{title}</h2>
       {children}
     </div>
@@ -278,9 +276,9 @@ function Section({ title, children }) {
 function SocialLink({ href, label, handle }) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer"
-      style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${COLORS.border}`, textDecoration: 'none' }}>
-      <span style={{ fontSize: 12, color: COLORS.muted }}>{label}</span>
-      <span style={{ fontSize: 12, color: COLORS.red }}>{handle}</span>
+      style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${'var(--border)'}`, textDecoration: 'none' }}>
+      <span style={{ fontSize: 12, color: 'var(--muted)' }}>{label}</span>
+      <span style={{ fontSize: 12, color: 'var(--red)' }}>{handle}</span>
     </a>
   );
 }

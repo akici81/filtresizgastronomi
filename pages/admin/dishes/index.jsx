@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AdminLayout from '../../../components/admin/AdminLayout';
 import { supabase } from '../../../lib/supabase';
-import { COLORS } from '../../../lib/constants';
-
 export default function AdminDishes() {
   const router = useRouter();
   const [dishes, setDishes] = useState([]);
@@ -57,11 +55,11 @@ export default function AdminDishes() {
           style={{
             flex: 1,
             minWidth: 200,
-            background: 'rgba(255,255,255,0.04)',
-            border: `1px solid ${COLORS.border}`,
+            background: 'var(--subtle-bg)',
+            border: `1px solid ${'var(--border)'}`,
             borderRadius: 6,
             padding: '10px 14px',
-            color: COLORS.white,
+            color: 'var(--text)',
             fontSize: 13,
             outline: 'none',
           }}
@@ -71,11 +69,11 @@ export default function AdminDishes() {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: `1px solid ${COLORS.border}`,
+            background: 'var(--subtle-bg)',
+            border: `1px solid ${'var(--border)'}`,
             borderRadius: 6,
             padding: '10px 14px',
-            color: COLORS.white,
+            color: 'var(--text)',
             fontSize: 13,
             outline: 'none',
             cursor: 'pointer',
@@ -91,9 +89,9 @@ export default function AdminDishes() {
         <button
           onClick={() => router.push('/admin/dishes/new')}
           style={{
-            background: COLORS.red,
+            background: 'var(--red)',
             border: 'none',
-            color: COLORS.white,
+            color: 'var(--text)',
             padding: '10px 20px',
             fontSize: 12,
             fontWeight: 700,
@@ -108,8 +106,8 @@ export default function AdminDishes() {
 
       {/* Table */}
       <div style={{
-        background: COLORS.card,
-        border: `1px solid ${COLORS.border}`,
+        background: 'var(--card)',
+        border: `1px solid ${'var(--border)'}`,
         borderRadius: 8,
         overflow: 'hidden',
       }}>
@@ -118,9 +116,9 @@ export default function AdminDishes() {
           display: 'grid',
           gridTemplateColumns: '1fr 120px 120px 100px 120px',
           padding: '12px 20px',
-          borderBottom: `1px solid ${COLORS.border}`,
+          borderBottom: `1px solid ${'var(--border)'}`,
           fontSize: 11,
-          color: COLORS.muted,
+          color: 'var(--muted)',
           letterSpacing: '0.08em',
         }}>
           <span>YEMEK ADI</span>
@@ -135,13 +133,13 @@ export default function AdminDishes() {
           [...Array(8)].map((_, i) => (
             <div key={i} style={{
               height: 52,
-              borderBottom: `1px solid ${COLORS.border}`,
-              background: 'rgba(255,255,255,0.01)',
+              borderBottom: `1px solid ${'var(--border)'}`,
+              background: 'var(--subtle-bg)',
               animation: 'pulse 1.5s infinite',
             }} />
           ))
         ) : filtered.length === 0 ? (
-          <div style={{ padding: 48, textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>
+          <div style={{ padding: 48, textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>
             {search ? 'Arama sonucu bulunamadı' : 'Henüz yemek eklenmemiş'}
           </div>
         ) : (
@@ -152,11 +150,11 @@ export default function AdminDishes() {
                 display: 'grid',
                 gridTemplateColumns: '1fr 120px 120px 100px 120px',
                 padding: '14px 20px',
-                borderBottom: `1px solid ${COLORS.border}`,
+                borderBottom: `1px solid ${'var(--border)'}`,
                 alignItems: 'center',
                 transition: 'background 0.15s',
               }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--subtle-bg)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             >
               {/* Name */}
@@ -177,12 +175,12 @@ export default function AdminDishes() {
               </div>
 
               {/* City */}
-              <span style={{ fontSize: 12, color: COLORS.dim }}>
+              <span style={{ fontSize: 12, color: 'var(--dim)' }}>
                 {dish.cities?.name || '—'}
               </span>
 
               {/* Category */}
-              <span style={{ fontSize: 12, color: COLORS.dim }}>
+              <span style={{ fontSize: 12, color: 'var(--dim)' }}>
                 {dish.category || '—'}
               </span>
 
@@ -194,13 +192,13 @@ export default function AdminDishes() {
                 <ActionBtn
                   onClick={() => toggleFeatured(dish)}
                   title={dish.is_featured ? 'Öne çıkanlardan kaldır' : 'Öne çıkar'}
-                  color={dish.is_featured ? '#fbbf24' : COLORS.muted}
+                  color={dish.is_featured ? '#fbbf24' : 'var(--muted)'}
                 >
                   ★
                 </ActionBtn>
                 <ActionBtn
                   onClick={() => router.push(`/admin/dishes/${dish.id}`)}
-                  color={COLORS.dim}
+                  color={'var(--dim)'}
                 >
                   ✎
                 </ActionBtn>
@@ -219,7 +217,7 @@ export default function AdminDishes() {
 
       {/* Count */}
       {!loading && (
-        <div style={{ fontSize: 12, color: COLORS.muted, marginTop: 12 }}>
+        <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 12 }}>
           {filtered.length} yemek gösteriliyor
         </div>
       )}
@@ -257,7 +255,7 @@ function ActionBtn({ children, onClick, color, disabled, title }) {
       title={title}
       style={{
         background: 'transparent',
-        border: `1px solid ${COLORS.border}`,
+        border: `1px solid ${'var(--border)'}`,
         color,
         width: 28,
         height: 28,
@@ -271,7 +269,7 @@ function ActionBtn({ children, onClick, color, disabled, title }) {
         transition: 'all 0.15s',
       }}
       onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.borderColor = color; }}
-      onMouseLeave={(e) => { if (!disabled) e.currentTarget.style.borderColor = COLORS.border; }}
+      onMouseLeave={(e) => { if (!disabled) e.currentTarget.style.borderColor = 'var(--border)'; }}
     >
       {children}
     </button>

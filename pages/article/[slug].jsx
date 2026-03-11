@@ -71,7 +71,7 @@ export default function ArticleDetail() {
 
   if (loading) return (
     <Layout>
-      <div style={{ textAlign: 'center', padding: '120px 24px', color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: '120px 24px', color: 'var(--muted)' }}>Yükleniyor...</div>
     </Layout>
   );
 
@@ -80,7 +80,7 @@ export default function ArticleDetail() {
       <div style={{ textAlign: 'center', padding: '120px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
         <h2>Makale bulunamadı</h2>
-        <button onClick={() => router.push('/articles')} style={{ marginTop: 16, background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: 'pointer' }}>
+        <button onClick={() => router.push('/articles')} style={{ marginTop: 16, background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', borderRadius: 6, cursor: 'pointer' }}>
           Tüm Makaleler
         </button>
       </div>
@@ -102,7 +102,7 @@ export default function ArticleDetail() {
       <div style={{ position: 'relative', height: 500, overflow: 'hidden' }}>
         {article.cover_image_url
           ? <img src={article.cover_image_url} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #1a0000, #0d0d0d)' }} />}
+          : <div style={{ width: '100%', height: '100%', background: 'var(--hero-bg)' }} />}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)' }} />
 
         {/* Hero alt bilgi */}
@@ -110,7 +110,7 @@ export default function ArticleDetail() {
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
               {article.category && (
-                <span style={{ background: COLORS.red, padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>
+                <span style={{ background: 'var(--red)', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>
                   {ARTICLE_CATEGORIES[article.category] || article.category}
                 </span>
               )}
@@ -145,7 +145,7 @@ export default function ArticleDetail() {
         {/* Favori butonu */}
         <button
           onClick={toggleFavorite}
-          style={{ position: 'absolute', top: 24, right: 24, background: isFavorited ? COLORS.red : 'rgba(0,0,0,0.6)', border: `1px solid ${isFavorited ? COLORS.red : 'rgba(255,255,255,0.2)'}`, backdropFilter: 'blur(8px)', color: COLORS.white, width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ position: 'absolute', top: 24, right: 24, background: isFavorited ? 'var(--red)' : 'rgba(0,0,0,0.6)', border: `1px solid ${isFavorited ? 'var(--red)' : 'rgba(255,255,255,0.2)'}`, backdropFilter: 'blur(8px)', color: 'var(--text)', width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           {isFavorited ? '♥' : '♡'}
         </button>
@@ -155,14 +155,14 @@ export default function ArticleDetail() {
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px' }}>
 
         {article.excerpt && (
-          <p style={{ fontSize: 19, color: COLORS.dim, lineHeight: 1.7, marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}`, fontStyle: 'italic' }}>
+          <p style={{ fontSize: 19, color: 'var(--dim)', lineHeight: 1.7, marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${'var(--border)'}`, fontStyle: 'italic' }}>
             {article.excerpt}
           </p>
         )}
 
         {article.content && (
           <div
-            style={{ fontSize: 16, color: COLORS.dim, lineHeight: 1.9, marginBottom: 48 }}
+            style={{ fontSize: 16, color: 'var(--dim)', lineHeight: 1.9, marginBottom: 48 }}
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
         )}
@@ -181,25 +181,25 @@ export default function ArticleDetail() {
 
         {/* İlişkili içerikler */}
         {(article.dishes || article.restaurants || article.chefs || article.cities) && (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40, padding: '16px 20px', background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8 }}>
-            <span style={{ fontSize: 12, color: COLORS.muted, alignSelf: 'center' }}>İlgili:</span>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40, padding: '16px 20px', background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8 }}>
+            <span style={{ fontSize: 12, color: 'var(--muted)', alignSelf: 'center' }}>İlgili:</span>
             {article.dishes && (
-              <span onClick={() => router.push(`/dish/${article.dishes.slug}`)} style={{ fontSize: 12, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: COLORS.red, cursor: 'pointer' }}>
+              <span onClick={() => router.push(`/dish/${article.dishes.slug}`)} style={{ fontSize: 12, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: 'var(--red)', cursor: 'pointer' }}>
                 🍽 {article.dishes.name}
               </span>
             )}
             {article.restaurants && (
-              <span onClick={() => router.push(`/restaurant/${article.restaurants.slug}`)} style={{ fontSize: 12, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: COLORS.red, cursor: 'pointer' }}>
+              <span onClick={() => router.push(`/restaurant/${article.restaurants.slug}`)} style={{ fontSize: 12, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: 'var(--red)', cursor: 'pointer' }}>
                 🏪 {article.restaurants.name}
               </span>
             )}
             {article.chefs && (
-              <span onClick={() => router.push(`/chef/${article.chefs.slug}`)} style={{ fontSize: 12, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: COLORS.red, cursor: 'pointer' }}>
+              <span onClick={() => router.push(`/chef/${article.chefs.slug}`)} style={{ fontSize: 12, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: 'var(--red)', cursor: 'pointer' }}>
                 👨‍🍳 {article.chefs.name}
               </span>
             )}
             {article.cities && (
-              <span onClick={() => router.push(`/city/${article.cities.slug}`)} style={{ fontSize: 12, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: COLORS.red, cursor: 'pointer' }}>
+              <span onClick={() => router.push(`/city/${article.cities.slug}`)} style={{ fontSize: 12, padding: '4px 10px', background: 'rgba(232,0,13,0.1)', border: '1px solid rgba(232,0,13,0.2)', borderRadius: 20, color: 'var(--red)', cursor: 'pointer' }}>
                 🗺 {article.cities.name}
               </span>
             )}
@@ -208,9 +208,9 @@ export default function ArticleDetail() {
 
         {/* Etiketler */}
         {tags.length > 0 && (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40, paddingTop: 32, borderTop: `1px solid ${COLORS.border}` }}>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40, paddingTop: 32, borderTop: `1px solid ${'var(--border)'}` }}>
             {tags.map(tag => (
-              <span key={tag} style={{ fontSize: 12, padding: '4px 12px', background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`, borderRadius: 20, color: COLORS.dim }}>
+              <span key={tag} style={{ fontSize: 12, padding: '4px 12px', background: 'var(--input-bg)', border: `1px solid ${'var(--border)'}`, borderRadius: 20, color: 'var(--dim)' }}>
                 #{tag}
               </span>
             ))}
@@ -221,14 +221,14 @@ export default function ArticleDetail() {
         {article.profiles && (
           <div
             onClick={() => router.push(`/profil/${article.profiles.username}`)}
-            style={{ display: 'flex', gap: 16, padding: 24, background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, marginBottom: 48, cursor: 'pointer', transition: 'border-color 0.15s' }}
+            style={{ display: 'flex', gap: 16, padding: 24, background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 12, marginBottom: 48, cursor: 'pointer', transition: 'border-color 0.15s' }}
             onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'}
-            onMouseLeave={e => e.currentTarget.style.borderColor = COLORS.border}
+            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
           >
             {article.profiles.avatar_url ? (
               <img src={article.profiles.avatar_url} alt="" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
             ) : (
-              <div style={{ width: 56, height: 56, borderRadius: '50%', background: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 700, flexShrink: 0 }}>
+              <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--red)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 700, flexShrink: 0 }}>
                 {(article.profiles.full_name || article.profiles.username || 'Y')[0].toUpperCase()}
               </div>
             )}
@@ -236,12 +236,12 @@ export default function ArticleDetail() {
               <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>
                 {article.profiles.full_name || article.profiles.username}
               </div>
-              <div style={{ fontSize: 12, color: COLORS.muted, marginBottom: 6 }}>@{article.profiles.username}</div>
+              <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6 }}>@{article.profiles.username}</div>
               {article.profiles.bio && (
-                <div style={{ fontSize: 13, color: COLORS.dim, lineHeight: 1.5 }}>{article.profiles.bio}</div>
+                <div style={{ fontSize: 13, color: 'var(--dim)', lineHeight: 1.5 }}>{article.profiles.bio}</div>
               )}
             </div>
-            <div style={{ fontSize: 12, color: COLORS.red, alignSelf: 'center', flexShrink: 0 }}>Profili Gör →</div>
+            <div style={{ fontSize: 12, color: 'var(--red)', alignSelf: 'center', flexShrink: 0 }}>Profili Gör →</div>
           </div>
         )}
 
@@ -254,9 +254,9 @@ export default function ArticleDetail() {
                 <div
                   key={r.id}
                   onClick={() => router.push(`/article/${r.slug}`)}
-                  style={{ cursor: 'pointer', background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10, overflow: 'hidden', transition: 'border-color 0.15s' }}
+                  style={{ cursor: 'pointer', background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 10, overflow: 'hidden', transition: 'border-color 0.15s' }}
                   onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(232,0,13,0.4)'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = COLORS.border}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
                 >
                   <div style={{ height: 120, overflow: 'hidden' }}>
                     {r.cover_image_url
@@ -268,7 +268,7 @@ export default function ArticleDetail() {
                       {r.title}
                     </div>
                     {r.published_at && (
-                      <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 6 }}>
+                      <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
                         {new Date(r.published_at).toLocaleDateString('tr-TR')}
                       </div>
                     )}

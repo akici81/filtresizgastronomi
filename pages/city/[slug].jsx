@@ -31,13 +31,13 @@ export default function CityDetail() {
     setLoading(false);
   }
 
-  if (loading) return <Layout><div style={{ textAlign: 'center', padding: '120px 24px', color: COLORS.muted }}>Yükleniyor...</div></Layout>;
+  if (loading) return <Layout><div style={{ textAlign: 'center', padding: '120px 24px', color: 'var(--muted)' }}>Yükleniyor...</div></Layout>;
   if (!city) return (
     <Layout>
       <div style={{ textAlign: 'center', padding: '120px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>🗺</div>
         <h2>Şehir bulunamadı</h2>
-        <button onClick={() => router.push('/cities')} style={{ marginTop: 16, background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: 'pointer' }}>Tüm Şehirler</button>
+        <button onClick={() => router.push('/cities')} style={{ marginTop: 16, background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', borderRadius: 6, cursor: 'pointer' }}>Tüm Şehirler</button>
       </div>
     </Layout>
   );
@@ -53,7 +53,7 @@ export default function CityDetail() {
       <div style={{ position: 'relative', height: 500, overflow: 'hidden' }}>
         {city.cover_image_url || city.image_url
           ? <img src={city.cover_image_url || city.image_url} alt={city.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #1a0000, #0d0d0d)' }} />}
+          : <div style={{ width: '100%', height: '100%', background: 'var(--hero-bg)' }} />}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)' }} />
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 48px 48px' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -70,19 +70,19 @@ export default function CityDetail() {
       {/* Content */}
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         {city.description && (
-          <div style={{ padding: '48px 0', borderBottom: `1px solid ${COLORS.border}` }}>
-            <div style={{ maxWidth: 800, fontSize: 16, color: COLORS.dim, lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: city.description }} />
+          <div style={{ padding: '48px 0', borderBottom: `1px solid ${'var(--border)'}` }}>
+            <div style={{ maxWidth: 800, fontSize: 16, color: 'var(--dim)', lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: city.description }} />
           </div>
         )}
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: 4, borderBottom: `1px solid ${COLORS.border}`, marginTop: 16 }}>
+        <div style={{ display: 'flex', gap: 4, borderBottom: `1px solid ${'var(--border)'}`, marginTop: 16 }}>
           {[
             { key: 'dishes', label: `Yemekler (${dishes.length})` },
             { key: 'restaurants', label: `Restoranlar (${restaurants.length})` },
           ].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
-              style={{ background: 'transparent', border: 'none', color: activeTab === tab.key ? COLORS.white : COLORS.dim, padding: '14px 20px', fontSize: 14, cursor: 'pointer', borderBottom: activeTab === tab.key ? `2px solid ${COLORS.red}` : '2px solid transparent', marginBottom: -1, transition: 'all 0.15s' }}>
+              style={{ background: 'transparent', border: 'none', color: activeTab === tab.key ? 'var(--text)' : 'var(--dim)', padding: '14px 20px', fontSize: 14, cursor: 'pointer', borderBottom: activeTab === tab.key ? `2px solid ${'var(--red)'}` : '2px solid transparent', marginBottom: -1, transition: 'all 0.15s' }}>
               {tab.label}
             </button>
           ))}
@@ -116,7 +116,7 @@ export default function CityDetail() {
 function Stat({ value, label }) {
   return (
     <div>
-      <div style={{ fontSize: 28, fontWeight: 900, color: COLORS.red }}>{value}</div>
+      <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--red)' }}>{value}</div>
       <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em' }}>{label.toUpperCase()}</div>
     </div>
   );
@@ -124,23 +124,23 @@ function Stat({ value, label }) {
 
 function MiniCard({ item, badge, onClick }) {
   return (
-    <div onClick={onClick} style={{ cursor: 'pointer', background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10, overflow: 'hidden', transition: 'transform 0.2s, border-color 0.2s' }}
+    <div onClick={onClick} style={{ cursor: 'pointer', background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 10, overflow: 'hidden', transition: 'transform 0.2s, border-color 0.2s' }}
       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = 'rgba(232,0,13,0.4)'; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = COLORS.border; }}>
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
       <div style={{ height: 160, overflow: 'hidden', position: 'relative' }}>
         {item.image_url
           ? <img src={item.image_url} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           : <div style={{ width: '100%', height: '100%', background: 'rgba(232,0,13,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>🍽</div>}
-        {badge && <div style={{ position: 'absolute', top: 10, left: 10, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: 20, fontSize: 10, color: COLORS.white }}>{badge}</div>}
+        {badge && <div style={{ position: 'absolute', top: 10, left: 10, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: 20, fontSize: 10, color: 'var(--text)' }}>{badge}</div>}
       </div>
       <div style={{ padding: 16 }}>
         <h4 style={{ margin: '0 0 6px', fontSize: 15, fontWeight: 700 }}>{item.name}</h4>
-        {item.short_description && <p style={{ margin: '0 0 10px', fontSize: 12, color: COLORS.dim, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.short_description}</p>}
+        {item.short_description && <p style={{ margin: '0 0 10px', fontSize: 12, color: 'var(--dim)', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.short_description}</p>}
         {item.average_rating > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ color: '#f59e0b', fontSize: 12 }}>★</span>
             <span style={{ fontSize: 12, fontWeight: 600 }}>{Number(item.average_rating).toFixed(1)}</span>
-            <span style={{ fontSize: 11, color: COLORS.muted }}>({item.reviews_count})</span>
+            <span style={{ fontSize: 11, color: 'var(--muted)' }}>({item.reviews_count})</span>
           </div>
         )}
       </div>
@@ -150,7 +150,7 @@ function MiniCard({ item, badge, onClick }) {
 
 function EmptyState({ icon, text }) {
   return (
-    <div style={{ textAlign: 'center', padding: '60px 0', color: COLORS.muted }}>
+    <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--muted)' }}>
       <div style={{ fontSize: 40, marginBottom: 12 }}>{icon}</div>
       <div>{text}</div>
     </div>

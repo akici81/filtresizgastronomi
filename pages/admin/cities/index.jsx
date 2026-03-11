@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AdminLayout from '../../../components/admin/AdminLayout';
 import { supabase } from '../../../lib/supabase';
-import { COLORS } from '../../../lib/constants';
-
 export default function AdminCities() {
   const router = useRouter();
   const [cities, setCities] = useState([]);
@@ -64,11 +62,11 @@ export default function AdminCities() {
           style={{
             flex: 1,
             minWidth: 200,
-            background: 'rgba(255,255,255,0.04)',
-            border: `1px solid ${COLORS.border}`,
+            background: 'var(--subtle-bg)',
+            border: `1px solid ${'var(--border)'}`,
             borderRadius: 6,
             padding: '10px 14px',
-            color: COLORS.white,
+            color: 'var(--text)',
             fontSize: 13,
             outline: 'none',
           }}
@@ -78,11 +76,11 @@ export default function AdminCities() {
           value={regionFilter}
           onChange={(e) => setRegionFilter(e.target.value)}
           style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: `1px solid ${COLORS.border}`,
+            background: 'var(--subtle-bg)',
+            border: `1px solid ${'var(--border)'}`,
             borderRadius: 6,
             padding: '10px 14px',
-            color: COLORS.white,
+            color: 'var(--text)',
             fontSize: 13,
             outline: 'none',
             cursor: 'pointer',
@@ -95,9 +93,9 @@ export default function AdminCities() {
         <button
           onClick={() => router.push('/admin/cities/new')}
           style={{
-            background: COLORS.red,
+            background: 'var(--red)',
             border: 'none',
-            color: COLORS.white,
+            color: 'var(--text)',
             padding: '10px 20px',
             fontSize: 12,
             fontWeight: 700,
@@ -112,8 +110,8 @@ export default function AdminCities() {
 
       {/* Table */}
       <div style={{
-        background: COLORS.card,
-        border: `1px solid ${COLORS.border}`,
+        background: 'var(--card)',
+        border: `1px solid ${'var(--border)'}`,
         borderRadius: 8,
         overflow: 'hidden',
       }}>
@@ -122,9 +120,9 @@ export default function AdminCities() {
           display: 'grid',
           gridTemplateColumns: '1fr 160px 100px 100px 120px',
           padding: '12px 20px',
-          borderBottom: `1px solid ${COLORS.border}`,
+          borderBottom: `1px solid ${'var(--border)'}`,
           fontSize: 11,
-          color: COLORS.muted,
+          color: 'var(--muted)',
           letterSpacing: '0.08em',
         }}>
           <span>ŞEHİR ADI</span>
@@ -139,12 +137,12 @@ export default function AdminCities() {
           [...Array(8)].map((_, i) => (
             <div key={i} style={{
               height: 52,
-              borderBottom: `1px solid ${COLORS.border}`,
+              borderBottom: `1px solid ${'var(--border)'}`,
               animation: 'pulse 1.5s infinite',
             }} />
           ))
         ) : filtered.length === 0 ? (
-          <div style={{ padding: 48, textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>
+          <div style={{ padding: 48, textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>
             {search ? 'Arama sonucu bulunamadı' : 'Henüz şehir eklenmemiş'}
           </div>
         ) : (
@@ -155,18 +153,18 @@ export default function AdminCities() {
                 display: 'grid',
                 gridTemplateColumns: '1fr 160px 100px 100px 120px',
                 padding: '14px 20px',
-                borderBottom: `1px solid ${COLORS.border}`,
+                borderBottom: `1px solid ${'var(--border)'}`,
                 alignItems: 'center',
                 transition: 'background 0.15s',
               }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--subtle-bg)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             >
               {/* Name */}
               <div style={{ fontSize: 14, fontWeight: 600 }}>{city.name}</div>
 
               {/* Region */}
-              <span style={{ fontSize: 12, color: COLORS.dim }}>{city.region || '—'}</span>
+              <span style={{ fontSize: 12, color: 'var(--dim)' }}>{city.region || '—'}</span>
 
               {/* Active */}
               <div
@@ -195,8 +193,8 @@ export default function AdminCities() {
                   padding: '3px 8px',
                   borderRadius: 4,
                   background: city.is_featured ? '#fbbf2422' : 'transparent',
-                  color: city.is_featured ? '#fbbf24' : COLORS.muted,
-                  border: `1px solid ${city.is_featured ? '#fbbf2440' : COLORS.border}`,
+                  color: city.is_featured ? '#fbbf24' : 'var(--muted)',
+                  border: `1px solid ${city.is_featured ? '#fbbf2440' : 'var(--border)'}`,
                   letterSpacing: '0.05em',
                 }}>
                   {city.is_featured ? '★ Evet' : '☆ Hayır'}
@@ -207,7 +205,7 @@ export default function AdminCities() {
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
                 <ActionBtn
                   onClick={() => router.push(`/admin/cities/${city.id}`)}
-                  color={COLORS.dim}
+                  color={'var(--dim)'}
                   title="Düzenle"
                 >
                   ✎
@@ -227,7 +225,7 @@ export default function AdminCities() {
       </div>
 
       {!loading && (
-        <div style={{ fontSize: 12, color: COLORS.muted, marginTop: 12 }}>
+        <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 12 }}>
           {filtered.length} şehir gösteriliyor
         </div>
       )}
@@ -243,7 +241,7 @@ function ActionBtn({ children, onClick, color, disabled, title }) {
       title={title}
       style={{
         background: 'transparent',
-        border: `1px solid ${COLORS.border}`,
+        border: `1px solid ${'var(--border)'}`,
         color,
         width: 28,
         height: 28,
@@ -257,7 +255,7 @@ function ActionBtn({ children, onClick, color, disabled, title }) {
         transition: 'all 0.15s',
       }}
       onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.borderColor = color; }}
-      onMouseLeave={(e) => { if (!disabled) e.currentTarget.style.borderColor = COLORS.border; }}
+      onMouseLeave={(e) => { if (!disabled) e.currentTarget.style.borderColor = 'var(--border)'; }}
     >
       {children}
     </button>

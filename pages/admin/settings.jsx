@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { supabase } from '../../lib/supabase';
-import { COLORS } from '../../lib/constants';
-
 const GROUPS = [
   { key: 'general', label: 'Genel' },
   { key: 'hero', label: 'Hero' },
@@ -86,7 +84,7 @@ export default function AdminSettings() {
 
   if (loading) return (
     <AdminLayout title="Ayarlar">
-      <div style={{ textAlign: 'center', padding: 60, color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: 60, color: 'var(--muted)' }}>Yükleniyor...</div>
     </AdminLayout>
   );
 
@@ -101,7 +99,7 @@ export default function AdminSettings() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 24 }}>
         {/* Sidebar */}
-        <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden', height: 'fit-content' }}>
+        <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden', height: 'fit-content' }}>
           {GROUPS.map(g => (
             <div
               key={g.key}
@@ -110,13 +108,13 @@ export default function AdminSettings() {
                 padding: '12px 16px',
                 fontSize: 13,
                 cursor: 'pointer',
-                color: activeGroup === g.key ? COLORS.white : COLORS.dim,
+                color: activeGroup === g.key ? 'var(--text)' : 'var(--dim)',
                 background: activeGroup === g.key ? 'rgba(232,0,13,0.1)' : 'transparent',
-                borderLeft: activeGroup === g.key ? `2px solid ${COLORS.red}` : '2px solid transparent',
+                borderLeft: activeGroup === g.key ? `2px solid ${'var(--red)'}` : '2px solid transparent',
                 transition: 'all 0.15s',
               }}
-              onMouseEnter={(e) => { if (activeGroup !== g.key) e.currentTarget.style.color = COLORS.white; }}
-              onMouseLeave={(e) => { if (activeGroup !== g.key) e.currentTarget.style.color = COLORS.dim; }}
+              onMouseEnter={(e) => { if (activeGroup !== g.key) e.currentTarget.style.color = 'var(--text)'; }}
+              onMouseLeave={(e) => { if (activeGroup !== g.key) e.currentTarget.style.color = 'var(--dim)'; }}
             >
               {g.label}
             </div>
@@ -124,21 +122,21 @@ export default function AdminSettings() {
         </div>
 
         {/* Settings Form */}
-        <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden' }}>
-          <div style={{ padding: '16px 24px', borderBottom: `1px solid ${COLORS.border}`, fontSize: 13, fontWeight: 700 }}>
+        <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden' }}>
+          <div style={{ padding: '16px 24px', borderBottom: `1px solid ${'var(--border)'}`, fontSize: 13, fontWeight: 700 }}>
             {GROUPS.find(g => g.key === activeGroup)?.label} Ayarları
           </div>
           <div style={{ padding: 24 }}>
             {groupSettings.length === 0 ? (
-              <div style={{ color: COLORS.muted, fontSize: 13 }}>Bu grupta ayar bulunamadı.</div>
+              <div style={{ color: 'var(--muted)', fontSize: 13 }}>Bu grupta ayar bulunamadı.</div>
             ) : (
               groupSettings.map(setting => (
                 <div key={setting.key} style={{ marginBottom: 24 }}>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: COLORS.white, marginBottom: 4 }}>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
                     {setting.label}
                   </label>
                   {setting.description && (
-                    <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 8 }}>
+                    <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
                       {setting.description}
                     </div>
                   )}
@@ -146,7 +144,7 @@ export default function AdminSettings() {
                   {setting.type === 'image' ? (
                     <div>
                       {setting.value && (
-                        <img src={setting.value} alt="" style={{ height: 60, borderRadius: 4, marginBottom: 8, objectFit: 'contain', background: 'rgba(255,255,255,0.05)', padding: 4 }} />
+                        <img src={setting.value} alt="" style={{ height: 60, borderRadius: 4, marginBottom: 8, objectFit: 'contain', background: 'var(--input-bg)', padding: 4 }} />
                       )}
                       <div style={{ display: 'flex', gap: 8 }}>
                         <input
@@ -158,8 +156,8 @@ export default function AdminSettings() {
                         />
                         <label style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          padding: '0 16px', border: `1px dashed ${COLORS.border}`,
-                          borderRadius: 6, cursor: 'pointer', fontSize: 12, color: COLORS.dim,
+                          padding: '0 16px', border: `1px dashed ${'var(--border)'}`,
+                          borderRadius: 6, cursor: 'pointer', fontSize: 12, color: 'var(--dim)',
                           whiteSpace: 'nowrap',
                         }}>
                           📁 Yükle
@@ -199,9 +197,9 @@ export default function AdminSettings() {
 
 const inp = {
   style: {
-    width: '100%', background: 'rgba(255,255,255,0.04)',
-    border: `1px solid ${COLORS.border}`, borderRadius: 6,
-    padding: '10px 12px', color: COLORS.white,
+    width: '100%', background: 'var(--subtle-bg)',
+    border: `1px solid ${'var(--border)'}`, borderRadius: 6,
+    padding: '10px 12px', color: 'var(--text)',
     fontSize: 13, outline: 'none', resize: 'vertical',
   },
 };
@@ -209,17 +207,17 @@ const inp = {
 function Toggle({ label, checked, onChange }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-      <div onClick={() => onChange(!checked)} style={{ width: 40, height: 22, borderRadius: 11, background: checked ? COLORS.red : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
-        <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
+      <div onClick={() => onChange(!checked)} style={{ width: 40, height: 22, borderRadius: 11, background: checked ? 'var(--red)' : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
+        <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: 'var(--text)', transition: 'left 0.2s' }} />
       </div>
-      {label && <span style={{ fontSize: 13, color: COLORS.dim }}>{label}</span>}
+      {label && <span style={{ fontSize: 13, color: 'var(--dim)' }}>{label}</span>}
     </div>
   );
 }
 
 function Btn({ children, onClick, loading }) {
   return (
-    <button onClick={onClick} disabled={loading} style={{ background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+    <button onClick={onClick} disabled={loading} style={{ background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
       {loading ? '...' : children}
     </button>
   );

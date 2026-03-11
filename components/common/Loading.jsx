@@ -1,5 +1,3 @@
-import { COLORS } from '../../lib/constants';
-
 export default function Loading({ size = 36, text = null }) {
   return (
     <div style={{
@@ -13,12 +11,12 @@ export default function Loading({ size = 36, text = null }) {
       <div style={{
         width: size,
         height: size,
-        border: `2px solid ${COLORS.red}`,
+        border: `2px solid ${'var(--red)'}`,
         borderTopColor: 'transparent',
         borderRadius: '50%',
         animation: 'spin 0.8s linear infinite',
       }} />
-      {text && <div style={{ color: COLORS.dim, fontSize: 13 }}>{text}</div>}
+      {text && <div style={{ color: 'var(--dim)', fontSize: 13 }}>{text}</div>}
     </div>
   );
 }
@@ -26,7 +24,7 @@ export default function Loading({ size = 36, text = null }) {
 export function FullPageLoading({ text = 'Yükleniyor...' }) {
   return (
     <div style={{
-      background: COLORS.bg,
+      background: 'var(--bg)',
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
@@ -42,7 +40,7 @@ export function Skeleton({ width = '100%', height = 20, borderRadius = 4 }) {
     <div style={{
       width,
       height,
-      background: COLORS.card,
+      background: 'var(--card)',
       borderRadius,
       animation: 'pulse 1.5s infinite',
     }} />

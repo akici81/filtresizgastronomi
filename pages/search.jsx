@@ -3,8 +3,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Layout from '../components/layout/Layout';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/constants';
-
 const TABS = [
   { key: 'all',         label: 'Tümü',        icon: '🔍' },
   { key: 'dishes',      label: 'Yemekler',    icon: '🍽' },
@@ -18,7 +16,7 @@ const TYPE_META = {
   dish:       { label: 'Yemek',      color: '#f59e0b', icon: '🍽' },
   restaurant: { label: 'Restoran',   color: '#10b981', icon: '🏪' },
   chef:       { label: 'Şef',        color: '#8b5cf6', icon: '👨‍🍳' },
-  city:       { label: 'Şehir',      color: COLORS.red, icon: '🗺' },
+  city:       { label: 'Şehir',      color: 'var(--red)', icon: '🗺' },
   article:    { label: 'Makale',     color: '#3b82f6', icon: '📰' },
 };
 
@@ -142,10 +140,10 @@ export default function SearchPage() {
       </Head>
 
       {/* Arama Hero */}
-      <div style={{ background: 'linear-gradient(180deg, #1a0000 0%, #0d0d0d 100%)', padding: '72px 0 40px' }}>
+      <div style={{ background: 'var(--hero-bg)', padding: '72px 0 40px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 24px' }}>
           <h1 style={{ fontSize: 32, fontWeight: 900, margin: '0 0 6px', letterSpacing: '-0.02em' }}>🔍 Ara</h1>
-          <p style={{ margin: '0 0 24px', fontSize: 14, color: COLORS.muted }}>Yemek, restoran, şef, şehir veya makale ara</p>
+          <p style={{ margin: '0 0 24px', fontSize: 14, color: 'var(--muted)' }}>Yemek, restoran, şef, şehir veya makale ara</p>
           <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10 }}>
             <input
               ref={inputRef}
@@ -154,14 +152,14 @@ export default function SearchPage() {
               onChange={e => handleInputChange(e.target.value)}
               placeholder="Örn: Lahmacun, Gaziantep, Kebap..."
               style={{
-                flex: 1, background: 'rgba(255,255,255,0.08)',
-                border: `1px solid ${query.length >= 2 ? 'rgba(232,0,13,0.4)' : COLORS.border}`,
-                borderRadius: 8, padding: '14px 20px', color: COLORS.white, fontSize: 16, outline: 'none',
+                flex: 1, background: 'var(--input-bg)',
+                border: `1px solid ${query.length >= 2 ? 'rgba(232,0,13,0.4)' : 'var(--border)'}`,
+                borderRadius: 8, padding: '14px 20px', color: 'var(--text)', fontSize: 16, outline: 'none',
                 transition: 'border-color 0.2s',
               }}
             />
             <button type="submit"
-              style={{ background: COLORS.red, border: 'none', color: COLORS.white, padding: '14px 28px', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap' }}>
+              style={{ background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '14px 28px', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap' }}>
               Ara
             </button>
           </form>
@@ -169,10 +167,10 @@ export default function SearchPage() {
           {/* Popüler aramalar (aramadan önce) */}
           {!searched && (
             <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 12, color: COLORS.muted, alignSelf: 'center' }}>Popüler:</span>
+              <span style={{ fontSize: 12, color: 'var(--muted)', alignSelf: 'center' }}>Popüler:</span>
               {['Lahmacun', 'Kebap', 'İstanbul', 'Baklava', 'Pide', 'Gaziantep'].map(term => (
                 <span key={term} onClick={() => { setQuery(term); router.push(`/search?q=${encodeURIComponent(term)}`); doSearch(term); }}
-                  style={{ fontSize: 12, padding: '4px 12px', background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`, borderRadius: 20, color: COLORS.dim, cursor: 'pointer' }}>
+                  style={{ fontSize: 12, padding: '4px 12px', background: 'var(--input-bg)', border: `1px solid ${'var(--border)'}`, borderRadius: 20, color: 'var(--dim)', cursor: 'pointer' }}>
                   {term}
                 </span>
               ))}
@@ -186,17 +184,17 @@ export default function SearchPage() {
         {loading ? (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
             <div style={{ fontSize: 32, marginBottom: 12 }}>⏳</div>
-            <div style={{ color: COLORS.muted, fontSize: 14 }}>Aranıyor...</div>
+            <div style={{ color: 'var(--muted)', fontSize: 14 }}>Aranıyor...</div>
           </div>
         ) : searched && totalResults === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🤷</div>
             <h3 style={{ margin: '0 0 8px', fontSize: 20 }}>"{searched}" için sonuç bulunamadı</h3>
-            <p style={{ color: COLORS.muted, fontSize: 14 }}>Farklı kelimeler deneyin veya daha kısa yazın.</p>
+            <p style={{ color: 'var(--muted)', fontSize: 14 }}>Farklı kelimeler deneyin veya daha kısa yazın.</p>
             <div style={{ marginTop: 20, display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
               {['Kebap', 'İstanbul', 'Baklava'].map(term => (
                 <span key={term} onClick={() => { setQuery(term); router.push(`/search?q=${encodeURIComponent(term)}`); doSearch(term); }}
-                  style={{ fontSize: 13, padding: '6px 16px', background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`, borderRadius: 20, color: COLORS.dim, cursor: 'pointer' }}>
+                  style={{ fontSize: 13, padding: '6px 16px', background: 'var(--input-bg)', border: `1px solid ${'var(--border)'}`, borderRadius: 20, color: 'var(--dim)', cursor: 'pointer' }}>
                   {term}
                 </span>
               ))}
@@ -207,28 +205,28 @@ export default function SearchPage() {
             {/* Sonuç özeti */}
             <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
               <div>
-                <span style={{ fontSize: 14, color: COLORS.muted }}>"{searched}" için </span>
+                <span style={{ fontSize: 14, color: 'var(--muted)' }}>"{searched}" için </span>
                 <span style={{ fontSize: 14, fontWeight: 700 }}>{totalResults} sonuç</span>
-                <span style={{ fontSize: 14, color: COLORS.muted }}> bulundu</span>
+                <span style={{ fontSize: 14, color: 'var(--muted)' }}> bulundu</span>
               </div>
             </div>
 
             {/* Sekmeler */}
-            <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${COLORS.border}`, marginBottom: 32, overflowX: 'auto' }}>
+            <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${'var(--border)'}`, marginBottom: 32, overflowX: 'auto' }}>
               {TABS.filter(tab => tab.key === 'all' || results[tab.key]?.length > 0).map(tab => (
                 <button key={tab.key} onClick={() => setActiveTab(tab.key)}
                   style={{
                     background: 'transparent', border: 'none', whiteSpace: 'nowrap',
-                    color: activeTab === tab.key ? COLORS.white : COLORS.dim,
+                    color: activeTab === tab.key ? 'var(--text)' : 'var(--dim)',
                     padding: '10px 18px', fontSize: 13, cursor: 'pointer',
                     fontWeight: activeTab === tab.key ? 700 : 400,
-                    borderBottom: activeTab === tab.key ? `2px solid ${COLORS.red}` : '2px solid transparent',
+                    borderBottom: activeTab === tab.key ? `2px solid ${'var(--red)'}` : '2px solid transparent',
                     marginBottom: -1, display: 'flex', alignItems: 'center', gap: 6,
                   }}>
                   <span>{tab.icon}</span>
                   {tab.label}
                   {tab.key !== 'all' && results[tab.key]?.length > 0 && (
-                    <span style={{ fontSize: 11, background: activeTab === tab.key ? COLORS.red : 'rgba(255,255,255,0.1)', color: COLORS.white, padding: '1px 6px', borderRadius: 10, fontWeight: 700 }}>
+                    <span style={{ fontSize: 11, background: activeTab === tab.key ? 'var(--red)' : 'var(--tab-inactive)', color: 'var(--text)', padding: '1px 6px', borderRadius: 10, fontWeight: 700 }}>
                       {results[tab.key].length}
                     </span>
                   )}
@@ -243,9 +241,9 @@ export default function SearchPage() {
                 const href = getHref(item);
                 return (
                   <div key={`${item._type}-${item.id}`} onClick={() => router.push(href)}
-                    style={{ cursor: 'pointer', background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10, overflow: 'hidden', transition: 'transform 0.15s, border-color 0.15s' }}
+                    style={{ cursor: 'pointer', background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 10, overflow: 'hidden', transition: 'transform 0.15s, border-color 0.15s' }}
                     onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = 'rgba(232,0,13,0.35)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = COLORS.border; }}>
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
 
                     {/* Görsel */}
                     <div style={{ height: 150, overflow: 'hidden', position: 'relative', background: `${meta.color}12` }}>
@@ -262,7 +260,7 @@ export default function SearchPage() {
                       <h4 style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 700, lineHeight: 1.3 }}>{item._name}</h4>
                       {item._sub && <div style={{ fontSize: 11, color: meta.color, marginBottom: 6, fontWeight: 600 }}>{item._sub}</div>}
                       {item._desc && (
-                        <p style={{ margin: 0, fontSize: 12, color: COLORS.dim, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        <p style={{ margin: 0, fontSize: 12, color: 'var(--dim)', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                           {item._desc}
                         </p>
                       )}
@@ -274,7 +272,7 @@ export default function SearchPage() {
           </>
         ) : (
           // Henüz arama yapılmadı
-          <div style={{ textAlign: 'center', padding: '60px 0', color: COLORS.muted }}>
+          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--muted)' }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>🍽</div>
             <p style={{ fontSize: 15 }}>Türkiye'nin gastronomi haritasında bir şeyler ara...</p>
           </div>

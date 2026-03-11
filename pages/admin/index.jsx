@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { supabase } from '../../lib/supabase';
-import { COLORS } from '../../lib/constants';
 import { useRouter } from 'next/router';
 
 export default function AdminDashboard() {
@@ -50,7 +49,7 @@ export default function AdminDashboard() {
   }
 
   const statCards = [
-    { label: 'Yemekler', value: stats.dishes, href: '/admin/dishes', color: COLORS.red },
+    { label: 'Yemekler', value: stats.dishes, href: '/admin/dishes', color: 'var(--red)' },
     { label: 'Restoranlar', value: stats.restaurants, href: '/admin/restaurants', color: '#3b82f6' },
     { label: 'Şehirler', value: stats.cities, href: '/admin/cities', color: '#10b981' },
     { label: 'Şefler', value: stats.chefs, href: '/admin/chefs', color: '#f59e0b' },
@@ -74,21 +73,21 @@ export default function AdminDashboard() {
             key={card.label}
             onClick={() => router.push(card.href)}
             style={{
-              background: COLORS.card,
-              border: `1px solid ${COLORS.border}`,
+              background: 'var(--card)',
+              border: `1px solid ${'var(--border)'}`,
               borderRadius: 8,
               padding: '20px 24px',
               cursor: 'pointer',
               transition: 'all 0.2s',
               borderTop: `3px solid ${card.color}`,
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = COLORS.cardHover}
-            onMouseLeave={(e) => e.currentTarget.style.background = COLORS.card}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--card-hover)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'var(--card)'}
           >
             <div style={{ fontSize: 28, fontWeight: 900, color: card.color, marginBottom: 6 }}>
               {loading ? '—' : card.value}
             </div>
-            <div style={{ fontSize: 12, color: COLORS.dim, letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: 12, color: 'var(--dim)', letterSpacing: '0.05em' }}>
               {card.label}
             </div>
           </div>
@@ -98,10 +97,10 @@ export default function AdminDashboard() {
       {/* Two Column */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
         {/* Recent Dishes */}
-        <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden' }}>
+        <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden' }}>
           <div style={{
             padding: '16px 20px',
-            borderBottom: `1px solid ${COLORS.border}`,
+            borderBottom: `1px solid ${'var(--border)'}`,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -109,7 +108,7 @@ export default function AdminDashboard() {
             <span style={{ fontSize: 13, fontWeight: 700 }}>Son Eklenen Yemekler</span>
             <span
               onClick={() => router.push('/admin/dishes')}
-              style={{ fontSize: 11, color: COLORS.red, cursor: 'pointer' }}
+              style={{ fontSize: 11, color: 'var(--red)', cursor: 'pointer' }}
             >
               Tümü →
             </span>
@@ -117,11 +116,11 @@ export default function AdminDashboard() {
           {loading ? (
             <div style={{ padding: 20 }}>
               {[...Array(5)].map((_, i) => (
-                <div key={i} style={{ height: 16, background: COLORS.border, borderRadius: 4, marginBottom: 12, opacity: 0.5 }} />
+                <div key={i} style={{ height: 16, background: 'var(--border)', borderRadius: 4, marginBottom: 12, opacity: 0.5 }} />
               ))}
             </div>
           ) : recentDishes.length === 0 ? (
-            <div style={{ padding: 24, textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>
+            <div style={{ padding: 24, textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>
               Henüz yemek eklenmemiş
             </div>
           ) : (
@@ -131,14 +130,14 @@ export default function AdminDashboard() {
                 onClick={() => router.push(`/admin/dishes/${dish.id}`)}
                 style={{
                   padding: '12px 20px',
-                  borderBottom: `1px solid ${COLORS.border}`,
+                  borderBottom: `1px solid ${'var(--border)'}`,
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   cursor: 'pointer',
                   transition: 'background 0.15s',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--subtle-bg)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <span style={{ fontSize: 13 }}>{dish.name}</span>
@@ -149,10 +148,10 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Users */}
-        <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden' }}>
+        <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden' }}>
           <div style={{
             padding: '16px 20px',
-            borderBottom: `1px solid ${COLORS.border}`,
+            borderBottom: `1px solid ${'var(--border)'}`,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -160,7 +159,7 @@ export default function AdminDashboard() {
             <span style={{ fontSize: 13, fontWeight: 700 }}>Son Kayıt Olan Kullanıcılar</span>
             <span
               onClick={() => router.push('/admin/users')}
-              style={{ fontSize: 11, color: COLORS.red, cursor: 'pointer' }}
+              style={{ fontSize: 11, color: 'var(--red)', cursor: 'pointer' }}
             >
               Tümü →
             </span>
@@ -168,11 +167,11 @@ export default function AdminDashboard() {
           {loading ? (
             <div style={{ padding: 20 }}>
               {[...Array(5)].map((_, i) => (
-                <div key={i} style={{ height: 16, background: COLORS.border, borderRadius: 4, marginBottom: 12, opacity: 0.5 }} />
+                <div key={i} style={{ height: 16, background: 'var(--border)', borderRadius: 4, marginBottom: 12, opacity: 0.5 }} />
               ))}
             </div>
           ) : recentUsers.length === 0 ? (
-            <div style={{ padding: 24, textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>
+            <div style={{ padding: 24, textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>
               Henüz kullanıcı yok
             </div>
           ) : (
@@ -182,19 +181,19 @@ export default function AdminDashboard() {
                 onClick={() => router.push(`/admin/users/${u.id}`)}
                 style={{
                   padding: '12px 20px',
-                  borderBottom: `1px solid ${COLORS.border}`,
+                  borderBottom: `1px solid ${'var(--border)'}`,
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   cursor: 'pointer',
                   transition: 'background 0.15s',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--subtle-bg)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <div>
                   <div style={{ fontSize: 13 }}>{u.full_name || u.username || 'İsimsiz'}</div>
-                  <div style={{ fontSize: 11, color: COLORS.muted }}>@{u.username}</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted)' }}>@{u.username}</div>
                 </div>
                 <RoleBadge role={u.role} />
               </div>
@@ -205,7 +204,7 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div style={{ marginTop: 24 }}>
-        <div style={{ fontSize: 11, color: COLORS.muted, letterSpacing: '0.1em', marginBottom: 16 }}>
+        <div style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.1em', marginBottom: 16 }}>
           HIZLI İŞLEMLER
         </div>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
@@ -221,8 +220,8 @@ export default function AdminDashboard() {
               onClick={() => router.push(action.href)}
               style={{
                 background: 'transparent',
-                border: `1px solid ${COLORS.border}`,
-                color: COLORS.dim,
+                border: `1px solid ${'var(--border)'}`,
+                color: 'var(--dim)',
                 padding: '10px 20px',
                 fontSize: 12,
                 borderRadius: 4,
@@ -230,12 +229,12 @@ export default function AdminDashboard() {
                 transition: 'all 0.15s',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = COLORS.red;
-                e.currentTarget.style.color = COLORS.white;
+                e.currentTarget.style.borderColor = 'var(--red)';
+                e.currentTarget.style.color = 'var(--text)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = COLORS.border;
-                e.currentTarget.style.color = COLORS.dim;
+                e.currentTarget.style.borderColor = 'var(--border)';
+                e.currentTarget.style.color = 'var(--dim)';
               }}
             >
               {action.label}
@@ -252,7 +251,7 @@ function StatusBadge({ status }) {
     published: { label: 'Yayında', color: '#10b981' },
     draft: { label: 'Taslak', color: '#f59e0b' },
     pending: { label: 'Bekliyor', color: '#3b82f6' },
-    archived: { label: 'Arşiv', color: COLORS.muted },
+    archived: { label: 'Arşiv', color: 'var(--muted)' },
   };
   const s = map[status] || map.draft;
   return (
@@ -271,12 +270,12 @@ function StatusBadge({ status }) {
 
 function RoleBadge({ role }) {
   const map = {
-    superadmin: { label: 'Süper Admin', color: COLORS.red },
+    superadmin: { label: 'Süper Admin', color: 'var(--red)' },
     admin: { label: 'Admin', color: '#f97316' },
     editor: { label: 'Editör', color: '#8b5cf6' },
     author: { label: 'Yazar', color: '#3b82f6' },
     moderator: { label: 'Moderatör', color: '#10b981' },
-    user: { label: 'Kullanıcı', color: COLORS.muted },
+    user: { label: 'Kullanıcı', color: 'var(--muted)' },
   };
   const r = map[role] || map.user;
   return (

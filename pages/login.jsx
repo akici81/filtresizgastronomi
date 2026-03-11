@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../hooks/useAuth';
-import { COLORS } from '../lib/constants';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
@@ -47,8 +46,8 @@ export default function LoginPage() {
         <div style={{
           width: '100%',
           maxWidth: 400,
-          background: COLORS.card,
-          border: `1px solid ${COLORS.border}`,
+          background: 'var(--card)',
+          border: `1px solid ${'var(--border)'}`,
           borderRadius: 12,
           padding: 40,
         }}>
@@ -62,7 +61,7 @@ export default function LoginPage() {
             }}>
               Giriş Yap
             </h1>
-            <p style={{ margin: 0, color: COLORS.dim, fontSize: 14 }}>
+            <p style={{ margin: 0, color: 'var(--dim)', fontSize: 14 }}>
               Hesabına giriş yap ve keşfetmeye devam et
             </p>
           </div>
@@ -111,7 +110,7 @@ export default function LoginPage() {
                 onClick={() => router.push('/forgot-password')}
                 style={{
                   fontSize: 12,
-                  color: COLORS.red,
+                  color: 'var(--red)',
                   cursor: 'pointer',
                 }}
               >
@@ -136,21 +135,21 @@ export default function LoginPage() {
             gap: 16,
             margin: '32px 0',
           }}>
-            <div style={{ flex: 1, height: 1, background: COLORS.border }} />
-            <span style={{ fontSize: 12, color: COLORS.muted }}>veya</span>
-            <div style={{ flex: 1, height: 1, background: COLORS.border }} />
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+            <span style={{ fontSize: 12, color: 'var(--muted)' }}>veya</span>
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           </div>
 
           {/* Register Link */}
           <div style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: 14, color: COLORS.dim }}>
+            <span style={{ fontSize: 14, color: 'var(--dim)' }}>
               Hesabın yok mu?{' '}
             </span>
             <span
               onClick={() => router.push('/register')}
               style={{
                 fontSize: 14,
-                color: COLORS.red,
+                color: 'var(--red)',
                 cursor: 'pointer',
                 fontWeight: 600,
               }}

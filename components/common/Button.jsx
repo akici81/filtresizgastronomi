@@ -1,5 +1,3 @@
-import { COLORS } from '../../lib/constants';
-
 export default function Button({
   children,
   onClick,
@@ -19,26 +17,26 @@ export default function Button({
 
   const variants = {
     primary: {
-      background: COLORS.red,
-      color: COLORS.white,
+      background: 'var(--red)',
+      color: 'var(--text)',
       border: 'none',
       hoverBg: '#c8000b',
     },
     secondary: {
-      background: 'rgba(255,255,255,0.1)',
-      color: COLORS.white,
+      background: 'var(--tab-inactive)',
+      color: 'var(--text)',
       border: 'none',
       hoverBg: 'rgba(255,255,255,0.15)',
     },
     outline: {
       background: 'transparent',
-      color: COLORS.red,
-      border: `1px solid ${COLORS.red}`,
+      color: 'var(--red)',
+      border: `1px solid ${'var(--red)'}`,
       hoverBg: 'rgba(232,0,13,0.1)',
     },
     ghost: {
       background: 'transparent',
-      color: COLORS.dim,
+      color: 'var(--dim)',
       border: 'none',
       hoverBg: 'rgba(255,255,255,0.05)',
     },

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Layout from '../components/layout/Layout';
 import { supabase } from '../lib/supabase';
 
-const COLORS = {
+const COLORS_UNUSED = { // removed - using CSS vars
   bg: '#080808',
   red: '#e8000d',
   white: '#ffffff',
@@ -263,7 +263,7 @@ export default function CitiesPage() {
         <h1 style={{ fontSize: 48, fontWeight: 900, margin: '0 0 12px', letterSpacing: '-0.03em' }}>
           Türkiye Gastronomi Haritası
         </h1>
-        <p style={{ color: COLORS.dim, fontSize: 17, maxWidth: 600, margin: '0 auto 32px' }}>
+        <p style={{ color: 'var(--dim)', fontSize: 17, maxWidth: 600, margin: '0 auto 32px' }}>
           81 ilin yöresel lezzetlerini keşfet. Haritada bir ile tıklayarak o şehrin gastronomi sayfasına ulaşabilirsin.
         </p>
 
@@ -275,25 +275,25 @@ export default function CitiesPage() {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             style={{
-              background: COLORS.card,
-              border: `1px solid ${COLORS.border}`,
+              background: 'var(--card)',
+              border: `1px solid ${'var(--border)'}`,
               borderRadius: 8,
               padding: '10px 16px',
-              color: COLORS.white,
+              color: 'var(--text)',
               fontSize: 14,
               width: 200,
               outline: 'none',
             }}
           />
-          <div style={{ display: 'flex', background: COLORS.card, borderRadius: 8, overflow: 'hidden', border: `1px solid ${COLORS.border}` }}>
+          <div style={{ display: 'flex', background: 'var(--card)', borderRadius: 8, overflow: 'hidden', border: `1px solid ${'var(--border)'}` }}>
             {['map', 'grid'].map(mode => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
                 style={{
-                  background: viewMode === mode ? COLORS.red : 'transparent',
+                  background: viewMode === mode ? 'var(--red)' : 'transparent',
                   border: 'none',
-                  color: COLORS.white,
+                  color: 'var(--text)',
                   padding: '10px 20px',
                   cursor: 'pointer',
                   fontSize: 13,
@@ -312,10 +312,10 @@ export default function CitiesPage() {
       {viewMode === 'map' && (
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px 64px' }}>
           <div style={{
-            background: COLORS.card,
+            background: 'var(--card)',
             borderRadius: 16,
             padding: '32px',
-            border: `1px solid ${COLORS.border}`,
+            border: `1px solid ${'var(--border)'}`,
           }}>
             <svg
               viewBox={TURKEY_VIEWBOX}
@@ -332,12 +332,12 @@ export default function CitiesPage() {
                     <path
                       d={il.path}
                       fill={
-                        isFiltered ? 'rgba(255,255,255,0.02)' :
-                        isHovered ? COLORS.red :
+                        isFiltered ? 'var(--subtle-bg)' :
+                        isHovered ? 'var(--red)' :
                         hasData ? 'rgba(232,0,13,0.3)' :
-                        'rgba(255,255,255,0.08)'
+                        'var(--block-bg)'
                       }
-                      stroke={isHovered ? COLORS.red : 'rgba(255,255,255,0.15)'}
+                      stroke={isHovered ? 'var(--red)' : 'var(--border)'}
                       strokeWidth={isHovered ? 2 : 0.5}
                       style={{
                         cursor: isFiltered ? 'default' : 'pointer',
@@ -363,7 +363,7 @@ export default function CitiesPage() {
                     stroke="rgba(232,0,13,0.5)"
                     strokeWidth="1"
                   />
-                  <text x="14" y="26" fontSize="15" fontWeight="800" fill={COLORS.white}>
+                  <text x="14" y="26" fontSize="15" fontWeight="800" fill={'var(--text)'}>
                     {hoveredCity.name || TURKEY_PATHS.find(i => i.slug === hovered)?.name}
                   </text>
                   {hoveredCity.gi_count > 0 && (
@@ -396,9 +396,9 @@ export default function CitiesPage() {
       {viewMode === 'grid' && (
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px 64px' }}>
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: COLORS.muted }}>Yükleniyor...</div>
+            <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--muted)' }}>Yükleniyor...</div>
           ) : filteredCities.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '80px 0', color: COLORS.muted }}>
+            <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--muted)' }}>
               <div style={{ fontSize: 40, marginBottom: 12 }}>🗺</div>
               <div>Sonuç bulunamadı</div>
             </div>
@@ -425,8 +425,8 @@ function CityCard({ city, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         cursor: 'pointer',
-        background: COLORS.card,
-        border: `1px solid ${hov ? 'rgba(232,0,13,0.4)' : COLORS.border}`,
+        background: 'var(--card)',
+        border: `1px solid ${hov ? 'rgba(232,0,13,0.4)' : 'var(--border)'}`,
         borderRadius: 12,
         overflow: 'hidden',
         transition: 'transform 0.2s, border-color 0.2s',
@@ -449,13 +449,13 @@ function CityCard({ city, onClick }) {
         )}
       </div>
       <div style={{ padding: '12px 16px' }}>
-        <h3 style={{ margin: '0 0 4px', fontSize: 15, fontWeight: 800, color: COLORS.white }}>{city.name}</h3>
+        <h3 style={{ margin: '0 0 4px', fontSize: 15, fontWeight: 800, color: 'var(--text)' }}>{city.name}</h3>
         {city.region && (
-          <p style={{ margin: '0 0 8px', fontSize: 11, color: COLORS.muted, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{city.region}</p>
+          <p style={{ margin: '0 0 8px', fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{city.region}</p>
         )}
         <div style={{ display: 'flex', gap: 12 }}>
           {city.dishes_count > 0 && (
-            <span style={{ fontSize: 11, color: COLORS.dim }}>🍽 {city.dishes_count} yemek</span>
+            <span style={{ fontSize: 11, color: 'var(--dim)' }}>🍽 {city.dishes_count} yemek</span>
           )}
         </div>
       </div>

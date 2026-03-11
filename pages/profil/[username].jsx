@@ -4,15 +4,13 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/layout/Layout';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
-import { COLORS } from '../../lib/constants';
-
 const ROLE_BADGE = {
   superadmin: { label: 'Süper Admin', color: '#f59e0b' },
   admin:      { label: 'Admin',       color: '#f59e0b' },
   editor:     { label: 'Editör',      color: '#3b82f6' },
   author:     { label: 'Yazar',       color: '#8b5cf6' },
   moderator:  { label: 'Moderatör',   color: '#10b981' },
-  user:       { label: 'Üye',         color: COLORS.muted },
+  user:       { label: 'Üye',         color: 'var(--muted)' },
 };
 
 const TABS = [
@@ -139,7 +137,7 @@ export default function ProfilePage() {
 
   if (loading) return (
     <Layout>
-      <div style={{ textAlign: 'center', padding: '120px 24px', color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: '120px 24px', color: 'var(--muted)' }}>Yükleniyor...</div>
     </Layout>
   );
 
@@ -148,8 +146,8 @@ export default function ProfilePage() {
       <div style={{ textAlign: 'center', padding: '120px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>👤</div>
         <h2 style={{ margin: '0 0 8px' }}>Kullanıcı bulunamadı</h2>
-        <p style={{ color: COLORS.muted, fontSize: 14 }}>@{username} kullanıcısı mevcut değil veya hesabı aktif değil.</p>
-        <button onClick={() => router.push('/')} style={{ marginTop: 20, background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: 'pointer', fontSize: 13 }}>
+        <p style={{ color: 'var(--muted)', fontSize: 14 }}>@{username} kullanıcısı mevcut değil veya hesabı aktif değil.</p>
+        <button onClick={() => router.push('/')} style={{ marginTop: 20, background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', borderRadius: 6, cursor: 'pointer', fontSize: 13 }}>
           Ana Sayfaya Dön
         </button>
       </div>
@@ -172,11 +170,11 @@ export default function ProfilePage() {
       </Head>
 
       {/* Cover */}
-      <div style={{ position: 'relative', height: 220, background: 'linear-gradient(135deg, #1a0000 0%, #0d0d0d 100%)', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 220, background: 'var(--hero-bg)', overflow: 'hidden' }}>
         {profile.cover_image_url && (
           <img src={profile.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} />
         )}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, #080808 0%, transparent 60%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, var(--bg) 0%, transparent 60%)' }} />
       </div>
 
       {/* Profil Ana Bilgi */}
@@ -185,9 +183,9 @@ export default function ProfilePage() {
           {/* Avatar */}
           <div style={{ flexShrink: 0 }}>
             {profile.avatar_url ? (
-              <img src={profile.avatar_url} alt={profile.username} style={{ width: 112, height: 112, borderRadius: '50%', objectFit: 'cover', border: `4px solid #080808` }} />
+              <img src={profile.avatar_url} alt={profile.username} style={{ width: 112, height: 112, borderRadius: '50%', objectFit: 'cover', border: `4px solid var(--bg)` }} />
             ) : (
-              <div style={{ width: 112, height: 112, borderRadius: '50%', background: COLORS.red, border: `4px solid #080808`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, fontWeight: 900, color: COLORS.white }}>
+              <div style={{ width: 112, height: 112, borderRadius: '50%', background: 'var(--red)', border: `4px solid var(--bg)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, fontWeight: 900, color: 'var(--text)' }}>
                 {(profile.full_name || profile.username || 'U')[0].toUpperCase()}
               </div>
             )}
@@ -206,9 +204,9 @@ export default function ProfilePage() {
                 {badge.label}
               </span>
             </div>
-            <div style={{ fontSize: 14, color: COLORS.muted, marginBottom: 8 }}>@{profile.username}</div>
+            <div style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 8 }}>@{profile.username}</div>
             {profile.bio && (
-              <p style={{ margin: 0, fontSize: 14, color: COLORS.dim, lineHeight: 1.6, maxWidth: 500 }}>{profile.bio}</p>
+              <p style={{ margin: 0, fontSize: 14, color: 'var(--dim)', lineHeight: 1.6, maxWidth: 500 }}>{profile.bio}</p>
             )}
           </div>
 
@@ -217,7 +215,7 @@ export default function ProfilePage() {
             {isOwnProfile ? (
               <button
                 onClick={() => router.push('/hesap')}
-                style={{ background: 'rgba(255,255,255,0.08)', border: `1px solid ${COLORS.border}`, color: COLORS.white, padding: '9px 20px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
+                style={{ background: 'var(--input-bg)', border: `1px solid ${'var(--border)'}`, color: 'var(--text)', padding: '9px 20px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
               >
                 Profili Düzenle
               </button>
@@ -225,14 +223,14 @@ export default function ProfilePage() {
               <button
                 onClick={toggleFollow}
                 disabled={followLoading}
-                style={{ background: isFollowing ? 'transparent' : COLORS.red, border: `1px solid ${isFollowing ? COLORS.border : COLORS.red}`, color: isFollowing ? COLORS.dim : COLORS.white, padding: '9px 20px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600, transition: 'all 0.15s' }}
+                style={{ background: isFollowing ? 'transparent' : 'var(--red)', border: `1px solid ${isFollowing ? 'var(--border)' : 'var(--red)'}`, color: isFollowing ? 'var(--dim)' : 'var(--text)', padding: '9px 20px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600, transition: 'all 0.15s' }}
               >
                 {followLoading ? '...' : isFollowing ? 'Takip Ediliyor' : 'Takip Et'}
               </button>
             ) : (
               <button
                 onClick={() => router.push('/login')}
-                style={{ background: COLORS.red, border: 'none', color: COLORS.white, padding: '9px 20px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
+                style={{ background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '9px 20px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
               >
                 Takip Et
               </button>
@@ -251,7 +249,7 @@ export default function ProfilePage() {
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
               {socialLinks.map((s, i) => (
                 <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
-                  style={{ fontSize: 12, color: COLORS.dim, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
+                  style={{ fontSize: 12, color: 'var(--dim)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
                   title={s.label}>
                   <span>{s.icon}</span>
                   <span>{s.label}</span>
@@ -262,15 +260,15 @@ export default function ProfilePage() {
         </div>
 
         {/* Sekmeler */}
-        <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${COLORS.border}`, marginBottom: 32 }}>
+        <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${'var(--border)'}`, marginBottom: 32 }}>
           {visibleTabs.map(tab => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               style={{
-                background: 'transparent', border: 'none', color: activeTab === tab.key ? COLORS.white : COLORS.dim,
+                background: 'transparent', border: 'none', color: activeTab === tab.key ? 'var(--text)' : 'var(--dim)',
                 padding: '12px 20px', fontSize: 13, fontWeight: activeTab === tab.key ? 700 : 400,
-                cursor: 'pointer', borderBottom: activeTab === tab.key ? `2px solid ${COLORS.red}` : '2px solid transparent',
+                cursor: 'pointer', borderBottom: activeTab === tab.key ? `2px solid ${'var(--red)'}` : '2px solid transparent',
                 marginBottom: -1, transition: 'all 0.15s',
               }}
             >
@@ -288,10 +286,10 @@ export default function ProfilePage() {
               <div>
                 {profile.bio ? (
                   <Section title="Biyografi">
-                    <p style={{ margin: 0, fontSize: 15, color: COLORS.dim, lineHeight: 1.8 }}>{profile.bio}</p>
+                    <p style={{ margin: 0, fontSize: 15, color: 'var(--dim)', lineHeight: 1.8 }}>{profile.bio}</p>
                   </Section>
                 ) : (
-                  <div style={{ textAlign: 'center', padding: '60px 0', color: COLORS.muted }}>
+                  <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--muted)' }}>
                     <div style={{ fontSize: 40, marginBottom: 12 }}>📝</div>
                     <p style={{ margin: 0, fontSize: 14 }}>Henüz biyografi eklenmemiş.</p>
                   </div>
@@ -301,11 +299,11 @@ export default function ProfilePage() {
                 <Section title="Bilgiler">
                   {profile.website && (
                     <InfoRow icon="🌐" label="Website">
-                      <a href={profile.website} target="_blank" rel="noopener noreferrer" style={{ color: COLORS.red, textDecoration: 'none', fontSize: 13 }}>{profile.website.replace(/https?:\/\//, '')}</a>
+                      <a href={profile.website} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--red)', textDecoration: 'none', fontSize: 13 }}>{profile.website.replace(/https?:\/\//, '')}</a>
                     </InfoRow>
                   )}
                   <InfoRow icon="📅" label="Üye">
-                    <span style={{ fontSize: 13, color: COLORS.dim }}>{new Date(profile.created_at).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })}</span>
+                    <span style={{ fontSize: 13, color: 'var(--dim)' }}>{new Date(profile.created_at).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })}</span>
                   </InfoRow>
                   {profile.role !== 'user' && (
                     <InfoRow icon="🏷" label="Rol">
@@ -328,17 +326,17 @@ export default function ProfilePage() {
                     <div
                       key={article.id}
                       onClick={() => router.push(`/article/${article.slug}`)}
-                      style={{ display: 'flex', gap: 16, padding: 16, background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, cursor: 'pointer', transition: 'border-color 0.15s' }}
+                      style={{ display: 'flex', gap: 16, padding: 16, background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, cursor: 'pointer', transition: 'border-color 0.15s' }}
                       onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'}
-                      onMouseLeave={e => e.currentTarget.style.borderColor = COLORS.border}
+                      onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
                     >
                       {article.cover_image_url && (
                         <img src={article.cover_image_url} alt={article.title} style={{ width: 100, height: 70, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
                       )}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <h3 style={{ margin: '0 0 6px', fontSize: 15, fontWeight: 700, lineHeight: 1.4 }}>{article.title}</h3>
-                        {article.excerpt && <p style={{ margin: '0 0 8px', fontSize: 13, color: COLORS.dim, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.excerpt}</p>}
-                        <div style={{ display: 'flex', gap: 16, fontSize: 12, color: COLORS.muted }}>
+                        {article.excerpt && <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--dim)', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.excerpt}</p>}
+                        <div style={{ display: 'flex', gap: 16, fontSize: 12, color: 'var(--muted)' }}>
                           <span>{new Date(article.published_at).toLocaleDateString('tr-TR')}</span>
                           {article.view_count > 0 && <span>👁 {article.view_count}</span>}
                           {article.like_count > 0 && <span>♥ {article.like_count}</span>}
@@ -362,18 +360,18 @@ export default function ProfilePage() {
                     const target = review.dishes || review.restaurants;
                     const targetSlug = review.dishes ? `/dish/${review.dishes.slug}` : `/restaurant/${review.restaurants?.slug}`;
                     return (
-                      <div key={review.id} style={{ padding: 16, background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8 }}>
+                      <div key={review.id} style={{ padding: 16, background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                           <span
                             onClick={() => router.push(targetSlug)}
-                            style={{ fontSize: 14, fontWeight: 700, color: COLORS.white, cursor: 'pointer', textDecoration: 'underline', textDecorationColor: COLORS.border }}
+                            style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', cursor: 'pointer', textDecoration: 'underline', textDecorationColor: 'var(--border)' }}
                           >
                             {target?.name}
                           </span>
                           <Stars rating={review.rating} />
                         </div>
-                        {review.content && <p style={{ margin: '0 0 8px', fontSize: 13, color: COLORS.dim, lineHeight: 1.6 }}>{review.content}</p>}
-                        <span style={{ fontSize: 11, color: COLORS.muted }}>{new Date(review.created_at).toLocaleDateString('tr-TR')}</span>
+                        {review.content && <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--dim)', lineHeight: 1.6 }}>{review.content}</p>}
+                        <span style={{ fontSize: 11, color: 'var(--muted)' }}>{new Date(review.created_at).toLocaleDateString('tr-TR')}</span>
                       </div>
                     );
                   })}
@@ -399,20 +397,20 @@ export default function ProfilePage() {
                       <div
                         key={fav.id}
                         onClick={() => router.push(href)}
-                        style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.15s' }}
+                        style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.15s' }}
                         onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                         onMouseLeave={e => e.currentTarget.style.transform = 'none'}
                       >
                         {img ? (
                           <img src={img} alt={name} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
                         ) : (
-                          <div style={{ width: '100%', height: 120, background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32 }}>
+                          <div style={{ width: '100%', height: 120, background: 'var(--subtle-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32 }}>
                             {fav.dishes ? '🍽' : fav.restaurants ? '🏪' : '📰'}
                           </div>
                         )}
                         <div style={{ padding: '10px 12px' }}>
-                          <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.4, color: COLORS.white }}>{name}</div>
-                          {fav.collection_name && <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 4 }}>📁 {fav.collection_name}</div>}
+                          <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.4, color: 'var(--text)' }}>{name}</div>
+                          {fav.collection_name && <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>📁 {fav.collection_name}</div>}
                         </div>
                       </div>
                     );
@@ -432,8 +430,8 @@ export default function ProfilePage() {
 function StatItem({ value, label, onClick }) {
   return (
     <div onClick={onClick} style={{ textAlign: 'center', cursor: onClick ? 'pointer' : 'default' }}>
-      <div style={{ fontSize: 20, fontWeight: 900, color: COLORS.white }}>{value}</div>
-      <div style={{ fontSize: 11, color: COLORS.muted, letterSpacing: '0.05em' }}>{label}</div>
+      <div style={{ fontSize: 20, fontWeight: 900, color: 'var(--text)' }}>{value}</div>
+      <div style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.05em' }}>{label}</div>
     </div>
   );
 }
@@ -441,7 +439,7 @@ function StatItem({ value, label, onClick }) {
 function Section({ title, children }) {
   return (
     <div style={{ marginBottom: 24 }}>
-      <h3 style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', color: COLORS.muted }}>
+      <h3 style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--muted)' }}>
         {title.toUpperCase()}
       </h3>
       {children}
@@ -453,7 +451,7 @@ function InfoRow({ icon, label, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
       <span style={{ fontSize: 14, width: 20, textAlign: 'center' }}>{icon}</span>
-      <span style={{ fontSize: 12, color: COLORS.muted, minWidth: 60 }}>{label}</span>
+      <span style={{ fontSize: 12, color: 'var(--muted)', minWidth: 60 }}>{label}</span>
       {children}
     </div>
   );
@@ -463,7 +461,7 @@ function Stars({ rating }) {
   return (
     <div style={{ display: 'flex', gap: 2 }}>
       {[1,2,3,4,5].map(i => (
-        <span key={i} style={{ fontSize: 12, color: i <= rating ? '#f59e0b' : COLORS.border }}>★</span>
+        <span key={i} style={{ fontSize: 12, color: i <= rating ? '#f59e0b' : 'var(--border)' }}>★</span>
       ))}
     </div>
   );
@@ -471,7 +469,7 @@ function Stars({ rating }) {
 
 function Empty({ icon, text }) {
   return (
-    <div style={{ textAlign: 'center', padding: '60px 0', color: COLORS.muted }}>
+    <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--muted)' }}>
       <div style={{ fontSize: 40, marginBottom: 12 }}>{icon}</div>
       <p style={{ margin: 0, fontSize: 14 }}>{text}</p>
     </div>

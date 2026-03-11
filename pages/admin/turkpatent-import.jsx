@@ -5,7 +5,6 @@ import { useState, useCallback } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
-import { COLORS } from '../../lib/constants';
 import { useRouter } from 'next/router';
 
 const S = {
@@ -20,7 +19,7 @@ const S = {
   title: {
     fontSize: '24px',
     fontWeight: '700',
-    color: COLORS.text || '#ffffff',
+    color: var(--text) || '#ffffff',
     margin: 0,
   },
   subtitle: {
@@ -41,13 +40,13 @@ const S = {
     color: active ? '#ffffff' : 'rgba(255,255,255,0.4)',
     background: 'none',
     border: 'none',
-    borderBottom: active ? `2px solid ${COLORS.accent || '#e8000d'}` : '2px solid transparent',
+    borderBottom: active ? `2px solid ${var(--red) || '#e8000d'}` : '2px solid transparent',
     cursor: 'pointer',
     marginBottom: '-1px',
     transition: 'all 0.2s',
   }),
   card: {
-    background: 'rgba(255,255,255,0.04)',
+    background: 'var(--subtle-bg)',
     border: '1px solid rgba(255,255,255,0.08)',
     borderRadius: '10px',
     padding: '24px',
@@ -64,7 +63,7 @@ const S = {
   },
   input: {
     width: '100%',
-    background: 'rgba(255,255,255,0.06)',
+    background: 'var(--input-bg)',
     border: '1px solid rgba(255,255,255,0.12)',
     borderRadius: '6px',
     padding: '10px 14px',
@@ -79,7 +78,7 @@ const S = {
     alignItems: 'flex-end',
   },
   btnPrimary: (loading) => ({
-    background: loading ? 'rgba(232,0,13,0.5)' : (COLORS.accent || '#e8000d'),
+    background: loading ? 'rgba(232,0,13,0.5)' : (var(--red) || '#e8000d'),
     color: '#ffffff',
     border: 'none',
     borderRadius: '6px',
@@ -91,7 +90,7 @@ const S = {
     transition: 'opacity 0.2s',
   }),
   btnSecondary: {
-    background: 'rgba(255,255,255,0.08)',
+    background: 'var(--input-bg)',
     color: '#ffffff',
     border: '1px solid rgba(255,255,255,0.12)',
     borderRadius: '6px',
@@ -134,14 +133,14 @@ const S = {
     height: '64px',
     borderRadius: '6px',
     objectFit: 'cover',
-    background: 'rgba(255,255,255,0.06)',
+    background: 'var(--input-bg)',
     flexShrink: 0,
   },
   thumbPlaceholder: {
     width: '64px',
     height: '64px',
     borderRadius: '6px',
-    background: 'rgba(255,255,255,0.06)',
+    background: 'var(--input-bg)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -172,7 +171,7 @@ const S = {
   }),
   progressBar: {
     height: '4px',
-    background: 'rgba(255,255,255,0.08)',
+    background: 'var(--input-bg)',
     borderRadius: '2px',
     overflow: 'hidden',
     marginTop: '12px',
@@ -180,7 +179,7 @@ const S = {
   progressFill: (pct) => ({
     height: '100%',
     width: `${pct}%`,
-    background: COLORS.accent || '#e8000d',
+    background: var(--red) || '#e8000d',
     borderRadius: '2px',
     transition: 'width 0.3s',
   }),
@@ -206,12 +205,12 @@ const S = {
   checkbox: {
     width: '18px',
     height: '18px',
-    accentColor: COLORS.accent || '#e8000d',
+    accentColor: var(--red) || '#e8000d',
     cursor: 'pointer',
     flexShrink: 0,
   },
   editField: {
-    background: 'rgba(255,255,255,0.06)',
+    background: 'var(--input-bg)',
     border: '1px solid rgba(255,255,255,0.1)',
     borderRadius: '4px',
     padding: '4px 8px',

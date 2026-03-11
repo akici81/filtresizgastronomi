@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AdminLayout from '../../../components/admin/AdminLayout';
 import { supabase } from '../../../lib/supabase';
-import { COLORS } from '../../../lib/constants';
-
 const REGIONS = ['Marmara', 'Ege', 'Akdeniz', 'İç Anadolu', 'Karadeniz', 'Doğu Anadolu', 'Güneydoğu Anadolu'];
 
 const EMPTY_FORM = {
@@ -118,7 +116,7 @@ export default function CityForm() {
 
   if (loading) return (
     <AdminLayout title="Şehir">
-      <div style={{ textAlign: 'center', padding: 60, color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: 60, color: 'var(--muted)' }}>Yükleniyor...</div>
     </AdminLayout>
   );
 
@@ -128,7 +126,7 @@ export default function CityForm() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <button
           onClick={() => router.push('/admin/cities')}
-          style={{ background: 'transparent', border: 'none', color: COLORS.dim, fontSize: 13, cursor: 'pointer' }}
+          style={{ background: 'transparent', border: 'none', color: 'var(--dim)', fontSize: 13, cursor: 'pointer' }}
         >
           ← Geri
         </button>
@@ -197,7 +195,7 @@ export default function CityForm() {
                 />
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: '#f59e0b' }}>Coğrafi İşaretli Ürün Şehri</div>
-                  <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>Bu şehre ait tescilli coğrafi işaret ürünleri var</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>Bu şehre ait tescilli coğrafi işaret ürünleri var</div>
                 </div>
               </label>
             </div>
@@ -230,9 +228,9 @@ export default function CityForm() {
             </Field>
             <label style={{
               display: 'block', padding: 10,
-              border: `1px dashed ${COLORS.border}`,
+              border: `1px dashed ${'var(--border)'}`,
               borderRadius: 6, textAlign: 'center',
-              cursor: 'pointer', fontSize: 12, color: COLORS.dim,
+              cursor: 'pointer', fontSize: 12, color: 'var(--dim)',
             }}>
               {uploading === 'image_url' ? 'Yükleniyor...' : '📁 Dosya Seç'}
               <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'image_url')} style={{ display: 'none' }} />
@@ -248,9 +246,9 @@ export default function CityForm() {
             </Field>
             <label style={{
               display: 'block', padding: 10,
-              border: `1px dashed ${COLORS.border}`,
+              border: `1px dashed ${'var(--border)'}`,
               borderRadius: 6, textAlign: 'center',
-              cursor: 'pointer', fontSize: 12, color: COLORS.dim,
+              cursor: 'pointer', fontSize: 12, color: 'var(--dim)',
             }}>
               {uploading === 'cover_image_url' ? 'Yükleniyor...' : '📁 Dosya Seç'}
               <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'cover_image_url')} style={{ display: 'none' }} />
@@ -277,11 +275,11 @@ export default function CityForm() {
 const inp = {
   style: {
     width: '100%',
-    background: 'rgba(255,255,255,0.04)',
-    border: `1px solid ${COLORS.border}`,
+    background: 'var(--subtle-bg)',
+    border: `1px solid ${'var(--border)'}`,
     borderRadius: 6,
     padding: '10px 12px',
-    color: COLORS.white,
+    color: 'var(--text)',
     fontSize: 13,
     outline: 'none',
     resize: 'vertical',
@@ -290,8 +288,8 @@ const inp = {
 
 function Card({ title, children }) {
   return (
-    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden' }}>
-      <div style={{ padding: '14px 20px', borderBottom: `1px solid ${COLORS.border}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: COLORS.dim }}>
+    <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ padding: '14px 20px', borderBottom: `1px solid ${'var(--border)'}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--dim)' }}>
         {title.toUpperCase()}
       </div>
       <div style={{ padding: 20 }}>{children}</div>
@@ -302,7 +300,7 @@ function Card({ title, children }) {
 function Field({ label, children }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <label style={{ display: 'block', fontSize: 11, color: COLORS.muted, letterSpacing: '0.08em', marginBottom: 6 }}>
+      <label style={{ display: 'block', fontSize: 11, color: 'var(--muted)', letterSpacing: '0.08em', marginBottom: 6 }}>
         {label.toUpperCase()}
       </label>
       {children}
@@ -313,9 +311,9 @@ function Field({ label, children }) {
 function Toggle({ label, checked, onChange }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-      <span style={{ fontSize: 13, color: COLORS.dim }}>{label}</span>
-      <div onClick={() => onChange(!checked)} style={{ width: 40, height: 22, borderRadius: 11, background: checked ? COLORS.red : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
-        <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
+      <span style={{ fontSize: 13, color: 'var(--dim)' }}>{label}</span>
+      <div onClick={() => onChange(!checked)} style={{ width: 40, height: 22, borderRadius: 11, background: checked ? 'var(--red)' : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
+        <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: 'var(--text)', transition: 'left 0.2s' }} />
       </div>
     </div>
   );
@@ -323,7 +321,7 @@ function Toggle({ label, checked, onChange }) {
 
 function Btn({ children, onClick, loading }) {
   return (
-    <button onClick={onClick} disabled={loading} style={{ background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+    <button onClick={onClick} disabled={loading} style={{ background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
       {loading ? '...' : children}
     </button>
   );

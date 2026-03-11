@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { supabase } from '../../lib/supabase';
-import { COLORS } from '../../lib/constants';
-
 export default function AdminHomepage() {
   const [sections, setSections] = useState([]);
   const [slider, setSlider] = useState([]);
@@ -144,7 +142,7 @@ export default function AdminHomepage() {
 
   if (loading) return (
     <AdminLayout title="Ana Sayfa Yönetimi">
-      <div style={{ textAlign: 'center', padding: 60, color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: 60, color: 'var(--muted)' }}>Yükleniyor...</div>
     </AdminLayout>
   );
 
@@ -154,7 +152,7 @@ export default function AdminHomepage() {
       {success && <Alert type="success">{success}</Alert>}
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 24, borderBottom: `1px solid ${COLORS.border}`, paddingBottom: 0 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 24, borderBottom: `1px solid ${'var(--border)'}`, paddingBottom: 0 }}>
         {[
           { key: 'sections', label: 'Bölümler' },
           { key: 'slider', label: 'Slider' },
@@ -164,9 +162,9 @@ export default function AdminHomepage() {
             onClick={() => setActiveTab(tab.key)}
             style={{
               background: 'transparent', border: 'none',
-              color: activeTab === tab.key ? COLORS.white : COLORS.dim,
+              color: activeTab === tab.key ? 'var(--text)' : 'var(--dim)',
               padding: '10px 20px', fontSize: 13, cursor: 'pointer',
-              borderBottom: activeTab === tab.key ? `2px solid ${COLORS.red}` : '2px solid transparent',
+              borderBottom: activeTab === tab.key ? `2px solid ${'var(--red)'}` : '2px solid transparent',
               marginBottom: -1, transition: 'all 0.15s',
             }}
           >
@@ -187,8 +185,8 @@ export default function AdminHomepage() {
               <div
                 key={section.id}
                 style={{
-                  background: COLORS.card,
-                  border: `1px solid ${section.is_active ? COLORS.border : 'rgba(255,255,255,0.03)'}`,
+                  background: 'var(--card)',
+                  border: `1px solid ${section.is_active ? 'var(--border)' : 'rgba(255,255,255,0.03)'}`,
                   borderRadius: 8, padding: 20,
                   opacity: section.is_active ? 1 : 0.5,
                   transition: 'all 0.2s',
@@ -200,19 +198,19 @@ export default function AdminHomepage() {
                     <button
                       onClick={() => moveSection(section.id, 'up')}
                       disabled={idx === 0}
-                      style={{ background: 'transparent', border: `1px solid ${COLORS.border}`, color: COLORS.dim, width: 24, height: 24, borderRadius: 4, cursor: idx === 0 ? 'not-allowed' : 'pointer', fontSize: 10, opacity: idx === 0 ? 0.3 : 1 }}
+                      style={{ background: 'transparent', border: `1px solid ${'var(--border)'}`, color: 'var(--dim)', width: 24, height: 24, borderRadius: 4, cursor: idx === 0 ? 'not-allowed' : 'pointer', fontSize: 10, opacity: idx === 0 ? 0.3 : 1 }}
                     >▲</button>
                     <button
                       onClick={() => moveSection(section.id, 'down')}
                       disabled={idx === sections.length - 1}
-                      style={{ background: 'transparent', border: `1px solid ${COLORS.border}`, color: COLORS.dim, width: 24, height: 24, borderRadius: 4, cursor: idx === sections.length - 1 ? 'not-allowed' : 'pointer', fontSize: 10, opacity: idx === sections.length - 1 ? 0.3 : 1 }}
+                      style={{ background: 'transparent', border: `1px solid ${'var(--border)'}`, color: 'var(--dim)', width: 24, height: 24, borderRadius: 4, cursor: idx === sections.length - 1 ? 'not-allowed' : 'pointer', fontSize: 10, opacity: idx === sections.length - 1 ? 0.3 : 1 }}
                     >▼</button>
                   </div>
 
                   {/* Section Type Badge */}
                   <div style={{
                     fontSize: 10, padding: '4px 10px', borderRadius: 4,
-                    background: 'rgba(232,0,13,0.1)', color: COLORS.red,
+                    background: 'rgba(232,0,13,0.1)', color: 'var(--red)',
                     letterSpacing: '0.08em', whiteSpace: 'nowrap',
                   }}>
                     {section.section_type.toUpperCase()}
@@ -225,10 +223,10 @@ export default function AdminHomepage() {
                       onChange={e => updateSectionTitle(section.id, 'title', e.target.value)}
                       placeholder="Bölüm başlığı..."
                       style={{
-                        background: 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${COLORS.border}`,
+                        background: 'var(--subtle-bg)',
+                        border: `1px solid ${'var(--border)'}`,
                         borderRadius: 6, padding: '8px 12px',
-                        color: COLORS.white, fontSize: 13, outline: 'none',
+                        color: 'var(--text)', fontSize: 13, outline: 'none',
                       }}
                     />
                     <input
@@ -236,33 +234,33 @@ export default function AdminHomepage() {
                       onChange={e => updateSectionTitle(section.id, 'subtitle', e.target.value)}
                       placeholder="Alt başlık..."
                       style={{
-                        background: 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${COLORS.border}`,
+                        background: 'var(--subtle-bg)',
+                        border: `1px solid ${'var(--border)'}`,
                         borderRadius: 6, padding: '8px 12px',
-                        color: COLORS.white, fontSize: 13, outline: 'none',
+                        color: 'var(--text)', fontSize: 13, outline: 'none',
                       }}
                     />
                   </div>
 
                   {/* Limit */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontSize: 11, color: COLORS.muted, whiteSpace: 'nowrap' }}>Limit:</span>
+                    <span style={{ fontSize: 11, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Limit:</span>
                     <input
                       type="number"
                       value={section.content_limit || 6}
                       onChange={e => updateSectionTitle(section.id, 'content_limit', parseInt(e.target.value))}
                       style={{
-                        width: 60, background: 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${COLORS.border}`, borderRadius: 6,
-                        padding: '8px 10px', color: COLORS.white, fontSize: 13, outline: 'none',
+                        width: 60, background: 'var(--subtle-bg)',
+                        border: `1px solid ${'var(--border)'}`, borderRadius: 6,
+                        padding: '8px 10px', color: 'var(--text)', fontSize: 13, outline: 'none',
                       }}
                     />
                   </div>
 
                   {/* Toggle */}
                   <div onClick={() => toggleSection(section)} style={{ cursor: 'pointer' }}>
-                    <div style={{ width: 40, height: 22, borderRadius: 11, background: section.is_active ? COLORS.red : 'rgba(255,255,255,0.1)', position: 'relative', transition: 'background 0.2s' }}>
-                      <div style={{ position: 'absolute', top: 3, left: section.is_active ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
+                    <div style={{ width: 40, height: 22, borderRadius: 11, background: section.is_active ? 'var(--red)' : 'rgba(255,255,255,0.1)', position: 'relative', transition: 'background 0.2s' }}>
+                      <div style={{ position: 'absolute', top: 3, left: section.is_active ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: 'var(--text)', transition: 'left 0.2s' }} />
                     </div>
                   </div>
                 </div>
@@ -282,7 +280,7 @@ export default function AdminHomepage() {
           {/* Slide List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
             {slider.length === 0 ? (
-              <div style={{ padding: 48, textAlign: 'center', color: COLORS.muted, fontSize: 13, background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8 }}>
+              <div style={{ padding: 48, textAlign: 'center', color: 'var(--muted)', fontSize: 13, background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8 }}>
                 Henüz slide eklenmemiş
               </div>
             ) : (
@@ -291,7 +289,7 @@ export default function AdminHomepage() {
                   key={slide.id}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 16,
-                    background: COLORS.card, border: `1px solid ${COLORS.border}`,
+                    background: 'var(--card)', border: `1px solid ${'var(--border)'}`,
                     borderRadius: 8, padding: 16,
                     opacity: slide.is_active ? 1 : 0.5,
                   }}
@@ -301,7 +299,7 @@ export default function AdminHomepage() {
                     {slide.image_url ? (
                       <img src={slide.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
-                      <div style={{ width: '100%', height: '100%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: COLORS.muted, fontSize: 12 }}>
+                      <div style={{ width: '100%', height: '100%', background: 'var(--input-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: 12 }}>
                         Görsel Yok
                       </div>
                     )}
@@ -313,10 +311,10 @@ export default function AdminHomepage() {
                       {slide.title || 'Başlıksız Slide'}
                     </div>
                     {slide.subtitle && (
-                      <div style={{ fontSize: 12, color: COLORS.dim }}>{slide.subtitle}</div>
+                      <div style={{ fontSize: 12, color: 'var(--dim)' }}>{slide.subtitle}</div>
                     )}
                     {slide.button_text && (
-                      <div style={{ fontSize: 11, color: COLORS.red, marginTop: 4 }}>
+                      <div style={{ fontSize: 11, color: 'var(--red)', marginTop: 4 }}>
                         Buton: {slide.button_text} → {slide.button_link}
                       </div>
                     )}
@@ -325,11 +323,11 @@ export default function AdminHomepage() {
                   {/* Actions */}
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                     <div onClick={() => toggleSlide(slide)} style={{ cursor: 'pointer' }}>
-                      <div style={{ width: 36, height: 20, borderRadius: 10, background: slide.is_active ? COLORS.red : 'rgba(255,255,255,0.1)', position: 'relative', transition: 'background 0.2s' }}>
-                        <div style={{ position: 'absolute', top: 2, left: slide.is_active ? 18 : 2, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
+                      <div style={{ width: 36, height: 20, borderRadius: 10, background: slide.is_active ? 'var(--red)' : 'rgba(255,255,255,0.1)', position: 'relative', transition: 'background 0.2s' }}>
+                        <div style={{ position: 'absolute', top: 2, left: slide.is_active ? 18 : 2, width: 16, height: 16, borderRadius: '50%', background: 'var(--text)', transition: 'left 0.2s' }} />
                       </div>
                     </div>
-                    <ActionBtn onClick={() => openSlideForm(slide)} color={COLORS.dim} title="Düzenle">✎</ActionBtn>
+                    <ActionBtn onClick={() => openSlideForm(slide)} color={'var(--dim)'} title="Düzenle">✎</ActionBtn>
                     <ActionBtn onClick={() => deleteSlide(slide.id)} color="#ef4444" title="Sil">✕</ActionBtn>
                   </div>
                 </div>
@@ -345,15 +343,15 @@ export default function AdminHomepage() {
               padding: 24,
             }}>
               <div style={{
-                background: '#141414', border: `1px solid ${COLORS.border}`,
+                background: '#141414', border: `1px solid ${'var(--border)'}`,
                 borderRadius: 12, width: '100%', maxWidth: 640,
                 maxHeight: '90vh', overflowY: 'auto',
               }}>
-                <div style={{ padding: '20px 24px', borderBottom: `1px solid ${COLORS.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ padding: '20px 24px', borderBottom: `1px solid ${'var(--border)'}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: 15, fontWeight: 700 }}>
                     {editingSlide === 'new' ? 'Yeni Slide' : 'Slide Düzenle'}
                   </span>
-                  <button onClick={() => setEditingSlide(null)} style={{ background: 'transparent', border: 'none', color: COLORS.dim, fontSize: 18, cursor: 'pointer' }}>✕</button>
+                  <button onClick={() => setEditingSlide(null)} style={{ background: 'transparent', border: 'none', color: 'var(--dim)', fontSize: 18, cursor: 'pointer' }}>✕</button>
                 </div>
 
                 <div style={{ padding: 24 }}>
@@ -365,7 +363,7 @@ export default function AdminHomepage() {
                   <Field label="Görsel URL *">
                     <input {...inp} value={slideForm.image_url || ''} onChange={e => setSlideForm(p => ({ ...p, image_url: e.target.value }))} placeholder="https://..." />
                   </Field>
-                  <label style={{ display: 'block', padding: 10, border: `1px dashed ${COLORS.border}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: COLORS.dim, marginBottom: 16 }}>
+                  <label style={{ display: 'block', padding: 10, border: `1px dashed ${'var(--border)'}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: 'var(--dim)', marginBottom: 16 }}>
                     {uploading === 'image_url' ? 'Yükleniyor...' : '📁 Görsel Yükle'}
                     <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'image_url')} style={{ display: 'none' }} />
                   </label>
@@ -399,13 +397,13 @@ export default function AdminHomepage() {
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{ fontSize: 13, color: COLORS.dim }}>Aktif</span>
-                      <div onClick={() => setSlideForm(p => ({ ...p, is_active: !p.is_active }))} style={{ width: 40, height: 22, borderRadius: 11, background: slideForm.is_active ? COLORS.red : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
-                        <div style={{ position: 'absolute', top: 3, left: slideForm.is_active ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
+                      <span style={{ fontSize: 13, color: 'var(--dim)' }}>Aktif</span>
+                      <div onClick={() => setSlideForm(p => ({ ...p, is_active: !p.is_active }))} style={{ width: 40, height: 22, borderRadius: 11, background: slideForm.is_active ? 'var(--red)' : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
+                        <div style={{ position: 'absolute', top: 3, left: slideForm.is_active ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: 'var(--text)', transition: 'left 0.2s' }} />
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: 10 }}>
-                      <button onClick={() => setEditingSlide(null)} style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: COLORS.white, padding: '10px 20px', fontSize: 12, fontWeight: 700, borderRadius: 6, cursor: 'pointer' }}>
+                      <button onClick={() => setEditingSlide(null)} style={{ background: 'var(--input-bg)', border: 'none', color: 'var(--text)', padding: '10px 20px', fontSize: 12, fontWeight: 700, borderRadius: 6, cursor: 'pointer' }}>
                         İptal
                       </button>
                       <Btn onClick={saveSlide} loading={saving}>Kaydet</Btn>
@@ -423,9 +421,9 @@ export default function AdminHomepage() {
 
 const inp = {
   style: {
-    width: '100%', background: 'rgba(255,255,255,0.04)',
-    border: `1px solid ${COLORS.border}`, borderRadius: 6,
-    padding: '10px 12px', color: COLORS.white,
+    width: '100%', background: 'var(--subtle-bg)',
+    border: `1px solid ${'var(--border)'}`, borderRadius: 6,
+    padding: '10px 12px', color: 'var(--text)',
     fontSize: 13, outline: 'none', resize: 'vertical',
   },
 };
@@ -433,7 +431,7 @@ const inp = {
 function Field({ label, children }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      {label && <label style={{ display: 'block', fontSize: 11, color: COLORS.muted, letterSpacing: '0.08em', marginBottom: 6 }}>{label.toUpperCase()}</label>}
+      {label && <label style={{ display: 'block', fontSize: 11, color: 'var(--muted)', letterSpacing: '0.08em', marginBottom: 6 }}>{label.toUpperCase()}</label>}
       {children}
     </div>
   );
@@ -441,7 +439,7 @@ function Field({ label, children }) {
 
 function Btn({ children, onClick, loading }) {
   return (
-    <button onClick={onClick} disabled={loading} style={{ background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+    <button onClick={onClick} disabled={loading} style={{ background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
       {loading ? '...' : children}
     </button>
   );
@@ -449,9 +447,9 @@ function Btn({ children, onClick, loading }) {
 
 function ActionBtn({ children, onClick, color, title }) {
   return (
-    <button onClick={onClick} title={title} style={{ background: 'transparent', border: `1px solid ${COLORS.border}`, color, width: 28, height: 28, borderRadius: 4, cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
+    <button onClick={onClick} title={title} style={{ background: 'transparent', border: `1px solid ${'var(--border)'}`, color, width: 28, height: 28, borderRadius: 4, cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
       onMouseEnter={(e) => e.currentTarget.style.borderColor = color}
-      onMouseLeave={(e) => e.currentTarget.style.borderColor = COLORS.border}
+      onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
     >
       {children}
     </button>

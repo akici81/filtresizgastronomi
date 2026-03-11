@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../hooks/useAuth';
-import { COLORS } from '../lib/constants';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
@@ -96,10 +95,10 @@ export default function RegisterPage() {
           <div style={styles.card}>
             <div style={{ fontSize: 56, marginBottom: 20 }}>📬</div>
             <h1 style={styles.title}>E-postanı Doğrula</h1>
-            <p style={{ margin: '0 0 12px', color: COLORS.dim, fontSize: 14, lineHeight: 1.7 }}>
-              <strong style={{ color: COLORS.white }}>{formData.email}</strong> adresine bir doğrulama bağlantısı gönderdik.
+            <p style={{ margin: '0 0 12px', color: 'var(--dim)', fontSize: 14, lineHeight: 1.7 }}>
+              <strong style={{ color: 'var(--text)' }}>{formData.email}</strong> adresine bir doğrulama bağlantısı gönderdik.
             </p>
-            <p style={{ margin: '0 0 32px', color: COLORS.muted, fontSize: 13, lineHeight: 1.6 }}>
+            <p style={{ margin: '0 0 32px', color: 'var(--muted)', fontSize: 13, lineHeight: 1.6 }}>
               Bağlantıya tıkladıktan sonra hesabın aktif olacak. Spam klasörünü de kontrol etmeyi unutma.
             </p>
             <Button onClick={() => router.push('/login')}>GİRİŞ SAYFASINA GİT</Button>
@@ -117,7 +116,7 @@ export default function RegisterPage() {
           <div style={{ ...styles.card, textAlign: 'center' }}>
             <div style={{ fontSize: 56, marginBottom: 20 }}>🎉</div>
             <h1 style={styles.title}>Hoş Geldin!</h1>
-            <p style={{ color: COLORS.dim, fontSize: 14 }}>Hesabın oluşturuldu, yönlendiriliyorsun...</p>
+            <p style={{ color: 'var(--dim)', fontSize: 14 }}>Hesabın oluşturuldu, yönlendiriliyorsun...</p>
           </div>
         </div>
       </Layout>
@@ -131,7 +130,7 @@ export default function RegisterPage() {
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <h1 style={styles.title}>Kayıt Ol</h1>
-            <p style={{ margin: 0, color: COLORS.dim, fontSize: 14 }}>
+            <p style={{ margin: 0, color: 'var(--dim)', fontSize: 14 }}>
               Gastronomi topluluğuna katıl
             </p>
           </div>
@@ -190,11 +189,11 @@ export default function RegisterPage() {
               required
             />
 
-            <p style={{ fontSize: 12, color: COLORS.muted, lineHeight: 1.6, marginBottom: 24 }}>
+            <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.6, marginBottom: 24 }}>
               Kayıt olarak{' '}
-              <span onClick={() => router.push('/terms')} style={{ color: COLORS.red, cursor: 'pointer' }}>Kullanım Şartları</span>
+              <span onClick={() => router.push('/terms')} style={{ color: 'var(--red)', cursor: 'pointer' }}>Kullanım Şartları</span>
               {'\'nı ve '}
-              <span onClick={() => router.push('/privacy')} style={{ color: COLORS.red, cursor: 'pointer' }}>Gizlilik Politikası</span>
+              <span onClick={() => router.push('/privacy')} style={{ color: 'var(--red)', cursor: 'pointer' }}>Gizlilik Politikası</span>
               {'\'nı kabul etmiş olursunuz.'}
             </p>
 
@@ -210,14 +209,14 @@ export default function RegisterPage() {
 
           {/* Divider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '28px 0' }}>
-            <div style={{ flex: 1, height: 1, background: COLORS.border }} />
-            <span style={{ fontSize: 12, color: COLORS.muted }}>veya</span>
-            <div style={{ flex: 1, height: 1, background: COLORS.border }} />
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+            <span style={{ fontSize: 12, color: 'var(--muted)' }}>veya</span>
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           </div>
 
           <div style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: 14, color: COLORS.dim }}>Zaten hesabın var mı? </span>
-            <span onClick={() => router.push('/login')} style={{ fontSize: 14, color: COLORS.red, cursor: 'pointer', fontWeight: 600 }}>
+            <span style={{ fontSize: 14, color: 'var(--dim)' }}>Zaten hesabın var mı? </span>
+            <span onClick={() => router.push('/login')} style={{ fontSize: 14, color: 'var(--red)', cursor: 'pointer', fontWeight: 600 }}>
               Giriş Yap
             </span>
           </div>
@@ -238,8 +237,8 @@ const styles = {
   card: {
     width: '100%',
     maxWidth: 440,
-    background: COLORS.card,
-    border: `1px solid ${COLORS.border}`,
+    background: 'var(--card)',
+    border: `1px solid ${'var(--border)'}`,
     borderRadius: 12,
     padding: 40,
   },

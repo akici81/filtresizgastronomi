@@ -66,13 +66,13 @@ export default function UserDetail() {
 
   if (loading) return (
     <AdminLayout title="Kullanıcı">
-      <div style={{ textAlign: 'center', padding: 60, color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: 60, color: 'var(--muted)' }}>Yükleniyor...</div>
     </AdminLayout>
   );
 
   if (!user) return (
     <AdminLayout title="Kullanıcı">
-      <div style={{ textAlign: 'center', padding: 60, color: COLORS.muted }}>Kullanıcı bulunamadı.</div>
+      <div style={{ textAlign: 'center', padding: 60, color: 'var(--muted)' }}>Kullanıcı bulunamadı.</div>
     </AdminLayout>
   );
 
@@ -81,7 +81,7 @@ export default function UserDetail() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <button
           onClick={() => router.push('/admin/users')}
-          style={{ background: 'transparent', border: 'none', color: COLORS.dim, fontSize: 13, cursor: 'pointer' }}
+          style={{ background: 'transparent', border: 'none', color: 'var(--dim)', fontSize: 13, cursor: 'pointer' }}
         >
           ← Geri
         </button>
@@ -132,7 +132,7 @@ export default function UserDetail() {
               ) : (
                 <div style={{
                   width: 80, height: 80, borderRadius: '50%',
-                  background: COLORS.red, display: 'flex',
+                  background: 'var(--red)', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
                   fontSize: 28, fontWeight: 700, margin: '0 auto',
                 }}>
@@ -142,7 +142,7 @@ export default function UserDetail() {
               <div style={{ fontSize: 14, fontWeight: 600, marginTop: 12 }}>
                 {user.full_name || user.username}
               </div>
-              <div style={{ fontSize: 12, color: COLORS.muted }}>{user.email}</div>
+              <div style={{ fontSize: 12, color: 'var(--muted)' }}>{user.email}</div>
             </div>
           </Card>
 
@@ -169,13 +169,13 @@ export default function UserDetail() {
             ].map(stat => (
               <div key={stat.label} style={{
                 display: 'flex', justifyContent: 'space-between',
-                padding: '10px 0', borderBottom: `1px solid ${COLORS.border}`,
+                padding: '10px 0', borderBottom: `1px solid ${'var(--border)'}`,
               }}>
-                <span style={{ fontSize: 13, color: COLORS.dim }}>{stat.label}</span>
+                <span style={{ fontSize: 13, color: 'var(--dim)' }}>{stat.label}</span>
                 <span style={{ fontSize: 13, fontWeight: 700 }}>{stat.value}</span>
               </div>
             ))}
-            <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 12 }}>
+            <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 12 }}>
               Kayıt: {new Date(user.created_at).toLocaleDateString('tr-TR')}
             </div>
           </Card>
@@ -187,17 +187,17 @@ export default function UserDetail() {
 
 const inp = {
   style: {
-    width: '100%', background: 'rgba(255,255,255,0.04)',
-    border: `1px solid ${COLORS.border}`, borderRadius: 6,
-    padding: '10px 12px', color: COLORS.white,
+    width: '100%', background: 'var(--subtle-bg)',
+    border: `1px solid ${'var(--border)'}`, borderRadius: 6,
+    padding: '10px 12px', color: 'var(--text)',
     fontSize: 13, outline: 'none', resize: 'vertical',
   },
 };
 
 function Card({ title, children }) {
   return (
-    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden' }}>
-      <div style={{ padding: '14px 20px', borderBottom: `1px solid ${COLORS.border}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: COLORS.dim }}>
+    <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ padding: '14px 20px', borderBottom: `1px solid ${'var(--border)'}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--dim)' }}>
         {title.toUpperCase()}
       </div>
       <div style={{ padding: 20 }}>{children}</div>
@@ -208,7 +208,7 @@ function Card({ title, children }) {
 function Field({ label, children }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <label style={{ display: 'block', fontSize: 11, color: COLORS.muted, letterSpacing: '0.08em', marginBottom: 6 }}>
+      <label style={{ display: 'block', fontSize: 11, color: 'var(--muted)', letterSpacing: '0.08em', marginBottom: 6 }}>
         {label.toUpperCase()}
       </label>
       {children}
@@ -219,9 +219,9 @@ function Field({ label, children }) {
 function Toggle({ label, checked, onChange }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-      <span style={{ fontSize: 13, color: COLORS.dim }}>{label}</span>
-      <div onClick={() => onChange(!checked)} style={{ width: 40, height: 22, borderRadius: 11, background: checked ? COLORS.red : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
-        <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
+      <span style={{ fontSize: 13, color: 'var(--dim)' }}>{label}</span>
+      <div onClick={() => onChange(!checked)} style={{ width: 40, height: 22, borderRadius: 11, background: checked ? 'var(--red)' : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
+        <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: 'var(--text)', transition: 'left 0.2s' }} />
       </div>
     </div>
   );
@@ -229,7 +229,7 @@ function Toggle({ label, checked, onChange }) {
 
 function Btn({ children, onClick, loading }) {
   return (
-    <button onClick={onClick} disabled={loading} style={{ background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+    <button onClick={onClick} disabled={loading} style={{ background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
       {loading ? '...' : children}
     </button>
   );

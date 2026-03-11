@@ -1,5 +1,3 @@
-import { COLORS } from '../../lib/constants';
-
 export default function Input({
   label,
   error,
@@ -13,7 +11,7 @@ export default function Input({
           display: 'block',
           fontSize: 11,
           letterSpacing: '0.1em',
-          color: COLORS.muted,
+          color: 'var(--muted)',
           marginBottom: 8,
         }}>
           {label.toUpperCase()}
@@ -23,20 +21,20 @@ export default function Input({
         type={type}
         style={{
           width: '100%',
-          background: 'rgba(255,255,255,0.04)',
-          border: `1px solid ${error ? '#ef4444' : COLORS.border}`,
+          background: 'var(--subtle-bg)',
+          border: `1px solid ${error ? '#ef4444' : 'var(--border)'}`,
           borderRadius: 4,
           padding: '12px 14px',
-          color: COLORS.white,
+          color: 'var(--text)',
           fontSize: 14,
           outline: 'none',
           transition: 'border-color 0.2s',
         }}
         onFocus={(e) => {
-          e.target.style.borderColor = COLORS.red;
+          e.target.style.borderColor = 'var(--red)';
         }}
         onBlur={(e) => {
-          e.target.style.borderColor = error ? '#ef4444' : COLORS.border;
+          e.target.style.borderColor = error ? '#ef4444' : var(--border);
         }}
         {...props}
       />
@@ -57,7 +55,7 @@ export function Textarea({ label, error, rows = 4, ...props }) {
           display: 'block',
           fontSize: 11,
           letterSpacing: '0.1em',
-          color: COLORS.muted,
+          color: 'var(--muted)',
           marginBottom: 8,
         }}>
           {label.toUpperCase()}
@@ -67,21 +65,21 @@ export function Textarea({ label, error, rows = 4, ...props }) {
         rows={rows}
         style={{
           width: '100%',
-          background: 'rgba(255,255,255,0.04)',
-          border: `1px solid ${error ? '#ef4444' : COLORS.border}`,
+          background: 'var(--subtle-bg)',
+          border: `1px solid ${error ? '#ef4444' : 'var(--border)'}`,
           borderRadius: 4,
           padding: '12px 14px',
-          color: COLORS.white,
+          color: 'var(--text)',
           fontSize: 14,
           outline: 'none',
           resize: 'vertical',
           transition: 'border-color 0.2s',
         }}
         onFocus={(e) => {
-          e.target.style.borderColor = COLORS.red;
+          e.target.style.borderColor = 'var(--red)';
         }}
         onBlur={(e) => {
-          e.target.style.borderColor = error ? '#ef4444' : COLORS.border;
+          e.target.style.borderColor = error ? '#ef4444' : var(--border);
         }}
         {...props}
       />
@@ -102,7 +100,7 @@ export function Select({ label, error, options = [], ...props }) {
           display: 'block',
           fontSize: 11,
           letterSpacing: '0.1em',
-          color: COLORS.muted,
+          color: 'var(--muted)',
           marginBottom: 8,
         }}>
           {label.toUpperCase()}
@@ -111,11 +109,11 @@ export function Select({ label, error, options = [], ...props }) {
       <select
         style={{
           width: '100%',
-          background: 'rgba(255,255,255,0.04)',
-          border: `1px solid ${error ? '#ef4444' : COLORS.border}`,
+          background: 'var(--subtle-bg)',
+          border: `1px solid ${error ? '#ef4444' : 'var(--border)'}`,
           borderRadius: 4,
           padding: '12px 14px',
-          color: COLORS.white,
+          color: 'var(--text)',
           fontSize: 14,
           outline: 'none',
           cursor: 'pointer',

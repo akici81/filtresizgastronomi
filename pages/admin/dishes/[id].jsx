@@ -121,7 +121,7 @@ export default function DishForm() {
 
   if (loading) return (
     <AdminLayout title="Yemek">
-      <div style={{ textAlign: 'center', padding: 60, color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: 60, color: 'var(--muted)' }}>Yükleniyor...</div>
     </AdminLayout>
   );
 
@@ -131,7 +131,7 @@ export default function DishForm() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <button
           onClick={() => router.push('/admin/dishes')}
-          style={{ background: 'transparent', border: 'none', color: COLORS.dim, fontSize: 13, cursor: 'pointer' }}
+          style={{ background: 'transparent', border: 'none', color: 'var(--dim)', fontSize: 13, cursor: 'pointer' }}
         >
           ← Geri
         </button>
@@ -213,7 +213,7 @@ export default function DishForm() {
                 />
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: '#f59e0b' }}>Tescilli Coğrafi İşaret</div>
-                  <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>TürkPatent tarafından tescillenmiş ürün</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>TürkPatent tarafından tescillenmiş ürün</div>
                 </div>
               </label>
             </div>
@@ -253,16 +253,16 @@ export default function DishForm() {
             <Field label="Görsel URL">
               <input {...inputProps} value={form.image_url} onChange={e => handleChange('image_url', e.target.value)} placeholder="https://..." />
             </Field>
-            <div style={{ textAlign: 'center', margin: '8px 0', color: COLORS.muted, fontSize: 12 }}>veya</div>
+            <div style={{ textAlign: 'center', margin: '8px 0', color: 'var(--muted)', fontSize: 12 }}>veya</div>
             <label style={{
               display: 'block',
               padding: '10px',
-              border: `1px dashed ${COLORS.border}`,
+              border: `1px dashed ${'var(--border)'}`,
               borderRadius: 6,
               textAlign: 'center',
               cursor: 'pointer',
               fontSize: 12,
-              color: COLORS.dim,
+              color: 'var(--dim)',
             }}>
               {uploading ? 'Yükleniyor...' : '📁 Dosya Seç'}
               <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
@@ -322,11 +322,11 @@ export default function DishForm() {
 const inputProps = {
   style: {
     width: '100%',
-    background: 'rgba(255,255,255,0.04)',
-    border: `1px solid ${COLORS.border}`,
+    background: 'var(--subtle-bg)',
+    border: `1px solid ${'var(--border)'}`,
     borderRadius: 6,
     padding: '10px 12px',
-    color: COLORS.white,
+    color: 'var(--text)',
     fontSize: 13,
     outline: 'none',
     resize: 'vertical',
@@ -335,8 +335,8 @@ const inputProps = {
 
 function Card({ title, children }) {
   return (
-    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden' }}>
-      <div style={{ padding: '14px 20px', borderBottom: `1px solid ${COLORS.border}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: COLORS.dim }}>
+    <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ padding: '14px 20px', borderBottom: `1px solid ${'var(--border)'}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--dim)' }}>
         {title.toUpperCase()}
       </div>
       <div style={{ padding: 20 }}>{children}</div>
@@ -347,7 +347,7 @@ function Card({ title, children }) {
 function Field({ label, children }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <label style={{ display: 'block', fontSize: 11, color: COLORS.muted, letterSpacing: '0.08em', marginBottom: 6 }}>
+      <label style={{ display: 'block', fontSize: 11, color: 'var(--muted)', letterSpacing: '0.08em', marginBottom: 6 }}>
         {label.toUpperCase()}
       </label>
       {children}
@@ -358,12 +358,12 @@ function Field({ label, children }) {
 function Toggle({ label, checked, onChange }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-      <span style={{ fontSize: 13, color: COLORS.dim }}>{label}</span>
+      <span style={{ fontSize: 13, color: 'var(--dim)' }}>{label}</span>
       <div
         onClick={() => onChange(!checked)}
         style={{
           width: 40, height: 22, borderRadius: 11,
-          background: checked ? COLORS.red : 'rgba(255,255,255,0.1)',
+          background: checked ? 'var(--red)' : 'rgba(255,255,255,0.1)',
           cursor: 'pointer', position: 'relative', transition: 'background 0.2s',
         }}
       >
@@ -371,7 +371,7 @@ function Toggle({ label, checked, onChange }) {
           position: 'absolute', top: 3,
           left: checked ? 21 : 3,
           width: 16, height: 16,
-          borderRadius: '50%', background: COLORS.white,
+          borderRadius: '50%', background: 'var(--text)',
           transition: 'left 0.2s',
         }} />
       </div>
@@ -385,9 +385,9 @@ function Btn({ children, onClick, loading, variant = 'primary' }) {
       onClick={onClick}
       disabled={loading}
       style={{
-        background: variant === 'primary' ? COLORS.red : 'rgba(255,255,255,0.08)',
+        background: variant === 'primary' ? 'var(--red)' : 'rgba(255,255,255,0.08)',
         border: 'none',
-        color: COLORS.white,
+        color: 'var(--text)',
         padding: '10px 20px',
         fontSize: 12,
         fontWeight: 700,

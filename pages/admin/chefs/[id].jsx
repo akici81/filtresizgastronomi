@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AdminLayout from '../../../components/admin/AdminLayout';
 import { supabase } from '../../../lib/supabase';
-import { COLORS } from '../../../lib/constants';
-
 const EMPTY_FORM = {
   name: '', slug: '', title: '', city_id: '',
   bio: '', short_bio: '', education: '',
@@ -160,7 +158,7 @@ export default function ChefForm() {
 
   if (loading) return (
     <AdminLayout title="Şef">
-      <div style={{ textAlign: 'center', padding: 60, color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: 60, color: 'var(--muted)' }}>Yükleniyor...</div>
     </AdminLayout>
   );
 
@@ -168,7 +166,7 @@ export default function ChefForm() {
     <AdminLayout title={isNew ? 'Yeni Şef' : 'Şefi Düzenle'}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <button onClick={() => router.push('/admin/chefs')}
-          style={{ background: 'transparent', border: 'none', color: COLORS.dim, fontSize: 13, cursor: 'pointer' }}>
+          style={{ background: 'transparent', border: 'none', color: 'var(--dim)', fontSize: 13, cursor: 'pointer' }}>
           ← Geri
         </button>
         <div style={{ display: 'flex', gap: 10 }}>
@@ -227,9 +225,9 @@ export default function ChefForm() {
           {/* Kariyer Geçmişi */}
           <Card title="Kariyer Geçmişi">
             {careerHistory.map((c, i) => (
-              <div key={i} style={{ marginBottom: 12, padding: 12, background: 'rgba(255,255,255,0.02)', borderRadius: 6, border: `1px solid ${COLORS.border}` }}>
+              <div key={i} style={{ marginBottom: 12, padding: 12, background: 'var(--subtle-bg)', borderRadius: 6, border: `1px solid ${'var(--border)'}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, color: COLORS.muted }}>POZISYON {i + 1}</span>
+                  <span style={{ fontSize: 11, color: 'var(--muted)' }}>POZISYON {i + 1}</span>
                   <button onClick={() => removeCareer(i)}
                     style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: 12 }}>Sil</button>
                 </div>
@@ -241,7 +239,7 @@ export default function ChefForm() {
               </div>
             ))}
             <button onClick={addCareer}
-              style={{ background: 'transparent', border: `1px dashed ${COLORS.border}`, color: COLORS.dim, padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontSize: 12, width: '100%' }}>
+              style={{ background: 'transparent', border: `1px dashed ${'var(--border)'}`, color: 'var(--dim)', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontSize: 12, width: '100%' }}>
               + Pozisyon Ekle
             </button>
           </Card>
@@ -249,9 +247,9 @@ export default function ChefForm() {
           {/* Ödüller */}
           <Card title="Ödüller & Başarılar">
             {awards.map((a, i) => (
-              <div key={i} style={{ marginBottom: 12, padding: 12, background: 'rgba(255,255,255,0.02)', borderRadius: 6, border: `1px solid ${COLORS.border}` }}>
+              <div key={i} style={{ marginBottom: 12, padding: 12, background: 'var(--subtle-bg)', borderRadius: 6, border: `1px solid ${'var(--border)'}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, color: COLORS.muted }}>ÖDÜL {i + 1}</span>
+                  <span style={{ fontSize: 11, color: 'var(--muted)' }}>ÖDÜL {i + 1}</span>
                   <button onClick={() => removeAward(i)}
                     style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: 12 }}>Sil</button>
                 </div>
@@ -263,7 +261,7 @@ export default function ChefForm() {
               </div>
             ))}
             <button onClick={addAward}
-              style={{ background: 'transparent', border: `1px dashed ${COLORS.border}`, color: COLORS.dim, padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontSize: 12, width: '100%' }}>
+              style={{ background: 'transparent', border: `1px dashed ${'var(--border)'}`, color: 'var(--dim)', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontSize: 12, width: '100%' }}>
               + Ödül Ekle
             </button>
           </Card>
@@ -310,7 +308,7 @@ export default function ChefForm() {
                 ))}
               </div>
             )}
-            <label style={{ display: 'block', padding: '12px', border: `1px dashed ${COLORS.border}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: COLORS.dim }}>
+            <label style={{ display: 'block', padding: '12px', border: `1px dashed ${'var(--border)'}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: 'var(--dim)' }}>
               {uploading === 'gallery' ? 'Yükleniyor...' : '📁 Galeri Görseli Ekle (çoklu seçim)'}
               <input type="file" accept="image/*" multiple onChange={handleGalleryUpload} style={{ display: 'none' }} />
             </label>
@@ -368,15 +366,15 @@ export default function ChefForm() {
 }
 
 const inp = {
-  width: '100%', background: 'rgba(255,255,255,0.04)',
-  border: `1px solid ${COLORS.border}`, borderRadius: 6,
-  padding: '10px 12px', color: COLORS.white, fontSize: 13,
+  width: '100%', background: 'var(--subtle-bg)',
+  border: `1px solid ${'var(--border)'}`, borderRadius: 6,
+  padding: '10px 12px', color: 'var(--text)', fontSize: 13,
   outline: 'none', resize: 'vertical', boxSizing: 'border-box',
 };
 
 function UploadBtn({ uploading, onChange }) {
   return (
-    <label style={{ display: 'block', padding: '8px', border: `1px dashed ${COLORS.border}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: COLORS.dim, marginTop: 6 }}>
+    <label style={{ display: 'block', padding: '8px', border: `1px dashed ${'var(--border)'}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: 'var(--dim)', marginTop: 6 }}>
       {uploading ? 'Yükleniyor...' : '📁 Dosya Seç'}
       <input type="file" accept="image/*" onChange={onChange} style={{ display: 'none' }} />
     </label>
@@ -385,8 +383,8 @@ function UploadBtn({ uploading, onChange }) {
 
 function Card({ title, children }) {
   return (
-    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden' }}>
-      <div style={{ padding: '14px 20px', borderBottom: `1px solid ${COLORS.border}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: COLORS.dim }}>
+    <div style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ padding: '14px 20px', borderBottom: `1px solid ${'var(--border)'}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--dim)' }}>
         {title.toUpperCase()}
       </div>
       <div style={{ padding: 20 }}>{children}</div>
@@ -397,7 +395,7 @@ function Card({ title, children }) {
 function Field({ label, children }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <label style={{ display: 'block', fontSize: 11, color: COLORS.muted, letterSpacing: '0.08em', marginBottom: 6 }}>
+      <label style={{ display: 'block', fontSize: 11, color: 'var(--muted)', letterSpacing: '0.08em', marginBottom: 6 }}>
         {label.toUpperCase()}
       </label>
       {children}
@@ -408,10 +406,10 @@ function Field({ label, children }) {
 function Toggle({ label, checked, onChange }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-      <span style={{ fontSize: 13, color: COLORS.dim }}>{label}</span>
+      <span style={{ fontSize: 13, color: 'var(--dim)' }}>{label}</span>
       <div onClick={() => onChange(!checked)}
-        style={{ width: 40, height: 22, borderRadius: 11, background: checked ? COLORS.red : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
-        <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
+        style={{ width: 40, height: 22, borderRadius: 11, background: checked ? 'var(--red)' : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
+        <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: 'var(--text)', transition: 'left 0.2s' }} />
       </div>
     </div>
   );
@@ -420,7 +418,7 @@ function Toggle({ label, checked, onChange }) {
 function Btn({ children, onClick, loading, variant = 'primary' }) {
   return (
     <button onClick={onClick} disabled={loading}
-      style={{ background: variant === 'primary' ? COLORS.red : 'rgba(255,255,255,0.08)', border: 'none', color: COLORS.white, padding: '10px 20px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+      style={{ background: variant === 'primary' ? 'var(--red)' : 'rgba(255,255,255,0.08)', border: 'none', color: 'var(--text)', padding: '10px 20px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
       {loading ? '...' : children}
     </button>
   );

@@ -2,7 +2,6 @@ console.log('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/constants';
 import Layout from '../components/layout/Layout';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 
@@ -61,7 +60,7 @@ export default function HomePage() {
         <div style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)',
           backgroundSize: '60px 60px',
           pointerEvents: 'none',
         }} />
@@ -70,7 +69,7 @@ export default function HomePage() {
           <div style={{ 
             fontSize: 10, 
             letterSpacing: '0.35em', 
-            color: COLORS.red, 
+            color: 'var(--red)', 
             marginBottom: 24 
           }}>
             {settings.site_tagline || "TÜRKİYE'NİN GASTRONOMİ HAFIZASI"}
@@ -85,14 +84,14 @@ export default function HomePage() {
             lineHeight: 0.95,
           }}>
             {settings.hero_title?.split(' ')[0] || 'Filtresiz'}<br />
-            <span style={{ color: COLORS.red }}>
+            <span style={{ color: 'var(--red)' }}>
               {settings.hero_title?.split(' ')[1] || 'Gastronomi'}
             </span>
           </h1>
 
           <p style={{
             fontSize: 16,
-            color: COLORS.dim,
+            color: 'var(--dim)',
             marginBottom: 48,
             lineHeight: 1.75,
             maxWidth: 480,
@@ -120,7 +119,7 @@ export default function HomePage() {
                 <div style={{ 
                   fontSize: 36, 
                   fontWeight: 900, 
-                  color: COLORS.white,
+                  color: 'var(--text)',
                   fontFamily: "'Georgia', serif",
                 }}>
                   {num}
@@ -128,7 +127,7 @@ export default function HomePage() {
                 <div style={{ 
                   fontSize: 9, 
                   letterSpacing: '0.2em', 
-                  color: COLORS.dim, 
+                  color: 'var(--dim)', 
                   marginTop: 6 
                 }}>
                   {label.toUpperCase()}
@@ -148,7 +147,7 @@ export default function HomePage() {
           flexDirection: 'column',
           alignItems: 'center',
           gap: 10,
-          color: COLORS.muted,
+          color: 'var(--muted)',
           fontSize: 9,
           letterSpacing: '0.2em',
         }}>
@@ -156,7 +155,7 @@ export default function HomePage() {
           <div style={{ 
             width: 1, 
             height: 40, 
-            background: `linear-gradient(${COLORS.red}, transparent)` 
+            background: `linear-gradient(${'var(--red)'}, transparent)` 
           }} />
         </div>
       </section>
@@ -193,9 +192,9 @@ export default function HomePage() {
       {/* CITIES */}
       <section style={{
         padding: '96px 48px',
-        background: 'rgba(255,255,255,0.012)',
-        borderTop: `1px solid ${COLORS.border}`,
-        borderBottom: `1px solid ${COLORS.border}`,
+        background: 'var(--section-bg)',
+        borderTop: `1px solid ${'var(--border)'}`,
+        borderBottom: `1px solid ${'var(--border)'}`,
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <SectionHeader 
@@ -258,7 +257,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <div style={{ 
             fontSize: 10, 
-            color: COLORS.red, 
+            color: 'var(--red)', 
             letterSpacing: '0.25em', 
             marginBottom: 16 
           }}>
@@ -275,7 +274,7 @@ export default function HomePage() {
           </h2>
           <p style={{
             fontSize: 16,
-            color: COLORS.dim,
+            color: 'var(--dim)',
             lineHeight: 1.75,
             marginBottom: 40,
           }}>
@@ -285,9 +284,9 @@ export default function HomePage() {
           <button
             onClick={() => router.push('/register')}
             style={{
-              background: COLORS.red,
+              background: 'var(--red)',
               border: 'none',
-              color: COLORS.white,
+              color: 'var(--text)',
               padding: '16px 40px',
               fontSize: 13,
               letterSpacing: '0.12em',
@@ -296,7 +295,7 @@ export default function HomePage() {
               fontWeight: 800,
             }}
             onMouseEnter={(e) => e.target.style.background = '#c8000b'}
-            onMouseLeave={(e) => e.target.style.background = COLORS.red}
+            onMouseLeave={(e) => e.target.style.background = 'var(--red)'}
           >
             ÜYE OL — ÜCRETSİZ
           </button>
@@ -328,13 +327,13 @@ function SearchBox() {
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        background: 'rgba(255,255,255,0.06)',
+        background: 'var(--block-bg)',
         border: '1px solid rgba(255,255,255,0.12)',
         borderRadius: 6,
         overflow: 'hidden',
         width: '100%',
       }}>
-        <span style={{ padding: '0 16px', color: COLORS.dim }}>🔍</span>
+        <span style={{ padding: '0 16px', color: 'var(--dim)' }}>🔍</span>
         <input
           type="text"
           value={query}
@@ -345,7 +344,7 @@ function SearchBox() {
             background: 'transparent',
             border: 'none',
             padding: '16px 0',
-            color: COLORS.white,
+            color: 'var(--text)',
             fontSize: 15,
             outline: 'none',
           }}
@@ -353,9 +352,9 @@ function SearchBox() {
         <button
           type="submit"
           style={{
-            background: COLORS.red,
+            background: 'var(--red)',
             border: 'none',
-            color: COLORS.white,
+            color: 'var(--text)',
             padding: '16px 24px',
             fontSize: 12,
             letterSpacing: '0.1em',
@@ -382,7 +381,7 @@ function SectionHeader({ tag, title, linkText, linkHref, router }) {
       <div>
         <div style={{ 
           fontSize: 10, 
-          color: COLORS.red, 
+          color: 'var(--red)', 
           letterSpacing: '0.25em', 
           marginBottom: 10 
         }}>
@@ -401,12 +400,12 @@ function SectionHeader({ tag, title, linkText, linkHref, router }) {
         onClick={() => router.push(linkHref)}
         style={{
           fontSize: 12,
-          color: COLORS.dim,
+          color: 'var(--dim)',
           cursor: 'pointer',
           letterSpacing: '0.06em',
         }}
-        onMouseEnter={(e) => e.target.style.color = COLORS.red}
-        onMouseLeave={(e) => e.target.style.color = COLORS.dim}
+        onMouseEnter={(e) => e.target.style.color = 'var(--red)'}
+        onMouseLeave={(e) => e.target.style.color = 'var(--dim)'}
       >
         {linkText} →
       </div>
@@ -427,8 +426,8 @@ function DishCard({ dish, onClick }) {
         cursor: 'pointer',
         borderRadius: 8,
         overflow: 'hidden',
-        border: `1px solid ${hover ? 'rgba(232,0,13,0.3)' : COLORS.border}`,
-        background: hover ? COLORS.cardHover : COLORS.card,
+        border: `1px solid ${hover ? 'rgba(232,0,13,0.3)' : 'var(--border)'}`,
+        background: hover ? 'var(--card-hover)' : 'var(--card)',
         transition: 'all 0.25s',
       }}
     >
@@ -449,7 +448,7 @@ function DishCard({ dish, onClick }) {
           <div style={{
             width: '100%',
             height: '100%',
-            background: 'rgba(255,255,255,0.02)',
+            background: 'var(--subtle-bg)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -463,8 +462,8 @@ function DishCard({ dish, onClick }) {
             position: 'absolute',
             top: 12,
             left: 12,
-            background: COLORS.red,
-            color: COLORS.white,
+            background: 'var(--red)',
+            color: 'var(--text)',
             fontSize: 9,
             padding: '4px 10px',
             letterSpacing: '0.1em',
@@ -478,7 +477,7 @@ function DishCard({ dish, onClick }) {
         <div style={{ 
           fontSize: 15, 
           fontWeight: 700, 
-          color: COLORS.white,
+          color: 'var(--text)',
           fontFamily: "'Georgia', serif",
           marginBottom: 6,
         }}>
@@ -487,7 +486,7 @@ function DishCard({ dish, onClick }) {
         {dish.cities?.name && (
           <div style={{ 
             fontSize: 11, 
-            color: COLORS.red, 
+            color: 'var(--red)', 
             letterSpacing: '0.08em' 
           }}>
             📍 {dish.cities.name}
@@ -496,7 +495,7 @@ function DishCard({ dish, onClick }) {
         {dish.short_description && (
           <div style={{
             fontSize: 12,
-            color: COLORS.dim,
+            color: 'var(--dim)',
             marginTop: 8,
             lineHeight: 1.5,
             display: '-webkit-box',
@@ -527,7 +526,7 @@ function CityCard({ city, onClick }) {
         height: 160,
         borderRadius: 8,
         overflow: 'hidden',
-        border: `1px solid ${hover ? 'rgba(232,0,13,0.3)' : COLORS.border}`,
+        border: `1px solid ${hover ? 'rgba(232,0,13,0.3)' : 'var(--border)'}`,
         transition: 'all 0.25s',
       }}
     >
@@ -566,7 +565,7 @@ function CityCard({ city, onClick }) {
         <div style={{
           fontSize: 16,
           fontWeight: 800,
-          color: COLORS.white,
+          color: 'var(--text)',
           fontFamily: "'Georgia', serif",
         }}>
           {city.name}
@@ -574,7 +573,7 @@ function CityCard({ city, onClick }) {
         {city.region && (
           <div style={{
             fontSize: 10,
-            color: COLORS.red,
+            color: 'var(--red)',
             letterSpacing: '0.1em',
             marginTop: 4,
           }}>
@@ -600,8 +599,8 @@ function RestaurantCard({ restaurant, onClick }) {
         gap: 16,
         padding: 16,
         borderRadius: 8,
-        background: hover ? COLORS.cardHover : COLORS.card,
-        border: `1px solid ${hover ? 'rgba(232,0,13,0.25)' : COLORS.border}`,
+        background: hover ? 'var(--card-hover)' : 'var(--card)',
+        border: `1px solid ${hover ? 'rgba(232,0,13,0.25)' : 'var(--border)'}`,
         cursor: 'pointer',
         transition: 'all 0.2s',
       }}
@@ -623,7 +622,7 @@ function RestaurantCard({ restaurant, onClick }) {
           <div style={{
             width: '100%',
             height: '100%',
-            background: 'rgba(255,255,255,0.04)',
+            background: 'var(--subtle-bg)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -644,7 +643,7 @@ function RestaurantCard({ restaurant, onClick }) {
           <div style={{
             fontSize: 15,
             fontWeight: 700,
-            color: COLORS.white,
+            color: 'var(--text)',
             fontFamily: "'Georgia', serif",
           }}>
             {restaurant.name}
@@ -663,14 +662,14 @@ function RestaurantCard({ restaurant, onClick }) {
           )}
         </div>
         {restaurant.cities?.name && (
-          <div style={{ fontSize: 11, color: COLORS.red, marginBottom: 4 }}>
+          <div style={{ fontSize: 11, color: 'var(--red)', marginBottom: 4 }}>
             📍 {restaurant.cities.name}
           </div>
         )}
         {restaurant.short_description && (
           <div style={{
             fontSize: 12,
-            color: COLORS.dim,
+            color: 'var(--dim)',
             lineHeight: 1.5,
             display: '-webkit-box',
             WebkitLineClamp: 2,
@@ -690,8 +689,8 @@ function CardSkeleton({ height = 280 }) {
   return (
     <div style={{
       height,
-      background: COLORS.card,
-      border: `1px solid ${COLORS.border}`,
+      background: 'var(--card)',
+      border: `1px solid ${'var(--border)'}`,
       borderRadius: 8,
       animation: 'pulse 1.5s infinite',
     }} />
@@ -705,7 +704,7 @@ function EmptyState({ message }) {
       gridColumn: '1 / -1',
       textAlign: 'center',
       padding: 48,
-      color: COLORS.dim,
+      color: 'var(--dim)',
     }}>
       {message}
     </div>

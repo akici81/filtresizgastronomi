@@ -3,8 +3,6 @@ import { useRouter } from 'next/router';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
-import { COLORS } from '../../lib/constants';
-
 // Tanımlı özellikler ve hangi rollere atanabileceği
 const FEATURE_DEFINITIONS = [
   {
@@ -128,7 +126,7 @@ export default function PermissionsPage() {
 
   if (loading) return (
     <AdminLayout title="Yetki Yönetimi">
-      <div style={{ textAlign: 'center', padding: 60, color: COLORS.muted }}>Yükleniyor...</div>
+      <div style={{ textAlign: 'center', padding: 60, color: 'var(--muted)' }}>Yükleniyor...</div>
     </AdminLayout>
   );
 
@@ -139,7 +137,7 @@ export default function PermissionsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
         <div>
           <h2 style={{ margin: '0 0 6px', fontSize: 20, fontWeight: 900 }}>Rol İzinleri</h2>
-          <p style={{ margin: 0, fontSize: 13, color: COLORS.muted }}>
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)' }}>
             Süper Admin her zaman tam yetkiye sahiptir. Burada diğer rollerin yetkilerini özelleştirebilirsiniz.
           </p>
         </div>
@@ -148,7 +146,7 @@ export default function PermissionsPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            style={{ background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}
+            style={{ background: 'var(--red)', border: 'none', color: 'var(--text)', padding: '10px 24px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}
           >
             {saving ? 'KAYDEDİLİYOR...' : 'KAYDET'}
           </button>
@@ -165,17 +163,17 @@ export default function PermissionsPage() {
               style={{
                 padding: '14px 16px',
                 borderRadius: 8,
-                border: `1px solid ${activeRole === roleKey ? info.color : COLORS.border}`,
-                background: activeRole === roleKey ? `${info.color}15` : COLORS.card,
+                border: `1px solid ${activeRole === roleKey ? info.color : 'var(--border)'}`,
+                background: activeRole === roleKey ? `${info.color}15` : 'var(--card)',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: info.color }} />
-                <span style={{ fontSize: 13, fontWeight: 700, color: COLORS.white }}>{info.label}</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{info.label}</span>
               </div>
-              <div style={{ fontSize: 11, color: COLORS.muted }}>{info.desc}</div>
+              <div style={{ fontSize: 11, color: 'var(--muted)' }}>{info.desc}</div>
             </div>
           ))}
 
@@ -185,7 +183,7 @@ export default function PermissionsPage() {
               <span style={{ fontSize: 12 }}>👑</span>
               <span style={{ fontSize: 13, fontWeight: 700, color: '#f59e0b' }}>Süper Admin</span>
             </div>
-            <div style={{ fontSize: 11, color: COLORS.muted }}>Her zaman tam yetki. Değiştirilemez.</div>
+            <div style={{ fontSize: 11, color: 'var(--muted)' }}>Her zaman tam yetki. Değiştirilemez.</div>
           </div>
         </div>
 
@@ -195,17 +193,17 @@ export default function PermissionsPage() {
             const groupFeatures = group.features.filter(f => f.roles.includes(activeRole));
             if (groupFeatures.length === 0) return null;
             return (
-              <div key={group.group} style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 8, overflow: 'hidden' }}>
-                <div style={{ padding: '14px 20px', borderBottom: `1px solid ${COLORS.border}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: COLORS.dim, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div key={group.group} style={{ background: 'var(--card)', border: `1px solid ${'var(--border)'}`, borderRadius: 8, overflow: 'hidden' }}>
+                <div style={{ padding: '14px 20px', borderBottom: `1px solid ${'var(--border)'}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--dim)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>{group.group.toUpperCase()}</span>
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button
                       onClick={() => groupFeatures.forEach(f => setPermissions(prev => ({ ...prev, [activeRole]: { ...prev[activeRole], [f.key]: true } })))}
-                      style={{ background: 'transparent', border: `1px solid ${COLORS.border}`, color: COLORS.dim, padding: '3px 10px', borderRadius: 4, cursor: 'pointer', fontSize: 11 }}
+                      style={{ background: 'transparent', border: `1px solid ${'var(--border)'}`, color: 'var(--dim)', padding: '3px 10px', borderRadius: 4, cursor: 'pointer', fontSize: 11 }}
                     >Tümünü Aç</button>
                     <button
                       onClick={() => groupFeatures.forEach(f => setPermissions(prev => ({ ...prev, [activeRole]: { ...prev[activeRole], [f.key]: false } })))}
-                      style={{ background: 'transparent', border: `1px solid ${COLORS.border}`, color: COLORS.dim, padding: '3px 10px', borderRadius: 4, cursor: 'pointer', fontSize: 11 }}
+                      style={{ background: 'transparent', border: `1px solid ${'var(--border)'}`, color: 'var(--dim)', padding: '3px 10px', borderRadius: 4, cursor: 'pointer', fontSize: 11 }}
                     >Tümünü Kapat</button>
                   </div>
                 </div>
@@ -213,11 +211,11 @@ export default function PermissionsPage() {
                   {groupFeatures.map(feature => (
                     <div
                       key={feature.key}
-                      style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${COLORS.border}10` }}
+                      style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${'var(--border)'}10` }}
                     >
                       <div>
-                        <div style={{ fontSize: 13, color: COLORS.white }}>{feature.label}</div>
-                        <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>{feature.key}</div>
+                        <div style={{ fontSize: 13, color: 'var(--text)' }}>{feature.label}</div>
+                        <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>{feature.key}</div>
                       </div>
                       <Toggle
                         checked={hasPermission(activeRole, feature.key)}
@@ -231,7 +229,7 @@ export default function PermissionsPage() {
           })}
 
           {currentFeatures.length === 0 && (
-            <div style={{ textAlign: 'center', padding: 40, color: COLORS.muted, background: COLORS.card, borderRadius: 8, border: `1px solid ${COLORS.border}` }}>
+            <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)', background: 'var(--card)', borderRadius: 8, border: `1px solid ${'var(--border)'}` }}>
               Bu rol için tanımlanmış özellik bulunmuyor.
             </div>
           )}
@@ -244,8 +242,8 @@ export default function PermissionsPage() {
 function Toggle({ checked, onChange }) {
   return (
     <div onClick={onChange}
-      style={{ width: 44, height: 24, borderRadius: 12, background: checked ? COLORS.red : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s', flexShrink: 0 }}>
-      <div style={{ position: 'absolute', top: 4, left: checked ? 23 : 4, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
+      style={{ width: 44, height: 24, borderRadius: 12, background: checked ? 'var(--red)' : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s', flexShrink: 0 }}>
+      <div style={{ position: 'absolute', top: 4, left: checked ? 23 : 4, width: 16, height: 16, borderRadius: '50%', background: 'var(--text)', transition: 'left 0.2s' }} />
     </div>
   );
 }
