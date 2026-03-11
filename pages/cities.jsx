@@ -421,6 +421,97 @@ export default function CitiesPage() {
                 <rect x="380" y="2" width="9" height="9" rx="2" fill="#10b981" />
                 <text x="395" y="10" fontSize="11" fill="var(--text-secondary)">Geleneksel Ürün</text>
               </g>
+
+              {/* Sağ bilgi paneli */}
+              <g transform="translate(1025, 30)">
+                {/* Panel arka plan */}
+                <rect x="0" y="0" width="200" height="480" rx="12"
+                  fill="var(--block-bg)" stroke="var(--border)" strokeWidth="1" />
+
+                {/* Başlık */}
+                <text x="100" y="30" fontSize="13" fontWeight="700" fill="var(--text)"
+                  textAnchor="middle">Coğrafi İşaret</text>
+                <text x="100" y="46" fontSize="13" fontWeight="700" fill="var(--red)"
+                  textAnchor="middle">İstatistikleri</text>
+                <line x1="16" y1="56" x2="184" y2="56" stroke="var(--border)" strokeWidth="1" />
+
+                {/* Toplam */}
+                <text x="100" y="82" fontSize="30" fontWeight="800" fill="var(--red)"
+                  textAnchor="middle">1.534</text>
+                <text x="100" y="98" fontSize="11" fill="var(--text-secondary)"
+                  textAnchor="middle">tescilli ürün</text>
+
+                <line x1="16" y1="112" x2="184" y2="112" stroke="var(--border)" strokeWidth="1" />
+
+                {/* Menşe Adı */}
+                <rect x="16" y="124" width="8" height="8" rx="2" fill="#3b82f6" />
+                <text x="32" y="133" fontSize="11" fontWeight="600" fill="var(--text)">Menşe Adı</text>
+                <text x="184" y="133" fontSize="13" fontWeight="700" fill="#3b82f6"
+                  textAnchor="end">338</text>
+                <text x="32" y="148" fontSize="10" fill="var(--text-secondary)">
+                  Tüm üretim süreçleri
+                </text>
+                <text x="32" y="160" fontSize="10" fill="var(--text-secondary)">
+                  yörede gerçekleşir
+                </text>
+
+                <line x1="16" y1="172" x2="184" y2="172" stroke="var(--border)" strokeWidth="1" />
+
+                {/* Mahreç İşareti */}
+                <rect x="16" y="184" width="8" height="8" rx="2" fill="#f59e0b" />
+                <text x="32" y="193" fontSize="11" fontWeight="600" fill="var(--text)">Mahreç İşareti</text>
+                <text x="184" y="193" fontSize="13" fontWeight="700" fill="#f59e0b"
+                  textAnchor="end">1.196</text>
+                <text x="32" y="208" fontSize="10" fill="var(--text-secondary)">
+                  En az bir üretim aşaması
+                </text>
+                <text x="32" y="220" fontSize="10" fill="var(--text-secondary)">
+                  yörede gerçekleşir
+                </text>
+
+                <line x1="16" y1="232" x2="184" y2="232" stroke="var(--border)" strokeWidth="1" />
+
+                {/* Geleneksel Ürün */}
+                <rect x="16" y="244" width="8" height="8" rx="2" fill="#10b981" />
+                <text x="32" y="253" fontSize="11" fontWeight="600" fill="var(--text)">Geleneksel Ürün</text>
+                <text x="184" y="253" fontSize="13" fontWeight="700" fill="#10b981"
+                  textAnchor="end">7</text>
+                <text x="32" y="268" fontSize="10" fill="var(--text-secondary)">
+                  Geleneksel üretim
+                </text>
+                <text x="32" y="280" fontSize="10" fill="var(--text-secondary)">
+                  yöntemiyle yapılır
+                </text>
+
+                <line x1="16" y1="292" x2="184" y2="292" stroke="var(--border)" strokeWidth="1" />
+
+                {/* Kaynak */}
+                <text x="100" y="316" fontSize="10" fill="var(--text-secondary)"
+                  textAnchor="middle">Kaynak</text>
+                <text x="100" y="332" fontSize="11" fontWeight="600" fill="var(--red)"
+                  textAnchor="middle">Türkpatent</text>
+                <text x="100" y="348" fontSize="10" fill="var(--text-secondary)"
+                  textAnchor="middle">ci.turkpatent.gov.tr</text>
+
+                <line x1="16" y1="362" x2="184" y2="362" stroke="var(--border)" strokeWidth="1" />
+
+                {/* Mühür ikonları */}
+                <image href="https://ci.turkpatent.gov.tr/uploads/images/mense_adi.png"
+                  x="20" y="374" width="46" height="46" />
+                <image href="https://ci.turkpatent.gov.tr/uploads/images/mahrec_isareti.png"
+                  x="77" y="374" width="46" height="46" />
+                <image href="https://ci.turkpatent.gov.tr/uploads/images/geleneksel_urun.png"
+                  x="134" y="374" width="46" height="46" />
+
+                <text x="43" y="432" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Menşe</text>
+                <text x="100" y="432" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Mahreç</text>
+                <text x="157" y="432" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Geleneksel</text>
+
+                <text x="100" y="460" fontSize="10" fill="var(--text-secondary)"
+                  textAnchor="middle">Türkiye'nin 81 ilinden</text>
+                <text x="100" y="474" fontSize="10" fill="var(--text-secondary)"
+                  textAnchor="middle">tescilli lezzetleri keşfet</text>
+              </g>
             </svg>
           </div>
         </div>
