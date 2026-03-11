@@ -13,6 +13,7 @@ const EMPTY_FORM = {
   latitude: '', longitude: '', image_url: '', cover_image_url: '',
   is_active: true, is_featured: false,
   seo_title: '', seo_description: '',
+  gi_status: false, gi_count: '', gi_source_url: '',
 };
 
 export default function CityForm() {
@@ -94,6 +95,9 @@ export default function CityForm() {
       local_ingredients: form.local_ingredients
         ? form.local_ingredients.split(',').map(t => t.trim()).filter(Boolean)
         : [],
+      gi_status: form.gi_status || false,
+      gi_count: form.gi_count ? parseInt(form.gi_count) : null,
+      gi_source_url: form.gi_source_url || null,
     };
 
     let result;
@@ -180,6 +184,33 @@ export default function CityForm() {
             <Field label="SEO Açıklama">
               <textarea {...inp} rows={2} value={form.seo_description} onChange={e => handleChange('seo_description', e.target.value)} placeholder="Meta açıklama (max 160 karakter)" />
             </Field>
+          </Card>
+          {/* Coğrafi İşaret */}
+          <Card title="🏷 Coğrafi İşaret">
+            <div style={{ marginBottom: 16, padding: '12px 14px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 8 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={form.gi_status || false}
+                  onChange={e => handleChange('gi_status', e.target.checked)}
+                  style={{ width: 16, height: 16, accentColor: '#f59e0b', cursor: 'pointer' }}
+                />
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#f59e0b' }}>Coğrafi İşaretli Ürün Şehri</div>
+                  <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>Bu şehre ait tescilli coğrafi işaret ürünleri var</div>
+                </div>
+              </label>
+            </div>
+            {form.gi_status && (
+              <>
+                <Field label="COĞRAFİ İŞARET ÜRÜN SAYISI">
+                  <input {...inp} type="number" value={form.gi_count || ''} onChange={e => handleChange('gi_count', e.target.value)} placeholder="Örn: 12" />
+                </Field>
+                <Field label="KAYNAK URL (TürkPatent / Kültür Portalı)">
+                  <input {...inp} value={form.gi_source_url || ''} onChange={e => handleChange('gi_source_url', e.target.value)} placeholder="https://ci.turkpatent.gov.tr/..." />
+                </Field>
+              </>
+            )}
           </Card>
         </div>
 

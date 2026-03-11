@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/layout/Layout';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
-import { COLORS, DISH_CATEGORIES, DIFFICULTY_LEVELS } from '../../lib/constants';
+import { COLORS, DIFFICULTY_LEVELS } from '../../lib/constants';
 
 export default function DishDetail() {
   const router = useRouter();
@@ -17,6 +17,7 @@ export default function DishDetail() {
   const [submitting, setSubmitting] = useState(false);
   const [reviewMsg, setReviewMsg] = useState({ type: '', text: '' });
   const [isFavorited, setIsFavorited] = useState(false);
+  const [favId, setFavId] = useState(null);
 
   useEffect(() => { if (slug) fetchDish(); }, [slug]);
   useEffect(() => { if (dish && user) checkFavorite(); }, [dish, user]);
@@ -31,11 +32,11 @@ export default function DishDetail() {
       .single();
     setDish(data);
     if (data) {
+      // reviews tablosunda dish_id kolonu var
       const { data: r } = await supabase
         .from('reviews')
         .select('*, profiles(full_name, username, avatar_url)')
-        .eq('entity_type', 'dish')
-        .eq('entity_id', data.id)
+        .eq('dish_id', data.id)
         .eq('is_approved', true)
         .order('created_at', { ascending: false });
       setReviews(r || []);
@@ -44,27 +45,45 @@ export default function DishDetail() {
   }
 
   async function checkFavorite() {
-    const { data } = await supabase.from('favorites').select('id').eq('user_id', user.id).eq('entity_type', 'dish').eq('entity_id', dish.id).single();
+    // favorites tablosunda dish_id kolonu var
+    const { data } = await supabase
+      .from('favorites')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('dish_id', dish.id)
+      .maybeSingle();
     setIsFavorited(!!data);
+    setFavId(data?.id || null);
   }
 
   async function toggleFavorite() {
     if (!user) { router.push('/login'); return; }
-    if (isFavorited) {
-      await supabase.from('favorites').delete().eq('user_id', user.id).eq('entity_type', 'dish').eq('entity_id', dish.id);
+    if (isFavorited && favId) {
+      await supabase.from('favorites').delete().eq('id', favId);
+      setIsFavorited(false);
+      setFavId(null);
     } else {
-      await supabase.from('favorites').insert({ user_id: user.id, entity_type: 'dish', entity_id: dish.id });
+      const { data } = await supabase
+        .from('favorites')
+        .insert({ user_id: user.id, dish_id: dish.id })
+        .select('id')
+        .single();
+      setIsFavorited(true);
+      setFavId(data?.id || null);
     }
-    setIsFavorited(!isFavorited);
   }
 
   async function submitReview() {
     if (!user) { router.push('/login'); return; }
     if (!reviewForm.comment.trim()) { setReviewMsg({ type: 'error', text: 'Yorum yazınız.' }); return; }
     setSubmitting(true);
+    // reviews tablosunda dish_id kolonu var
     const { error } = await supabase.from('reviews').insert({
-      user_id: user.id, entity_type: 'dish', entity_id: dish.id,
-      rating: reviewForm.rating, comment: reviewForm.comment, is_approved: true,
+      user_id: user.id,
+      dish_id: dish.id,
+      rating: reviewForm.rating,
+      content: reviewForm.comment,
+      is_approved: true,
     });
     if (error) {
       setReviewMsg({ type: 'error', text: error.message });
@@ -107,18 +126,33 @@ export default function DishDetail() {
           <div style={{ maxWidth: 900, margin: '0 auto' }}>
             {dish.category && (
               <div style={{ display: 'inline-block', background: COLORS.red, padding: '4px 12px', borderRadius: 20, fontSize: 12, marginBottom: 12 }}>
-                {DISH_CATEGORIES[dish.category] || dish.category}
+                {dish.category}
               </div>
             )}
             <h1 style={{ fontSize: 48, fontWeight: 900, margin: '0 0 12px', letterSpacing: '-0.02em' }}>{dish.name}</h1>
             <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
-              {dish.cities?.name && <span onClick={() => router.push(`/city/${dish.cities.slug}`)} style={{ fontSize: 14, color: COLORS.dim, cursor: 'pointer' }}>📍 {dish.cities.name}</span>}
-              {dish.average_rating > 0 && <span style={{ fontSize: 14, color: '#f59e0b' }}>★ {Number(dish.average_rating).toFixed(1)} ({dish.reviews_count} değerlendirme)</span>}
-              {dish.difficulty_level && <span style={{ fontSize: 14, color: COLORS.dim }}>{DIFFICULTY_LEVELS[dish.difficulty_level] || dish.difficulty_level}</span>}
+              {dish.cities?.name && (
+                <span onClick={() => router.push(`/city/${dish.cities.slug}`)} style={{ fontSize: 14, color: COLORS.dim, cursor: 'pointer' }}>
+                  📍 {dish.cities.name}
+                </span>
+              )}
+              {dish.rating_avg > 0 && (
+                <span style={{ fontSize: 14, color: '#f59e0b' }}>
+                  ★ {Number(dish.rating_avg).toFixed(1)} ({dish.rating_count} değerlendirme)
+                </span>
+              )}
+              {dish.difficulty && (
+                <span style={{ fontSize: 14, color: COLORS.dim }}>
+                  {DIFFICULTY_LEVELS[dish.difficulty] || dish.difficulty}
+                </span>
+              )}
             </div>
           </div>
         </div>
-        <button onClick={toggleFavorite} style={{ position: 'absolute', top: 24, right: 24, background: isFavorited ? COLORS.red : 'rgba(0,0,0,0.6)', border: `1px solid ${isFavorited ? COLORS.red : 'rgba(255,255,255,0.2)'}`, backdropFilter: 'blur(8px)', color: COLORS.white, width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
+        <button
+          onClick={toggleFavorite}
+          style={{ position: 'absolute', top: 24, right: 24, background: isFavorited ? COLORS.red : 'rgba(0,0,0,0.6)', border: `1px solid ${isFavorited ? COLORS.red : 'rgba(255,255,255,0.2)'}`, backdropFilter: 'blur(8px)', color: COLORS.white, width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
+        >
           {isFavorited ? '♥' : '♡'}
         </button>
       </div>
@@ -128,12 +162,23 @@ export default function DishDetail() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 48 }}>
           {/* Sol */}
           <div>
-            {dish.short_description && <p style={{ fontSize: 18, color: COLORS.dim, lineHeight: 1.7, marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>{dish.short_description}</p>}
+            {dish.short_description && (
+              <p style={{ fontSize: 18, color: COLORS.dim, lineHeight: 1.7, marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
+                {dish.short_description}
+              </p>
+            )}
 
             {dish.description && (
               <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 20 }}>Hakkında</h2>
                 <div style={{ fontSize: 15, color: COLORS.dim, lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: dish.description }} />
+              </div>
+            )}
+
+            {dish.story && (
+              <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 20 }}>Hikayesi</h2>
+                <div style={{ fontSize: 15, color: COLORS.dim, lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: dish.story }} />
               </div>
             )}
 
@@ -148,26 +193,39 @@ export default function DishDetail() {
               <div style={{ marginBottom: 40, paddingBottom: 40, borderBottom: `1px solid ${COLORS.border}` }}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 20 }}>Galeri</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-                  {gallery.map((img, i) => <img key={i} src={img} alt={`${dish.name} ${i + 1}`} style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: 8 }} />)}
+                  {gallery.map((img, i) => (
+                    <img key={i} src={img} alt={`${dish.name} ${i + 1}`} style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: 8 }} />
+                  ))}
                 </div>
               </div>
             )}
 
             {/* Yorumlar */}
             <div>
-              <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 24 }}>Değerlendirmeler {reviews.length > 0 && <span style={{ color: COLORS.muted, fontWeight: 400, fontSize: 16 }}>({reviews.length})</span>}</h2>
+              <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 24 }}>
+                Değerlendirmeler {reviews.length > 0 && <span style={{ color: COLORS.muted, fontWeight: 400, fontSize: 16 }}>({reviews.length})</span>}
+              </h2>
               {user ? (
                 <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24, marginBottom: 32 }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Değerlendirme Yaz</h3>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-                    {[1,2,3,4,5].map(star => (
-                      <span key={star} onClick={() => setReviewForm(p => ({ ...p, rating: star }))} style={{ fontSize: 28, cursor: 'pointer', color: star <= reviewForm.rating ? '#f59e0b' : COLORS.border, transition: 'color 0.15s' }}>★</span>
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <span key={star} onClick={() => setReviewForm(p => ({ ...p, rating: star }))}
+                        style={{ fontSize: 28, cursor: 'pointer', color: star <= reviewForm.rating ? '#f59e0b' : COLORS.border, transition: 'color 0.15s' }}>★</span>
                     ))}
                   </div>
-                  <textarea value={reviewForm.comment} onChange={e => setReviewForm(p => ({ ...p, comment: e.target.value }))} placeholder="Bu yemek hakkında düşüncelerinizi paylaşın..." rows={4}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: '12px 16px', color: COLORS.white, fontSize: 14, outline: 'none', resize: 'vertical' }} />
-                  {reviewMsg.text && <div style={{ color: reviewMsg.type === 'error' ? '#ef4444' : '#10b981', fontSize: 13, marginTop: 8 }}>{reviewMsg.text}</div>}
-                  <button onClick={submitReview} disabled={submitting} style={{ marginTop: 12, background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: submitting ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 700, opacity: submitting ? 0.7 : 1 }}>
+                  <textarea
+                    value={reviewForm.comment}
+                    onChange={e => setReviewForm(p => ({ ...p, comment: e.target.value }))}
+                    placeholder="Bu yemek hakkında düşüncelerinizi paylaşın..."
+                    rows={4}
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: '12px 16px', color: COLORS.white, fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
+                  />
+                  {reviewMsg.text && (
+                    <div style={{ color: reviewMsg.type === 'error' ? '#ef4444' : '#10b981', fontSize: 13, marginTop: 8 }}>{reviewMsg.text}</div>
+                  )}
+                  <button onClick={submitReview} disabled={submitting}
+                    style={{ marginTop: 12, background: COLORS.red, border: 'none', color: COLORS.white, padding: '10px 24px', borderRadius: 6, cursor: submitting ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 700, opacity: submitting ? 0.7 : 1 }}>
                     {submitting ? 'Gönderiliyor...' : 'Gönder'}
                   </button>
                 </div>
@@ -195,7 +253,7 @@ export default function DishDetail() {
                         </div>
                         <div style={{ color: '#f59e0b' }}>{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</div>
                       </div>
-                      <p style={{ margin: 0, fontSize: 14, color: COLORS.dim, lineHeight: 1.6 }}>{review.comment}</p>
+                      <p style={{ margin: 0, fontSize: 14, color: COLORS.dim, lineHeight: 1.6 }}>{review.content}</p>
                     </div>
                   ))}
                 </div>
@@ -209,17 +267,31 @@ export default function DishDetail() {
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Bilgiler</h3>
               {[
                 dish.cities?.name && { label: 'Şehir', value: dish.cities.name },
-                dish.difficulty_level && { label: 'Zorluk', value: DIFFICULTY_LEVELS[dish.difficulty_level] || dish.difficulty_level },
+                dish.difficulty && { label: 'Zorluk', value: DIFFICULTY_LEVELS[dish.difficulty] || dish.difficulty },
                 dish.prep_time && { label: 'Hazırlık', value: `${dish.prep_time} dk` },
                 dish.cook_time && { label: 'Pişirme', value: `${dish.cook_time} dk` },
-                dish.serving_size && { label: 'Porsiyon', value: dish.serving_size },
+                dish.servings && { label: 'Porsiyon', value: `${dish.servings} kişilik` },
+                dish.calories && { label: 'Kalori', value: `${dish.calories} kcal` },
+                dish.season && { label: 'Mevsim', value: dish.season },
               ].filter(Boolean).map(item => (
                 <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${COLORS.border}` }}>
                   <span style={{ fontSize: 13, color: COLORS.muted }}>{item.label}</span>
                   <span style={{ fontSize: 13, fontWeight: 600 }}>{item.value}</span>
                 </div>
               ))}
+              <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
+                {dish.is_vegetarian && <span style={{ fontSize: 10, padding: '3px 8px', background: 'rgba(16,185,129,0.15)', color: '#10b981', borderRadius: 20 }}>🌿 Vejetaryen</span>}
+                {dish.is_vegan && <span style={{ fontSize: 10, padding: '3px 8px', background: 'rgba(16,185,129,0.15)', color: '#10b981', borderRadius: 20 }}>🌱 Vegan</span>}
+                {dish.is_gluten_free && <span style={{ fontSize: 10, padding: '3px 8px', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', borderRadius: 20 }}>🌾 Glutensiz</span>}
+                {dish.gi_status && (
+                  <a href={dish.gi_source_url || 'https://ci.turkpatent.gov.tr/veri-tabani'} target="_blank" rel="noopener noreferrer"
+                    style={{ fontSize: 10, padding: '3px 10px', background: 'rgba(245,158,11,0.15)', color: '#f59e0b', borderRadius: 20, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, border: '1px solid rgba(245,158,11,0.3)' }}>
+                    🏷 Tescilli Coğrafi İşaret{dish.gi_number ? ` · No: ${dish.gi_number}` : ''}
+                  </a>
+                )}
+              </div>
             </div>
+
             {ingredients.length > 0 && (
               <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 24 }}>
                 <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Malzemeler</h3>

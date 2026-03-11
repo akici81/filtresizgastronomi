@@ -12,6 +12,7 @@ const EMPTY_FORM = {
   cook_time: '', servings: '', calories: '', season: '',
   image_url: '', video_url: '', recipe: '', tags: '',
   seo_title: '', seo_description: '',
+  gi_status: false, gi_number: '', gi_source_url: '',
 };
 
 export default function DishForm() {
@@ -97,6 +98,9 @@ export default function DishForm() {
       calories: form.calories ? parseInt(form.calories) : null,
       tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       published_at: status === 'published' ? new Date().toISOString() : null,
+      gi_status: form.gi_status || false,
+      gi_number: form.gi_number || null,
+      gi_source_url: form.gi_source_url || null,
     };
 
     let result;
@@ -195,6 +199,34 @@ export default function DishForm() {
             <Field label="SEO Açıklama">
               <textarea {...inputProps} rows={2} value={form.seo_description} onChange={e => handleChange('seo_description', e.target.value)} placeholder="Meta açıklama (max 160 karakter)" />
             </Field>
+          </Card>
+
+          {/* Coğrafi İşaret */}
+          <Card title="🏷 Coğrafi İşaret">
+            <div style={{ marginBottom: 16, padding: '12px 14px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 8 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={form.gi_status || false}
+                  onChange={e => handleChange('gi_status', e.target.checked)}
+                  style={{ width: 16, height: 16, accentColor: '#f59e0b', cursor: 'pointer' }}
+                />
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#f59e0b' }}>Tescilli Coğrafi İşaret</div>
+                  <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>TürkPatent tarafından tescillenmiş ürün</div>
+                </div>
+              </label>
+            </div>
+            {form.gi_status && (
+              <>
+                <Field label="TESCİL NUMARASI">
+                  <input {...inputProps} value={form.gi_number || ''} onChange={e => handleChange('gi_number', e.target.value)} placeholder="Örn: 123" />
+                </Field>
+                <Field label="KAYNAK URL (TürkPatent)">
+                  <input {...inputProps} value={form.gi_source_url || ''} onChange={e => handleChange('gi_source_url', e.target.value)} placeholder="https://ci.turkpatent.gov.tr/..." />
+                </Field>
+              </>
+            )}
           </Card>
         </div>
 

@@ -8,9 +8,9 @@ const EMPTY_FORM = {
   title: '', slug: '', excerpt: '', content: '',
   category: 'story', tags: '',
   city_id: '', dish_id: '', restaurant_id: '', chef_id: '',
-  cover_image_url: '', read_time: '',
+  cover_image_url: '', og_image_url: '', read_time: '',
   status: 'draft', is_featured: false, is_editors_pick: false,
-  seo_title: '', seo_description: '', og_image_url: '',
+  seo_title: '', seo_description: '',
 };
 
 export default function ArticleForm() {
@@ -19,6 +19,7 @@ export default function ArticleForm() {
   const isNew = id === 'new';
 
   const [form, setForm] = useState(EMPTY_FORM);
+  const [gallery, setGallery] = useState([]);
   const [cities, setCities] = useState([]);
   const [dishes, setDishes] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
@@ -52,8 +53,7 @@ export default function ArticleForm() {
     const { data } = await supabase.from('articles').select('*').eq('id', id).single();
     if (data) {
       setForm({
-        ...EMPTY_FORM,
-        ...data,
+        ...EMPTY_FORM, ...data,
         tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
         city_id: data.city_id || '',
         dish_id: data.dish_id || '',
@@ -61,6 +61,7 @@ export default function ArticleForm() {
         chef_id: data.chef_id || '',
         read_time: data.read_time || '',
       });
+      if (Array.isArray(data.gallery) && data.gallery.length > 0) setGallery(data.gallery);
     }
     setLoading(false);
   }
@@ -69,8 +70,7 @@ export default function ArticleForm() {
     setForm(prev => ({ ...prev, [key]: value }));
     if (key === 'title' && (isNew || !form.slug)) {
       setForm(prev => ({
-        ...prev,
-        title: value,
+        ...prev, title: value,
         slug: value.toLowerCase()
           .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
           .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
@@ -84,7 +84,7 @@ export default function ArticleForm() {
     if (!file) return;
     setUploading(field);
     const ext = file.name.split('.').pop();
-    const path = `articles/${Date.now()}.${ext}`;
+    const path = `articles/${Date.now()}_${field}.${ext}`;
     const { error } = await supabase.storage.from('images').upload(path, file);
     if (!error) {
       const { data } = supabase.storage.from('images').getPublicUrl(path);
@@ -93,9 +93,30 @@ export default function ArticleForm() {
     setUploading(false);
   }
 
+  async function handleGalleryUpload(e) {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploading('gallery');
+    const urls = [];
+    for (const file of files) {
+      const ext = file.name.split('.').pop();
+      const path = `articles/gallery/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from('images').upload(path, file);
+      if (!error) {
+        const { data } = supabase.storage.from('images').getPublicUrl(path);
+        urls.push(data.publicUrl);
+      }
+    }
+    setGallery(prev => [...prev, ...urls]);
+    setUploading(false);
+  }
+
+  function removeGalleryImage(i) {
+    setGallery(prev => prev.filter((_, idx) => idx !== i));
+  }
+
   async function handleSave(status) {
-    setError('');
-    setSuccess('');
+    setError(''); setSuccess('');
     if (!form.title) { setError('Makale başlığı zorunludur.'); return; }
     if (!form.slug) { setError('Slug zorunludur.'); return; }
     setSaving(true);
@@ -109,7 +130,8 @@ export default function ArticleForm() {
       chef_id: form.chef_id || null,
       read_time: form.read_time ? parseInt(form.read_time) : null,
       tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
-      published_at: status === 'published' ? new Date().toISOString() : null,
+      gallery,
+      published_at: status === 'published' ? new Date().toISOString() : (form.published_at || null),
     };
 
     let result;
@@ -137,10 +159,8 @@ export default function ArticleForm() {
   return (
     <AdminLayout title={isNew ? 'Yeni Makale' : 'Makaleyi Düzenle'}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
-        <button
-          onClick={() => router.push('/admin/articles')}
-          style={{ background: 'transparent', border: 'none', color: COLORS.dim, fontSize: 13, cursor: 'pointer' }}
-        >
+        <button onClick={() => router.push('/admin/articles')}
+          style={{ background: 'transparent', border: 'none', color: COLORS.dim, fontSize: 13, cursor: 'pointer' }}>
           ← Geri
         </button>
         <div style={{ display: 'flex', gap: 10 }}>
@@ -153,59 +173,76 @@ export default function ArticleForm() {
       {success && <Alert type="success">{success}</Alert>}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24 }}>
-        {/* Left */}
+        {/* Sol Kolon */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
           <Card title="Makale Bilgileri">
             <Field label="Başlık *">
-              <input {...inp} value={form.title} onChange={e => handleChange('title', e.target.value)} placeholder="Makale başlığı..." />
+              <input style={inp} value={form.title} onChange={e => handleChange('title', e.target.value)} placeholder="Makale başlığı..." />
             </Field>
             <Field label="Slug *">
-              <input {...inp} value={form.slug} onChange={e => handleChange('slug', e.target.value)} placeholder="makale-basligi" />
+              <input style={inp} value={form.slug} onChange={e => handleChange('slug', e.target.value)} placeholder="makale-basligi" />
             </Field>
             <Field label="Özet">
-              <textarea {...inp} rows={3} value={form.excerpt} onChange={e => handleChange('excerpt', e.target.value)} placeholder="Makale özeti, liste görünümünde gösterilir..." />
+              <textarea style={inp} rows={3} value={form.excerpt} onChange={e => handleChange('excerpt', e.target.value)} placeholder="Makale özeti, liste görünümünde gösterilir..." />
             </Field>
           </Card>
 
           <Card title="İçerik">
             <Field label="Makale İçeriği">
               <textarea
-                {...inp}
-                rows={20}
+                style={{ ...inp, fontFamily: 'monospace', lineHeight: 1.6 }}
+                rows={22}
                 value={form.content}
                 onChange={e => handleChange('content', e.target.value)}
                 placeholder="Makale içeriğini buraya yazın... HTML desteklenir."
-                style={{
-                  ...inp.style,
-                  fontFamily: 'monospace',
-                  fontSize: 13,
-                  lineHeight: 1.6,
-                }}
               />
             </Field>
             <div style={{ fontSize: 11, color: COLORS.muted, marginTop: -8 }}>
-              HTML etiketleri desteklenir: &lt;p&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;blockquote&gt;, &lt;img&gt;
+              Desteklenen etiketler: &lt;p&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;blockquote&gt;, &lt;img&gt;
             </div>
           </Card>
 
+          {/* Galeri */}
+          <Card title="Galeri">
+            {gallery.length > 0 && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
+                {gallery.map((url, i) => (
+                  <div key={i} style={{ position: 'relative' }}>
+                    <img src={url} alt="" style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: 6 }} />
+                    <button onClick={() => removeGalleryImage(i)}
+                      style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.7)', border: 'none', color: '#fff', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <label style={{ display: 'block', padding: '12px', border: `1px dashed ${COLORS.border}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: COLORS.dim }}>
+              {uploading === 'gallery' ? 'Yükleniyor...' : '📁 Galeri Görseli Ekle (çoklu seçim)'}
+              <input type="file" accept="image/*" multiple onChange={handleGalleryUpload} style={{ display: 'none' }} />
+            </label>
+          </Card>
+
+          {/* SEO */}
           <Card title="SEO">
             <Field label="SEO Başlık">
-              <input {...inp} value={form.seo_title} onChange={e => handleChange('seo_title', e.target.value)} placeholder="Makale Başlığı | Filtresiz Gastronomi" />
+              <input style={inp} value={form.seo_title} onChange={e => handleChange('seo_title', e.target.value)} placeholder="Makale Başlığı | Filtresiz Gastronomi" />
             </Field>
             <Field label="SEO Açıklama">
-              <textarea {...inp} rows={2} value={form.seo_description} onChange={e => handleChange('seo_description', e.target.value)} placeholder="Meta açıklama (max 160 karakter)" />
+              <textarea style={inp} rows={2} value={form.seo_description} onChange={e => handleChange('seo_description', e.target.value)} placeholder="Meta açıklama (max 160 karakter)" />
             </Field>
             <Field label="OG Görsel URL">
-              <input {...inp} value={form.og_image_url} onChange={e => handleChange('og_image_url', e.target.value)} placeholder="Sosyal medya paylaşım görseli..." />
+              <input style={inp} value={form.og_image_url} onChange={e => handleChange('og_image_url', e.target.value)} placeholder="Sosyal medya paylaşım görseli..." />
             </Field>
+            <UploadBtn uploading={uploading === 'og_image_url'} onChange={e => handleImageUpload(e, 'og_image_url')} label="📁 OG Görsel Yükle" />
           </Card>
         </div>
 
-        {/* Right */}
+        {/* Sağ Kolon */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
           <Card title="Durum">
             <Field label="Yayın Durumu">
-              <select {...inp} value={form.status} onChange={e => handleChange('status', e.target.value)}>
+              <select style={inp} value={form.status} onChange={e => handleChange('status', e.target.value)}>
                 <option value="draft">Taslak</option>
                 <option value="pending">İnceleme Bekliyor</option>
                 <option value="published">Yayında</option>
@@ -216,56 +253,56 @@ export default function ArticleForm() {
             <Toggle label="Editör Seçimi" checked={form.is_editors_pick} onChange={v => handleChange('is_editors_pick', v)} />
           </Card>
 
+          {/* Kapak Görseli */}
           <Card title="Kapak Görseli">
             {form.cover_image_url && (
-              <img src={form.cover_image_url} alt="" style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 6, marginBottom: 12 }} />
+              <img src={form.cover_image_url} alt="" style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 6, marginBottom: 10 }} />
             )}
             <Field label="Görsel URL">
-              <input {...inp} value={form.cover_image_url} onChange={e => handleChange('cover_image_url', e.target.value)} placeholder="https://..." />
+              <input style={inp} value={form.cover_image_url} onChange={e => handleChange('cover_image_url', e.target.value)} placeholder="https://..." />
             </Field>
-            <label style={{ display: 'block', padding: 10, border: `1px dashed ${COLORS.border}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: COLORS.dim }}>
-              {uploading === 'cover_image_url' ? 'Yükleniyor...' : '📁 Dosya Seç'}
-              <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'cover_image_url')} style={{ display: 'none' }} />
-            </label>
+            <UploadBtn uploading={uploading === 'cover_image_url'} onChange={e => handleImageUpload(e, 'cover_image_url')} />
           </Card>
 
+          {/* Kategori & Etiketler */}
           <Card title="Kategori & Etiketler">
             <Field label="Kategori">
-              <select {...inp} value={form.category} onChange={e => handleChange('category', e.target.value)}>
+              <select style={inp} value={form.category} onChange={e => handleChange('category', e.target.value)}>
                 {Object.entries(ARTICLE_CATEGORIES).map(([v, l]) => (
                   <option key={v} value={v}>{l}</option>
                 ))}
               </select>
             </Field>
             <Field label="Etiketler (virgülle ayır)">
-              <input {...inp} value={form.tags} onChange={e => handleChange('tags', e.target.value)} placeholder="gastronomi, istanbul, kebap" />
+              <input style={inp} value={form.tags} onChange={e => handleChange('tags', e.target.value)} placeholder="gastronomi, istanbul, kebap" />
             </Field>
             <Field label="Okuma Süresi (dk)">
-              <input {...inp} type="number" value={form.read_time} onChange={e => handleChange('read_time', e.target.value)} placeholder="5" />
+              <input style={inp} type="number" value={form.read_time} onChange={e => handleChange('read_time', e.target.value)} placeholder="5" />
             </Field>
           </Card>
 
+          {/* İlişkili İçerik */}
           <Card title="İlişkili İçerik">
             <Field label="Şehir">
-              <select {...inp} value={form.city_id} onChange={e => handleChange('city_id', e.target.value)}>
+              <select style={inp} value={form.city_id} onChange={e => handleChange('city_id', e.target.value)}>
                 <option value="">Seç</option>
                 {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </Field>
             <Field label="Yemek">
-              <select {...inp} value={form.dish_id} onChange={e => handleChange('dish_id', e.target.value)}>
+              <select style={inp} value={form.dish_id} onChange={e => handleChange('dish_id', e.target.value)}>
                 <option value="">Seç</option>
                 {dishes.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
             </Field>
             <Field label="Restoran">
-              <select {...inp} value={form.restaurant_id} onChange={e => handleChange('restaurant_id', e.target.value)}>
+              <select style={inp} value={form.restaurant_id} onChange={e => handleChange('restaurant_id', e.target.value)}>
                 <option value="">Seç</option>
                 {restaurants.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
               </select>
             </Field>
             <Field label="Şef">
-              <select {...inp} value={form.chef_id} onChange={e => handleChange('chef_id', e.target.value)}>
+              <select style={inp} value={form.chef_id} onChange={e => handleChange('chef_id', e.target.value)}>
                 <option value="">Seç</option>
                 {chefs.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
@@ -278,13 +315,20 @@ export default function ArticleForm() {
 }
 
 const inp = {
-  style: {
-    width: '100%', background: 'rgba(255,255,255,0.04)',
-    border: `1px solid ${COLORS.border}`, borderRadius: 6,
-    padding: '10px 12px', color: COLORS.white,
-    fontSize: 13, outline: 'none', resize: 'vertical',
-  },
+  width: '100%', background: 'rgba(255,255,255,0.04)',
+  border: `1px solid ${COLORS.border}`, borderRadius: 6,
+  padding: '10px 12px', color: COLORS.white, fontSize: 13,
+  outline: 'none', resize: 'vertical', boxSizing: 'border-box',
 };
+
+function UploadBtn({ uploading, onChange, label = '📁 Dosya Seç' }) {
+  return (
+    <label style={{ display: 'block', padding: '8px', border: `1px dashed ${COLORS.border}`, borderRadius: 6, textAlign: 'center', cursor: 'pointer', fontSize: 12, color: COLORS.dim, marginTop: 6 }}>
+      {uploading ? 'Yükleniyor...' : label}
+      <input type="file" accept="image/*" onChange={onChange} style={{ display: 'none' }} />
+    </label>
+  );
+}
 
 function Card({ title, children }) {
   return (
@@ -312,7 +356,8 @@ function Toggle({ label, checked, onChange }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
       <span style={{ fontSize: 13, color: COLORS.dim }}>{label}</span>
-      <div onClick={() => onChange(!checked)} style={{ width: 40, height: 22, borderRadius: 11, background: checked ? COLORS.red : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
+      <div onClick={() => onChange(!checked)}
+        style={{ width: 40, height: 22, borderRadius: 11, background: checked ? COLORS.red : 'rgba(255,255,255,0.1)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s' }}>
         <div style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: COLORS.white, transition: 'left 0.2s' }} />
       </div>
     </div>
@@ -321,7 +366,8 @@ function Toggle({ label, checked, onChange }) {
 
 function Btn({ children, onClick, loading, variant = 'primary' }) {
   return (
-    <button onClick={onClick} disabled={loading} style={{ background: variant === 'primary' ? COLORS.red : 'rgba(255,255,255,0.08)', border: 'none', color: COLORS.white, padding: '10px 20px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+    <button onClick={onClick} disabled={loading}
+      style={{ background: variant === 'primary' ? COLORS.red : 'rgba(255,255,255,0.08)', border: 'none', color: COLORS.white, padding: '10px 20px', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
       {loading ? '...' : children}
     </button>
   );
