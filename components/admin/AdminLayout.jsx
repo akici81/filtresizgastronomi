@@ -95,10 +95,10 @@ export default function AdminLayout({ children, title = 'Admin Panel' }) {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
       {/* Sidebar */}
-      <aside style={{ width: 240, background: '#0d0d0d', borderRight: `1px solid ${'var(--border)'}`, display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
-        <div style={{ padding: '24px 20px', borderBottom: `1px solid ${'var(--border)'}` }}>
+      <aside style={{ width: 240, background: 'var(--bg-secondary)', borderRight: `1px solid var(--border)`, display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+        <div style={{ padding: '24px 20px', borderBottom: `1px solid var(--border)` }}>
           <div onClick={() => router.push('/')} style={{ cursor: 'pointer' }}>
-            <span style={{ fontSize: 13, fontWeight: 900, letterSpacing: '0.1em' }}>FİLTRESİZ</span>
+            <span style={{ fontSize: 13, fontWeight: 900, letterSpacing: '0.1em', color: 'var(--text)' }}>FİLTRESİZ</span>
             <span style={{ fontSize: 13, fontWeight: 300, color: 'var(--red)', marginLeft: 6 }}>ADMIN</span>
           </div>
           <div style={{ fontSize: 10, color: 'var(--red)', marginTop: 4, letterSpacing: '0.05em', fontWeight: 700 }}>
@@ -116,7 +116,7 @@ export default function AdminLayout({ children, title = 'Admin Panel' }) {
                 padding: '10px 20px', fontSize: 13, cursor: 'pointer',
                 color: isActive(item.href) ? 'var(--text)' : 'var(--dim)',
                 background: isActive(item.href) ? 'rgba(232,0,13,0.1)' : 'transparent',
-                borderLeft: isActive(item.href) ? `2px solid ${'var(--red)'}` : '2px solid transparent',
+                borderLeft: isActive(item.href) ? '2px solid var(--red)' : '2px solid transparent',
                 transition: 'all 0.15s',
               }}
               onMouseEnter={e => { if (!isActive(item.href)) e.currentTarget.style.color = 'var(--text)'; }}
@@ -128,7 +128,7 @@ export default function AdminLayout({ children, title = 'Admin Panel' }) {
           ))}
         </nav>
 
-        <div style={{ padding: '16px 20px', borderTop: `1px solid ${'var(--border)'}` }}>
+        <div style={{ padding: '16px 20px', borderTop: `1px solid var(--border)` }}>
           <div style={{ fontSize: 13, color: 'var(--text)', marginBottom: 2 }}>
             {profile.full_name || profile.username}
           </div>
@@ -148,8 +148,8 @@ export default function AdminLayout({ children, title = 'Admin Panel' }) {
 
       {/* Main */}
       <main style={{ marginLeft: 240, flex: 1, minHeight: '100vh' }}>
-        <div style={{ padding: '0 32px', height: 56, display: 'flex', alignItems: 'center', borderBottom: `1px solid ${'var(--border)'}`, background: '#0d0d0d', position: 'sticky', top: 0, zIndex: 40 }}>
-          <h1 style={{ margin: 0, fontSize: 15, fontWeight: 700 }}>{title}</h1>
+        <div style={{ padding: '0 32px', height: 56, display: 'flex', alignItems: 'center', borderBottom: `1px solid var(--border)`, background: 'var(--bg-secondary)', position: 'sticky', top: 0, zIndex: 40 }}>
+          <h1 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{title}</h1>
         </div>
         <div style={{ padding: 32 }}>
           {children}
