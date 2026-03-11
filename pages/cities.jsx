@@ -16,7 +16,7 @@ const COLORS_UNUSED = { // removed - using CSS vars
 
 // SVG Türkiye Haritası Path Verileri
 // Kaynak: github.com/cihadturhan/svg-turkiye-haritasi
-const TURKEY_VIEWBOX = "0 0 1240 545";
+const TURKEY_VIEWBOX = "0 0 1007.478 527.323";
 
 const TURKEY_PATHS = [
   { slug: "adana", plaka: "01", name: "Adana",
@@ -194,6 +194,7 @@ export default function CitiesPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('map'); // 'map' | 'grid'
+  const [contentFilter, setContentFilter] = useState('all'); // 'all' | 'dishes' | 'gi'
 
   useEffect(() => {
     fetchCities();
@@ -203,7 +204,7 @@ export default function CitiesPage() {
     setLoading(true);
     const { data } = await supabase
       .from('cities')
-      .select('id, name, slug, region, gi_count, gi_mense_count, gi_mahrec_count, gi_geleneksel_count, gi_status, image_url')
+      .select('id, name, slug, region, gi_count, gi_mense_count, gi_mahrec_count, gi_geleneksel_count, gi_status, dishes_count, image_url')
       .eq('is_active', true)
       .order('gi_count', { ascending: false, nullsFirst: false });
 
@@ -285,6 +286,33 @@ export default function CitiesPage() {
               outline: 'none',
             }}
           />
+          {/* İçerik Filtresi */}
+          <div style={{ display: 'flex', background: 'var(--card)', borderRadius: 8, overflow: 'hidden', border: `1px solid ${'var(--border)'}` }}>
+            {[
+              { key: 'all', label: '🗺 Tümü' },
+              { key: 'dishes', label: '🍽 Yöresel' },
+              { key: 'gi', label: '🏅 Coğrafi İşaret' },
+            ].map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setContentFilter(key)}
+                style={{
+                  background: contentFilter === key ? 'var(--red)' : 'transparent',
+                  border: 'none',
+                  color: contentFilter === key ? 'white' : 'var(--text)',
+                  padding: '10px 16px',
+                  cursor: 'pointer',
+                  fontSize: 13,
+                  fontWeight: contentFilter === key ? 700 : 400,
+                  transition: 'all 0.15s',
+                  borderRight: `1px solid ${'var(--border)'}`,
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {/* Harita/Liste */}
           <div style={{ display: 'flex', background: 'var(--card)', borderRadius: 8, overflow: 'hidden', border: `1px solid ${'var(--border)'}` }}>
             {['map', 'grid'].map(mode => (
               <button
@@ -325,8 +353,18 @@ export default function CitiesPage() {
                 const lookupSlug = il.slug.startsWith('istanbul') ? 'istanbul' : il.slug;
                 const data = cityData[lookupSlug];
                 const isHovered = hovered === il.slug;
-                const hasData = data && data.gi_count > 0;
+                const hasGI = data && data.gi_count > 0;
+                const hasDishes = data && data.dishes_count > 0;
+                const hasData =
+                  contentFilter === 'gi' ? hasGI :
+                  contentFilter === 'dishes' ? hasDishes :
+                  (hasGI || hasDishes);
                 const isFiltered = searchTerm && !il.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+                // Renk: GI filtresi → kırmızı, Yöresel → turuncu, Tümü → her ikisi kırmızı
+                const fillColor = contentFilter === 'dishes'
+                  ? 'rgba(234,88,12,0.35)'   // turuncu — yöresel
+                  : 'rgba(232,0,13,0.3)';     // kırmızı — GI veya tümü
 
                 return (
                   <g key={il.slug}>
@@ -335,7 +373,7 @@ export default function CitiesPage() {
                       fill={
                         isFiltered ? 'var(--subtle-bg)' :
                         isHovered ? 'var(--red)' :
-                        hasData ? 'rgba(232,0,13,0.3)' :
+                        hasData ? fillColor :
                         'var(--block-bg)'
                       }
                       stroke={isHovered ? 'var(--red)' : 'var(--border)'}
@@ -354,163 +392,175 @@ export default function CitiesPage() {
               })}
 
               {/* Tooltip */}
-              {tooltip.visible && hoveredCity && (
-                <g transform={`translate(${Math.min(tooltip.x + 15, 1020)}, ${Math.max(tooltip.y - 110, 10)})`}>
-                  <rect
-                    width="215"
-                    height={hoveredCity.gi_count > 0 ? "132" : "80"}
-                    rx="8"
-                    fill="rgba(10,10,10,0.95)"
-                    stroke="rgba(232,0,13,0.5)"
-                    strokeWidth="1"
-                  />
-                  <text x="14" y="26" fontSize="15" fontWeight="800" fill="white">
-                    {hoveredCity.name || TURKEY_PATHS.find(i => i.slug === hovered)?.name}
-                  </text>
-                  {hoveredCity.gi_count > 0 ? (
-                    <>
-                      <text x="14" y="48" fontSize="12" fill="#f59e0b">
-                        ★ Toplam {hoveredCity.gi_count} coğrafi işaretli ürün
-                      </text>
-                      <line x1="14" y1="57" x2="200" y2="57" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-                      {hoveredCity.gi_mense_count > 0 && (
-                        <>
-                          <rect x="14" y="65" width="8" height="8" rx="2" fill="#3b82f6" />
-                          <text x="28" y="74" fontSize="11" fill="rgba(255,255,255,0.75)">
-                            Menşe Adı: {hoveredCity.gi_mense_count}
+              {tooltip.visible && hoveredCity && (() => {
+                const showDishes = contentFilter !== 'gi';
+                const showGI = contentFilter !== 'dishes';
+                const hasDishes = hoveredCity.dishes_count > 0;
+                const hasGI = hoveredCity.gi_count > 0;
+                const hasAny = (showDishes && hasDishes) || (showGI && hasGI);
+                const boxHeight = hasAny
+                  ? (showDishes && hasDishes && showGI && hasGI ? 148 : 110)
+                  : 80;
+                return (
+                  <g transform={`translate(${Math.min(tooltip.x + 15, 1020)}, ${Math.max(tooltip.y - 110, 10)})`}>
+                    <rect width="220" height={boxHeight} rx="8"
+                      fill="rgba(10,10,10,0.95)" stroke="rgba(232,0,13,0.5)" strokeWidth="1" />
+                    <text x="14" y="26" fontSize="15" fontWeight="800" fill="white">
+                      {hoveredCity.name || TURKEY_PATHS.find(i => i.slug === hovered)?.name}
+                    </text>
+                    {hasAny ? (
+                      <>
+                        <line x1="14" y1="34" x2="206" y2="34" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+                        {showDishes && hasDishes && (
+                          <>
+                            <text x="14" y="52" fontSize="12" fill="rgba(234,88,12,0.9)">
+                              🍽 {hoveredCity.dishes_count} yöresel yemek
+                            </text>
+                          </>
+                        )}
+                        {showDishes && !hasDishes && contentFilter === 'all' && (
+                          <text x="14" y="52" fontSize="11" fill="rgba(255,255,255,0.3)">
+                            🍽 Henüz yöresel yemek eklenmedi
                           </text>
-                        </>
-                      )}
-                      {hoveredCity.gi_mahrec_count > 0 && (
-                        <>
-                          <rect x="14" y="81" width="8" height="8" rx="2" fill="#f59e0b" />
-                          <text x="28" y="90" fontSize="11" fill="rgba(255,255,255,0.75)">
-                            Mahreç İşareti: {hoveredCity.gi_mahrec_count}
-                          </text>
-                        </>
-                      )}
-                      {hoveredCity.gi_geleneksel_count > 0 && (
-                        <>
-                          <rect x="14" y="97" width="8" height="8" rx="2" fill="#10b981" />
-                          <text x="28" y="106" fontSize="11" fill="rgba(255,255,255,0.75)">
-                            Geleneksel Ürün: {hoveredCity.gi_geleneksel_count}
-                          </text>
-                        </>
-                      )}
-                      <text x="172" y="122" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
-                    </>
-                  ) : (
-                    <>
-                      <text x="14" y="50" fontSize="12" fill="rgba(255,255,255,0.35)">
-                        Yakında içerik eklenecek
-                      </text>
-                      <text x="152" y="70" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
-                    </>
-                  )}
-                </g>
-              )}
+                        )}
+                        {showGI && hasGI && (
+                          <>
+                            <text x="14" y={showDishes && hasDishes ? 72 : 52} fontSize="12" fill="#f59e0b">
+                              🏅 {hoveredCity.gi_count} coğrafi işaretli ürün
+                            </text>
+                            <line x1="14" y1={showDishes && hasDishes ? 80 : 60}
+                              x2="206" y2={showDishes && hasDishes ? 80 : 60}
+                              stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+                            {hoveredCity.gi_mense_count > 0 && (
+                              <>
+                                <rect x="14" y={showDishes && hasDishes ? 88 : 68} width="7" height="7" rx="1" fill="#3b82f6" />
+                                <text x="26" y={showDishes && hasDishes ? 96 : 76} fontSize="10" fill="rgba(255,255,255,0.65)">
+                                  Menşe: {hoveredCity.gi_mense_count}
+                                </text>
+                              </>
+                            )}
+                            {hoveredCity.gi_mahrec_count > 0 && (
+                              <>
+                                <rect x="90" y={showDishes && hasDishes ? 88 : 68} width="7" height="7" rx="1" fill="#f59e0b" />
+                                <text x="102" y={showDishes && hasDishes ? 96 : 76} fontSize="10" fill="rgba(255,255,255,0.65)">
+                                  Mahreç: {hoveredCity.gi_mahrec_count}
+                                </text>
+                              </>
+                            )}
+                            {hoveredCity.gi_geleneksel_count > 0 && (
+                              <>
+                                <rect x="14" y={showDishes && hasDishes ? 104 : 84} width="7" height="7" rx="1" fill="#10b981" />
+                                <text x="26" y={showDishes && hasDishes ? 112 : 92} fontSize="10" fill="rgba(255,255,255,0.65)">
+                                  Geleneksel: {hoveredCity.gi_geleneksel_count}
+                                </text>
+                              </>
+                            )}
+                          </>
+                        )}
+                        <text x="182" y={boxHeight - 8} fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
+                      </>
+                    ) : (
+                      <>
+                        <text x="14" y="50" fontSize="12" fill="rgba(255,255,255,0.3)">
+                          Yakında içerik eklenecek
+                        </text>
+                        <text x="152" y="70" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
+                      </>
+                    )}
+                  </g>
+                );
+              })()}
 
               {/* Legend */}
-              <g transform="translate(20, 490)">
-                <rect x="0" y="0" width="12" height="12" rx="2" fill="rgba(232,0,13,0.4)" />
-                <text x="18" y="10" fontSize="11" fill="var(--text-secondary)">Yemek verisi var</text>
-                <rect x="148" y="2" width="9" height="9" rx="2" fill="#3b82f6" />
-                <text x="163" y="10" fontSize="11" fill="var(--text-secondary)">Menşe Adı</text>
-                <rect x="255" y="2" width="9" height="9" rx="2" fill="#f59e0b" />
-                <text x="270" y="10" fontSize="11" fill="var(--text-secondary)">Mahreç İşareti</text>
-                <rect x="380" y="2" width="9" height="9" rx="2" fill="#10b981" />
-                <text x="395" y="10" fontSize="11" fill="var(--text-secondary)">Geleneksel Ürün</text>
+              <g transform="translate(20, 505)">
+                {contentFilter !== 'gi' && (
+                  <>
+                    <rect x="0" y="0" width="10" height="10" rx="2" fill="rgba(234,88,12,0.5)" />
+                    <text x="16" y="9" fontSize="11" fill="var(--text-secondary)">Yöresel yemek</text>
+                  </>
+                )}
+                {contentFilter !== 'dishes' && (
+                  <>
+                    <rect x={contentFilter === 'gi' ? 0 : 130} y="0" width="10" height="10" rx="2" fill="rgba(232,0,13,0.4)" />
+                    <text x={contentFilter === 'gi' ? 16 : 146} y="9" fontSize="11" fill="var(--text-secondary)">Coğrafi işaret</text>
+                    <rect x={contentFilter === 'gi' ? 120 : 250} y="1" width="8" height="8" rx="2" fill="#3b82f6" />
+                    <text x={contentFilter === 'gi' ? 133 : 263} y="9" fontSize="11" fill="var(--text-secondary)">Menşe</text>
+                    <rect x={contentFilter === 'gi' ? 195 : 325} y="1" width="8" height="8" rx="2" fill="#f59e0b" />
+                    <text x={contentFilter === 'gi' ? 208 : 338} y="9" fontSize="11" fill="var(--text-secondary)">Mahreç</text>
+                    <rect x={contentFilter === 'gi' ? 270 : 400} y="1" width="8" height="8" rx="2" fill="#10b981" />
+                    <text x={contentFilter === 'gi' ? 283 : 413} y="9" fontSize="11" fill="var(--text-secondary)">Geleneksel</text>
+                  </>
+                )}
               </g>
 
-              {/* Sağ bilgi paneli */}
+              {/* Sağ bilgi paneli - filtreye göre değişir */}
               <g transform="translate(1025, 30)">
-                {/* Panel arka plan */}
                 <rect x="0" y="0" width="200" height="480" rx="12"
                   fill="var(--block-bg)" stroke="var(--border)" strokeWidth="1" />
 
                 {/* Başlık */}
-                <text x="100" y="30" fontSize="13" fontWeight="700" fill="var(--text)"
-                  textAnchor="middle">Coğrafi İşaret</text>
-                <text x="100" y="46" fontSize="13" fontWeight="700" fill="var(--red)"
-                  textAnchor="middle">İstatistikleri</text>
+                <text x="100" y="30" fontSize="13" fontWeight="700" fill="var(--text)" textAnchor="middle">
+                  {contentFilter === 'dishes' ? 'Yöresel Yemek' : contentFilter === 'gi' ? 'Coğrafi İşaret' : 'Gastronomi'}
+                </text>
+                <text x="100" y="46" fontSize="13" fontWeight="700" fill="var(--red)" textAnchor="middle">
+                  {contentFilter === 'dishes' ? 'Haritası' : contentFilter === 'gi' ? 'İstatistikleri' : 'Haritası'}
+                </text>
                 <line x1="16" y1="56" x2="184" y2="56" stroke="var(--border)" strokeWidth="1" />
 
-                {/* Toplam */}
-                <text x="100" y="82" fontSize="30" fontWeight="800" fill="var(--red)"
-                  textAnchor="middle">1.534</text>
-                <text x="100" y="98" fontSize="11" fill="var(--text-secondary)"
-                  textAnchor="middle">tescilli ürün</text>
-
-                <line x1="16" y1="112" x2="184" y2="112" stroke="var(--border)" strokeWidth="1" />
-
-                {/* Menşe Adı */}
-                <rect x="16" y="124" width="8" height="8" rx="2" fill="#3b82f6" />
-                <text x="32" y="133" fontSize="11" fontWeight="600" fill="var(--text)">Menşe Adı</text>
-                <text x="184" y="133" fontSize="13" fontWeight="700" fill="#3b82f6"
-                  textAnchor="end">338</text>
-                <text x="32" y="148" fontSize="10" fill="var(--text-secondary)">
-                  Tüm üretim süreçleri
-                </text>
-                <text x="32" y="160" fontSize="10" fill="var(--text-secondary)">
-                  yörede gerçekleşir
-                </text>
-
-                <line x1="16" y1="172" x2="184" y2="172" stroke="var(--border)" strokeWidth="1" />
-
-                {/* Mahreç İşareti */}
-                <rect x="16" y="184" width="8" height="8" rx="2" fill="#f59e0b" />
-                <text x="32" y="193" fontSize="11" fontWeight="600" fill="var(--text)">Mahreç İşareti</text>
-                <text x="184" y="193" fontSize="13" fontWeight="700" fill="#f59e0b"
-                  textAnchor="end">1.196</text>
-                <text x="32" y="208" fontSize="10" fill="var(--text-secondary)">
-                  En az bir üretim aşaması
-                </text>
-                <text x="32" y="220" fontSize="10" fill="var(--text-secondary)">
-                  yörede gerçekleşir
-                </text>
-
-                <line x1="16" y1="232" x2="184" y2="232" stroke="var(--border)" strokeWidth="1" />
-
-                {/* Geleneksel Ürün */}
-                <rect x="16" y="244" width="8" height="8" rx="2" fill="#10b981" />
-                <text x="32" y="253" fontSize="11" fontWeight="600" fill="var(--text)">Geleneksel Ürün</text>
-                <text x="184" y="253" fontSize="13" fontWeight="700" fill="#10b981"
-                  textAnchor="end">7</text>
-                <text x="32" y="268" fontSize="10" fill="var(--text-secondary)">
-                  Geleneksel üretim
-                </text>
-                <text x="32" y="280" fontSize="10" fill="var(--text-secondary)">
-                  yöntemiyle yapılır
-                </text>
-
-                <line x1="16" y1="292" x2="184" y2="292" stroke="var(--border)" strokeWidth="1" />
-
-                {/* Kaynak */}
-                <text x="100" y="316" fontSize="10" fill="var(--text-secondary)"
-                  textAnchor="middle">Kaynak</text>
-                <text x="100" y="332" fontSize="11" fontWeight="600" fill="var(--red)"
-                  textAnchor="middle">Türkpatent</text>
-                <text x="100" y="348" fontSize="10" fill="var(--text-secondary)"
-                  textAnchor="middle">ci.turkpatent.gov.tr</text>
-
-                <line x1="16" y1="362" x2="184" y2="362" stroke="var(--border)" strokeWidth="1" />
-
-                {/* Mühür ikonları */}
-                <image href="https://ci.turkpatent.gov.tr/uploads/images/mense_adi.png"
-                  x="20" y="374" width="46" height="46" />
-                <image href="https://ci.turkpatent.gov.tr/uploads/images/mahrec_isareti.png"
-                  x="77" y="374" width="46" height="46" />
-                <image href="https://ci.turkpatent.gov.tr/uploads/images/geleneksel_urun.png"
-                  x="134" y="374" width="46" height="46" />
-
-                <text x="43" y="432" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Menşe</text>
-                <text x="100" y="432" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Mahreç</text>
-                <text x="157" y="432" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Geleneksel</text>
-
-                <text x="100" y="460" fontSize="10" fill="var(--text-secondary)"
-                  textAnchor="middle">Türkiye'nin 81 ilinden</text>
-                <text x="100" y="474" fontSize="10" fill="var(--text-secondary)"
-                  textAnchor="middle">tescilli lezzetleri keşfet</text>
+                {contentFilter === 'dishes' ? (
+                  <>
+                    <text x="100" y="82" fontSize="28" fontWeight="800" fill="rgba(234,88,12,0.9)" textAnchor="middle">
+                      81
+                    </text>
+                    <text x="100" y="98" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">il haritada</text>
+                    <line x1="16" y1="112" x2="184" y2="112" stroke="var(--border)" strokeWidth="1" />
+                    <text x="100" y="140" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">Editörlerimiz her ile</text>
+                    <text x="100" y="156" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">ait yöresel yemek,</text>
+                    <text x="100" y="172" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">tarih ve hikaye</text>
+                    <text x="100" y="188" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">ekliyor.</text>
+                    <line x1="16" y1="202" x2="184" y2="202" stroke="var(--border)" strokeWidth="1" />
+                    <text x="100" y="228" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">🍽 Tarif</text>
+                    <text x="100" y="246" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">📖 Hikaye</text>
+                    <text x="100" y="264" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">📍 Yöre bilgisi</text>
+                    <text x="100" y="282" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">⭐ Değerlendirme</text>
+                    <line x1="16" y1="296" x2="184" y2="296" stroke="var(--border)" strokeWidth="1" />
+                    <text x="100" y="320" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">İçerik eklemek için</text>
+                    <text x="100" y="336" fontSize="11" fill="var(--red)" textAnchor="middle">editör olarak kaydol</text>
+                  </>
+                ) : (
+                  <>
+                    <text x="100" y="82" fontSize="30" fontWeight="800" fill="var(--red)" textAnchor="middle">1.534</text>
+                    <text x="100" y="98" fontSize="11" fill="var(--text-secondary)" textAnchor="middle">tescilli ürün</text>
+                    <line x1="16" y1="112" x2="184" y2="112" stroke="var(--border)" strokeWidth="1" />
+                    <rect x="16" y="124" width="8" height="8" rx="2" fill="#3b82f6" />
+                    <text x="32" y="133" fontSize="11" fontWeight="600" fill="var(--text)">Menşe Adı</text>
+                    <text x="184" y="133" fontSize="13" fontWeight="700" fill="#3b82f6" textAnchor="end">338</text>
+                    <text x="32" y="148" fontSize="10" fill="var(--text-secondary)">Tüm üretim yörede</text>
+                    <line x1="16" y1="162" x2="184" y2="162" stroke="var(--border)" strokeWidth="1" />
+                    <rect x="16" y="174" width="8" height="8" rx="2" fill="#f59e0b" />
+                    <text x="32" y="183" fontSize="11" fontWeight="600" fill="var(--text)">Mahreç İşareti</text>
+                    <text x="184" y="183" fontSize="13" fontWeight="700" fill="#f59e0b" textAnchor="end">1.196</text>
+                    <text x="32" y="198" fontSize="10" fill="var(--text-secondary)">En az bir aşama yörede</text>
+                    <line x1="16" y1="212" x2="184" y2="212" stroke="var(--border)" strokeWidth="1" />
+                    <rect x="16" y="224" width="8" height="8" rx="2" fill="#10b981" />
+                    <text x="32" y="233" fontSize="11" fontWeight="600" fill="var(--text)">Geleneksel Ürün</text>
+                    <text x="184" y="233" fontSize="13" fontWeight="700" fill="#10b981" textAnchor="end">7</text>
+                    <text x="32" y="248" fontSize="10" fill="var(--text-secondary)">Geleneksel yöntemle</text>
+                    <line x1="16" y1="262" x2="184" y2="262" stroke="var(--border)" strokeWidth="1" />
+                    <text x="100" y="284" fontSize="10" fill="var(--text-secondary)" textAnchor="middle">Kaynak</text>
+                    <text x="100" y="300" fontSize="11" fontWeight="600" fill="var(--red)" textAnchor="middle">Türkpatent</text>
+                    <text x="100" y="316" fontSize="10" fill="var(--text-secondary)" textAnchor="middle">ci.turkpatent.gov.tr</text>
+                    <line x1="16" y1="330" x2="184" y2="330" stroke="var(--border)" strokeWidth="1" />
+                    <image href="https://ci.turkpatent.gov.tr/uploads/images/mense_adi.png" x="20" y="342" width="46" height="46" />
+                    <image href="https://ci.turkpatent.gov.tr/uploads/images/mahrec_isareti.png" x="77" y="342" width="46" height="46" />
+                    <image href="https://ci.turkpatent.gov.tr/uploads/images/geleneksel_urun.png" x="134" y="342" width="46" height="46" />
+                    <text x="43" y="400" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Menşe</text>
+                    <text x="100" y="400" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Mahreç</text>
+                    <text x="157" y="400" fontSize="9" fill="var(--text-secondary)" textAnchor="middle">Geleneksel</text>
+                    <text x="100" y="440" fontSize="10" fill="var(--text-secondary)" textAnchor="middle">Türkiye'nin 81 ilinden</text>
+                    <text x="100" y="456" fontSize="10" fill="var(--text-secondary)" textAnchor="middle">tescilli lezzetleri keşfet</text>
+                  </>
+                )}
               </g>
             </svg>
           </div>
