@@ -283,12 +283,51 @@ export default function DishDetail() {
                 {dish.is_vegetarian && <span style={{ fontSize: 10, padding: '3px 8px', background: 'rgba(16,185,129,0.15)', color: '#10b981', borderRadius: 20 }}>🌿 Vejetaryen</span>}
                 {dish.is_vegan && <span style={{ fontSize: 10, padding: '3px 8px', background: 'rgba(16,185,129,0.15)', color: '#10b981', borderRadius: 20 }}>🌱 Vegan</span>}
                 {dish.is_gluten_free && <span style={{ fontSize: 10, padding: '3px 8px', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', borderRadius: 20 }}>🌾 Glutensiz</span>}
-                {dish.gi_status && (
-                  <a href={dish.gi_source_url || 'https://ci.turkpatent.gov.tr/veri-tabani'} target="_blank" rel="noopener noreferrer"
-                    style={{ fontSize: 10, padding: '3px 10px', background: 'rgba(245,158,11,0.15)', color: '#f59e0b', borderRadius: 20, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, border: '1px solid rgba(245,158,11,0.3)' }}>
-                    🏷 Tescilli Coğrafi İşaret{dish.gi_number ? ` · No: ${dish.gi_number}` : ''}
-                  </a>
-                )}
+                {dish.gi_status && (() => {
+                  const muhurUrl =
+                    dish.gi_tur === 'Menşe Adı'
+                      ? 'https://ci.turkpatent.gov.tr/uploads/images/mense_adi.png'
+                      : dish.gi_tur === 'Geleneksel Ürün Adı'
+                      ? 'https://ci.turkpatent.gov.tr/uploads/images/geleneksel_urun.png'
+                      : 'https://ci.turkpatent.gov.tr/uploads/images/mahrec_isareti.png';
+                  const muhurRenk =
+                    dish.gi_tur === 'Menşe Adı' ? '#3b82f6' :
+                    dish.gi_tur === 'Geleneksel Ürün Adı' ? '#10b981' : '#f59e0b';
+                  const muhurBg =
+                    dish.gi_tur === 'Menşe Adı' ? 'rgba(59,130,246,0.08)' :
+                    dish.gi_tur === 'Geleneksel Ürün Adı' ? 'rgba(16,185,129,0.08)' : 'rgba(245,158,11,0.08)';
+                  return (
+                    <a
+                      href={dish.gi_source_url || 'https://ci.turkpatent.gov.tr/veri-tabani'}
+                      target="_blank" rel="noopener noreferrer"
+                      style={{ textDecoration: 'none', display: 'block', marginTop: 16 }}
+                    >
+                      <div style={{
+                        display: 'flex', alignItems: 'center', gap: 14,
+                        background: muhurBg,
+                        border: `1px solid ${muhurRenk}40`,
+                        borderRadius: 12, padding: '12px 16px',
+                        transition: 'all 0.2s',
+                      }}>
+                        <img src={muhurUrl} alt={dish.gi_tur}
+                          style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0 }} />
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: muhurRenk, marginBottom: 3 }}>
+                            {dish.gi_tur || 'Coğrafi İşaret'} Tescilli
+                          </div>
+                          <div style={{ fontSize: 12, color: 'var(--text)', fontWeight: 500 }}>
+                            {dish.name}
+                          </div>
+                          {dish.gi_number && (
+                            <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2 }}>
+                              Tescil No: {dish.gi_number} · Türkpatent ↗
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })()}
               </div>
             </div>
 
