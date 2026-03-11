@@ -16,7 +16,7 @@ const COLORS_UNUSED = { // removed - using CSS vars
 
 // SVG Türkiye Haritası Path Verileri
 // Kaynak: github.com/cihadturhan/svg-turkiye-haritasi
-const TURKEY_VIEWBOX = "0 0 1007.478 527.323";
+const TURKEY_VIEWBOX = "0 0 1240 545";
 
 const TURKEY_PATHS = [
   { slug: "adana", plaka: "01", name: "Adana",
@@ -322,7 +322,6 @@ export default function CitiesPage() {
               style={{ width: '100%', height: 'auto' }}
             >
               {TURKEY_PATHS.map(il => {
-                // istanbul-asya ve istanbul-avrupa → istanbul olarak eşleştir
                 const lookupSlug = il.slug.startsWith('istanbul') ? 'istanbul' : il.slug;
                 const data = cityData[lookupSlug];
                 const isHovered = hovered === il.slug;
@@ -356,7 +355,7 @@ export default function CitiesPage() {
 
               {/* Tooltip */}
               {tooltip.visible && hoveredCity && (
-                <g transform={`translate(${Math.min(tooltip.x + 15, 820)}, ${Math.max(tooltip.y - 110, 10)})`}>
+                <g transform={`translate(${Math.min(tooltip.x + 15, 1020)}, ${Math.max(tooltip.y - 110, 10)})`}>
                   <rect
                     width="215"
                     height={hoveredCity.gi_count > 0 ? "132" : "80"}
@@ -365,11 +364,9 @@ export default function CitiesPage() {
                     stroke="rgba(232,0,13,0.5)"
                     strokeWidth="1"
                   />
-                  {/* Şehir adı */}
                   <text x="14" y="26" fontSize="15" fontWeight="800" fill="white">
                     {hoveredCity.name || TURKEY_PATHS.find(i => i.slug === hovered)?.name}
                   </text>
-
                   {hoveredCity.gi_count > 0 ? (
                     <>
                       <text x="14" y="48" fontSize="12" fill="#f59e0b">
@@ -414,15 +411,15 @@ export default function CitiesPage() {
               )}
 
               {/* Legend */}
-              <g transform="translate(20, 480)">
-                <rect x="0" y="0" width="12" height="12" rx="2" fill="rgba(232,0,13,0.3)" />
-                <text x="18" y="10" fontSize="10" fill="rgba(255,255,255,0.5)">Yemek verisi var</text>
-                <rect x="130" y="0" width="8" height="8" rx="2" fill="#3b82f6" />
-                <text x="143" y="9" fontSize="10" fill="rgba(255,255,255,0.5)">Menşe Adı</text>
-                <rect x="220" y="0" width="8" height="8" rx="2" fill="#f59e0b" />
-                <text x="233" y="9" fontSize="10" fill="rgba(255,255,255,0.5)">Mahreç İşareti</text>
-                <rect x="330" y="0" width="8" height="8" rx="2" fill="#10b981" />
-                <text x="343" y="9" fontSize="10" fill="rgba(255,255,255,0.5)">Geleneksel Ürün</text>
+              <g transform="translate(20, 490)">
+                <rect x="0" y="0" width="12" height="12" rx="2" fill="rgba(232,0,13,0.4)" />
+                <text x="18" y="10" fontSize="11" fill="var(--text-secondary)">Yemek verisi var</text>
+                <rect x="148" y="2" width="9" height="9" rx="2" fill="#3b82f6" />
+                <text x="163" y="10" fontSize="11" fill="var(--text-secondary)">Menşe Adı</text>
+                <rect x="255" y="2" width="9" height="9" rx="2" fill="#f59e0b" />
+                <text x="270" y="10" fontSize="11" fill="var(--text-secondary)">Mahreç İşareti</text>
+                <rect x="380" y="2" width="9" height="9" rx="2" fill="#10b981" />
+                <text x="395" y="10" fontSize="11" fill="var(--text-secondary)">Geleneksel Ürün</text>
               </g>
             </svg>
           </div>
