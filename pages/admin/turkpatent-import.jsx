@@ -19,7 +19,7 @@ const S = {
   title: {
     fontSize: '24px',
     fontWeight: '700',
-    color: var(--text) || '#ffffff',
+    color: 'var(--text)',
     margin: 0,
   },
   subtitle: {
@@ -40,7 +40,7 @@ const S = {
     color: active ? '#ffffff' : 'rgba(255,255,255,0.4)',
     background: 'none',
     border: 'none',
-    borderBottom: active ? `2px solid ${var(--red) || '#e8000d'}` : '2px solid transparent',
+    borderBottom: active ? '2px solid var(--red)' : '2px solid transparent',
     cursor: 'pointer',
     marginBottom: '-1px',
     transition: 'all 0.2s',
@@ -78,7 +78,7 @@ const S = {
     alignItems: 'flex-end',
   },
   btnPrimary: (loading) => ({
-    background: loading ? 'rgba(232,0,13,0.5)' : (var(--red) || '#e8000d'),
+    background: loading ? 'rgba(232,0,13,0.5)' : 'var(--red)',
     color: '#ffffff',
     border: 'none',
     borderRadius: '6px',
@@ -179,7 +179,7 @@ const S = {
   progressFill: (pct) => ({
     height: '100%',
     width: `${pct}%`,
-    background: var(--red) || '#e8000d',
+    background: 'var(--red)',
     borderRadius: '2px',
     transition: 'width 0.3s',
   }),
@@ -205,7 +205,7 @@ const S = {
   checkbox: {
     width: '18px',
     height: '18px',
-    accentColor: var(--red) || '#e8000d',
+    accentColor: 'var(--red)',
     cursor: 'pointer',
     flexShrink: 0,
   },
