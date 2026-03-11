@@ -34,7 +34,7 @@ export default function Input({
           e.target.style.borderColor = 'var(--red)';
         }}
         onBlur={(e) => {
-          e.target.style.borderColor = error ? '#ef4444' : var(--border);
+          e.target.style.borderColor = error ? '#ef4444' : 'var(--border)';
         }}
         {...props}
       />
@@ -79,7 +79,7 @@ export function Textarea({ label, error, rows = 4, ...props }) {
           e.target.style.borderColor = 'var(--red)';
         }}
         onBlur={(e) => {
-          e.target.style.borderColor = error ? '#ef4444' : var(--border);
+          e.target.style.borderColor = error ? '#ef4444' : 'var(--border)';
         }}
         {...props}
       />
