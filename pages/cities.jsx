@@ -245,7 +245,7 @@ export default function CitiesPage() {
     router.push(`/city/${slug}`);
   }
 
-  const hoveredCity = hovered ? cityData[hovered] || TURKEY_PATHS.find(i => i.slug === hovered) : null;
+  const hoveredCity = hovered ? cityData[hovered.startsWith('istanbul') ? 'istanbul' : hovered] || TURKEY_PATHS.find(i => i.slug === hovered) : null;
 
   return (
     <Layout>
@@ -322,7 +322,9 @@ export default function CitiesPage() {
               style={{ width: '100%', height: 'auto' }}
             >
               {TURKEY_PATHS.map(il => {
-                const data = cityData[il.slug];
+                // istanbul-asya ve istanbul-avrupa → istanbul olarak eşleştir
+                const lookupSlug = il.slug.startsWith('istanbul') ? 'istanbul' : il.slug;
+                const data = cityData[lookupSlug];
                 const isHovered = hovered === il.slug;
                 const hasData = data && data.gi_count > 0;
                 const isFiltered = searchTerm && !il.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -356,8 +358,8 @@ export default function CitiesPage() {
               {tooltip.visible && hoveredCity && (
                 <g transform={`translate(${Math.min(tooltip.x + 15, 820)}, ${Math.max(tooltip.y - 110, 10)})`}>
                   <rect
-                    width="210"
-                    height={hoveredCity.gi_count > 0 ? "130" : "80"}
+                    width="215"
+                    height={hoveredCity.gi_count > 0 ? "132" : "80"}
                     rx="8"
                     fill="rgba(10,10,10,0.95)"
                     stroke="rgba(232,0,13,0.5)"
@@ -370,47 +372,42 @@ export default function CitiesPage() {
 
                   {hoveredCity.gi_count > 0 ? (
                     <>
-                      {/* Toplam */}
                       <text x="14" y="48" fontSize="12" fill="#f59e0b">
                         ★ Toplam {hoveredCity.gi_count} coğrafi işaretli ürün
                       </text>
-                      {/* Ayırıcı çizgi */}
-                      <line x1="14" y1="56" x2="196" y2="56" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-                      {/* Menşe Adı */}
+                      <line x1="14" y1="57" x2="200" y2="57" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
                       {hoveredCity.gi_mense_count > 0 && (
                         <>
-                          <rect x="14" y="64" width="8" height="8" rx="2" fill="#3b82f6" />
-                          <text x="28" y="73" fontSize="11" fill="rgba(255,255,255,0.75)">
+                          <rect x="14" y="65" width="8" height="8" rx="2" fill="#3b82f6" />
+                          <text x="28" y="74" fontSize="11" fill="rgba(255,255,255,0.75)">
                             Menşe Adı: {hoveredCity.gi_mense_count}
                           </text>
                         </>
                       )}
-                      {/* Mahreç İşareti */}
                       {hoveredCity.gi_mahrec_count > 0 && (
                         <>
-                          <rect x="14" y="80" width="8" height="8" rx="2" fill="#f59e0b" />
-                          <text x="28" y="89" fontSize="11" fill="rgba(255,255,255,0.75)">
+                          <rect x="14" y="81" width="8" height="8" rx="2" fill="#f59e0b" />
+                          <text x="28" y="90" fontSize="11" fill="rgba(255,255,255,0.75)">
                             Mahreç İşareti: {hoveredCity.gi_mahrec_count}
                           </text>
                         </>
                       )}
-                      {/* Geleneksel Ürün Adı */}
                       {hoveredCity.gi_geleneksel_count > 0 && (
                         <>
-                          <rect x="14" y="96" width="8" height="8" rx="2" fill="#10b981" />
-                          <text x="28" y="105" fontSize="11" fill="rgba(255,255,255,0.75)">
+                          <rect x="14" y="97" width="8" height="8" rx="2" fill="#10b981" />
+                          <text x="28" y="106" fontSize="11" fill="rgba(255,255,255,0.75)">
                             Geleneksel Ürün: {hoveredCity.gi_geleneksel_count}
                           </text>
                         </>
                       )}
-                      <text x="170" y="120" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
+                      <text x="172" y="122" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
                     </>
                   ) : (
                     <>
                       <text x="14" y="50" fontSize="12" fill="rgba(255,255,255,0.35)">
                         Yakında içerik eklenecek
                       </text>
-                      <text x="150" y="70" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
+                      <text x="152" y="70" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
                     </>
                   )}
                 </g>
@@ -420,8 +417,12 @@ export default function CitiesPage() {
               <g transform="translate(20, 480)">
                 <rect x="0" y="0" width="12" height="12" rx="2" fill="rgba(232,0,13,0.3)" />
                 <text x="18" y="10" fontSize="10" fill="rgba(255,255,255,0.5)">Yemek verisi var</text>
-                <rect x="130" y="0" width="12" height="12" rx="2" fill="#f59e0b" />
-                <text x="148" y="10" fontSize="10" fill="rgba(255,255,255,0.5)">Coğrafi işaret</text>
+                <rect x="130" y="0" width="8" height="8" rx="2" fill="#3b82f6" />
+                <text x="143" y="9" fontSize="10" fill="rgba(255,255,255,0.5)">Menşe Adı</text>
+                <rect x="220" y="0" width="8" height="8" rx="2" fill="#f59e0b" />
+                <text x="233" y="9" fontSize="10" fill="rgba(255,255,255,0.5)">Mahreç İşareti</text>
+                <rect x="330" y="0" width="8" height="8" rx="2" fill="#10b981" />
+                <text x="343" y="9" fontSize="10" fill="rgba(255,255,255,0.5)">Geleneksel Ürün</text>
               </g>
             </svg>
           </div>
