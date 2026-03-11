@@ -203,7 +203,7 @@ export default function CitiesPage() {
     setLoading(true);
     const { data } = await supabase
       .from('cities')
-      .select('id, name, slug, region, gi_count, gi_status, image_url')
+      .select('id, name, slug, region, gi_count, gi_mense_count, gi_mahrec_count, gi_geleneksel_count, gi_status, image_url')
       .eq('is_active', true)
       .order('gi_count', { ascending: false, nullsFirst: false });
 
@@ -354,29 +354,65 @@ export default function CitiesPage() {
 
               {/* Tooltip */}
               {tooltip.visible && hoveredCity && (
-                <g transform={`translate(${Math.min(tooltip.x + 15, 850)}, ${Math.max(tooltip.y - 80, 10)})`}>
+                <g transform={`translate(${Math.min(tooltip.x + 15, 820)}, ${Math.max(tooltip.y - 110, 10)})`}>
                   <rect
-                    width="180"
-                    height="80"
+                    width="210"
+                    height={hoveredCity.gi_count > 0 ? "130" : "80"}
                     rx="8"
                     fill="rgba(10,10,10,0.95)"
                     stroke="rgba(232,0,13,0.5)"
                     strokeWidth="1"
                   />
-                  <text x="14" y="26" fontSize="15" fontWeight="800" fill={'var(--text)'}>
+                  {/* Şehir adı */}
+                  <text x="14" y="26" fontSize="15" fontWeight="800" fill="white">
                     {hoveredCity.name || TURKEY_PATHS.find(i => i.slug === hovered)?.name}
                   </text>
-                  {hoveredCity.gi_count > 0 && (
-                    <text x="14" y="46" fontSize="12" fill="#f59e0b">
-                      ★ {hoveredCity.gi_count} coğrafi işaretli ürün
-                    </text>
+
+                  {hoveredCity.gi_count > 0 ? (
+                    <>
+                      {/* Toplam */}
+                      <text x="14" y="48" fontSize="12" fill="#f59e0b">
+                        ★ Toplam {hoveredCity.gi_count} coğrafi işaretli ürün
+                      </text>
+                      {/* Ayırıcı çizgi */}
+                      <line x1="14" y1="56" x2="196" y2="56" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+                      {/* Menşe Adı */}
+                      {hoveredCity.gi_mense_count > 0 && (
+                        <>
+                          <rect x="14" y="64" width="8" height="8" rx="2" fill="#3b82f6" />
+                          <text x="28" y="73" fontSize="11" fill="rgba(255,255,255,0.75)">
+                            Menşe Adı: {hoveredCity.gi_mense_count}
+                          </text>
+                        </>
+                      )}
+                      {/* Mahreç İşareti */}
+                      {hoveredCity.gi_mahrec_count > 0 && (
+                        <>
+                          <rect x="14" y="80" width="8" height="8" rx="2" fill="#f59e0b" />
+                          <text x="28" y="89" fontSize="11" fill="rgba(255,255,255,0.75)">
+                            Mahreç İşareti: {hoveredCity.gi_mahrec_count}
+                          </text>
+                        </>
+                      )}
+                      {/* Geleneksel Ürün Adı */}
+                      {hoveredCity.gi_geleneksel_count > 0 && (
+                        <>
+                          <rect x="14" y="96" width="8" height="8" rx="2" fill="#10b981" />
+                          <text x="28" y="105" fontSize="11" fill="rgba(255,255,255,0.75)">
+                            Geleneksel Ürün: {hoveredCity.gi_geleneksel_count}
+                          </text>
+                        </>
+                      )}
+                      <text x="170" y="120" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
+                    </>
+                  ) : (
+                    <>
+                      <text x="14" y="50" fontSize="12" fill="rgba(255,255,255,0.35)">
+                        Yakında içerik eklenecek
+                      </text>
+                      <text x="150" y="70" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
+                    </>
                   )}
-                  {!hoveredCity.gi_count && (
-                    <text x="14" y="50" fontSize="12" fill="rgba(255,255,255,0.35)">
-                      Yakında içerik eklenecek
-                    </text>
-                  )}
-                  <text x="150" y="70" fontSize="10" fill="rgba(232,0,13,0.7)">tıkla →</text>
                 </g>
               )}
 
