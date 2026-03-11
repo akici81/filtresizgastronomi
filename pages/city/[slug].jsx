@@ -10,8 +10,9 @@ export default function CityDetail() {
   const { slug } = router.query;
   const [city, setCity] = useState(null);
   const [dishes, setDishes] = useState([]);
+  const [giDishes, setGiDishes] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
-  const [activeTab, setActiveTab] = useState('dishes');
+  const [activeTab, setActiveTab] = useState('gi');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { if (slug) fetchCity(); }, [slug]);
@@ -22,10 +23,12 @@ export default function CityDetail() {
     setCity(data);
     if (data) {
       const [dishRes, restRes] = await Promise.all([
-        supabase.from('dishes').select('id, name, slug, image_url, short_description, average_rating, reviews_count, category').eq('city_id', data.id).eq('status', 'published').order('average_rating', { ascending: false }),
+        supabase.from('dishes').select('id, name, slug, image_url, short_description, average_rating, reviews_count, category, gi_status, gi_tur, gi_number, gi_source_url').eq('city_id', data.id).eq('status', 'published').order('average_rating', { ascending: false }),
         supabase.from('restaurants').select('id, name, slug, image_url, short_description, average_rating, reviews_count, cuisine_type, price_range').eq('city_id', data.id).eq('status', 'published').order('average_rating', { ascending: false }),
       ]);
-      setDishes(dishRes.data || []);
+      const allDishes = dishRes.data || [];
+      setDishes(allDishes.filter(d => !d.gi_status));
+      setGiDishes(allDishes.filter(d => d.gi_status));
       setRestaurants(restRes.data || []);
     }
     setLoading(false);
@@ -60,7 +63,8 @@ export default function CityDetail() {
             <h1 style={{ fontSize: 56, fontWeight: 900, margin: '0 0 12px', letterSpacing: '-0.03em' }}>{city.name}</h1>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.6)', margin: '0 0 20px', maxWidth: 600 }}>{city.short_description}</p>
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-              {city.dishes_count > 0 && <Stat value={city.dishes_count} label="Yemek" />}
+              {dishes.length > 0 && <Stat value={dishes.length} label="Yöresel Yemek" />}
+              {giDishes.length > 0 && <Stat value={giDishes.length} label="Coğrafi İşaret" color="#f59e0b" />}
               {city.restaurants_count > 0 && <Stat value={city.restaurants_count} label="Restoran" />}
             </div>
           </div>
@@ -78,8 +82,9 @@ export default function CityDetail() {
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 4, borderBottom: `1px solid ${'var(--border)'}`, marginTop: 16 }}>
           {[
-            { key: 'dishes', label: `Yemekler (${dishes.length})` },
-            { key: 'restaurants', label: `Restoranlar (${restaurants.length})` },
+            { key: 'dishes', label: `🍽 Yöresel Yemekler (${dishes.length})` },
+            { key: 'gi', label: `🏅 Coğrafi İşaretler (${giDishes.length})` },
+            { key: 'restaurants', label: `🏪 Restoranlar (${restaurants.length})` },
           ].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               style={{ background: 'transparent', border: 'none', color: activeTab === tab.key ? 'var(--text)' : 'var(--dim)', padding: '14px 20px', fontSize: 14, cursor: 'pointer', borderBottom: activeTab === tab.key ? `2px solid ${'var(--red)'}` : '2px solid transparent', marginBottom: -1, transition: 'all 0.15s' }}>
@@ -89,15 +94,57 @@ export default function CityDetail() {
         </div>
 
         <div style={{ padding: '32px 0 64px' }}>
+          {/* Yöresel Yemekler */}
           {activeTab === 'dishes' && (
             dishes.length === 0
-              ? <EmptyState icon="🍽" text="Bu şehre ait yemek bulunamadı" />
+              ? <EmptyState icon="🍽" text="Bu şehre ait yöresel yemek henüz eklenmedi" />
               : <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
                   {dishes.map(dish => (
                     <MiniCard key={dish.id} item={dish} badge={DISH_CATEGORIES[dish.category]} onClick={() => router.push(`/dish/${dish.slug}`)} />
                   ))}
                 </div>
           )}
+
+          {/* Coğrafi İşaretler */}
+          {activeTab === 'gi' && (
+            giDishes.length === 0
+              ? <EmptyState icon="🏅" text="Bu şehre ait coğrafi işaretli ürün bulunamadı" />
+              : (
+                <>
+                  {/* GI özet banner */}
+                  <div style={{ display: 'flex', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}>
+                    {['Menşe Adı', 'Mahreç İşareti', 'Geleneksel Ürün Adı'].map(tur => {
+                      const count = giDishes.filter(d => d.gi_tur === tur).length;
+                      if (!count) return null;
+                      const color = tur === 'Menşe Adı' ? '#3b82f6' : tur === 'Geleneksel Ürün Adı' ? '#10b981' : '#f59e0b';
+                      const bg = tur === 'Menşe Adı' ? 'rgba(59,130,246,0.08)' : tur === 'Geleneksel Ürün Adı' ? 'rgba(16,185,129,0.08)' : 'rgba(245,158,11,0.08)';
+                      const muhur = tur === 'Menşe Adı'
+                        ? 'https://ci.turkpatent.gov.tr/uploads/images/mense_adi.png'
+                        : tur === 'Geleneksel Ürün Adı'
+                        ? 'https://ci.turkpatent.gov.tr/uploads/images/geleneksel_urun.png'
+                        : 'https://ci.turkpatent.gov.tr/uploads/images/mahrec_isareti.png';
+                      return (
+                        <div key={tur} style={{ display: 'flex', alignItems: 'center', gap: 10, background: bg, border: `1px solid ${color}30`, borderRadius: 10, padding: '10px 16px' }}>
+                          <img src={muhur} alt={tur} style={{ width: 36, height: 36, objectFit: 'contain' }} />
+                          <div>
+                            <div style={{ fontSize: 11, color, fontWeight: 600 }}>{tur}</div>
+                            <div style={{ fontSize: 20, fontWeight: 800, color, lineHeight: 1.2 }}>{count}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* GI ürün listesi */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
+                    {giDishes.map(dish => (
+                      <GICard key={dish.id} dish={dish} onClick={() => router.push(`/dish/${dish.slug}`)} />
+                    ))}
+                  </div>
+                </>
+              )
+          )}
+
+          {/* Restoranlar */}
           {activeTab === 'restaurants' && (
             restaurants.length === 0
               ? <EmptyState icon="🏪" text="Bu şehre ait restoran bulunamadı" />
@@ -113,11 +160,50 @@ export default function CityDetail() {
   );
 }
 
-function Stat({ value, label }) {
+function Stat({ value, label, color }) {
   return (
     <div>
-      <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--red)' }}>{value}</div>
+      <div style={{ fontSize: 28, fontWeight: 900, color: color || 'var(--red)' }}>{value}</div>
       <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em' }}>{label.toUpperCase()}</div>
+    </div>
+  );
+}
+
+function GICard({ dish, onClick }) {
+  const color = dish.gi_tur === 'Menşe Adı' ? '#3b82f6' : dish.gi_tur === 'Geleneksel Ürün Adı' ? '#10b981' : '#f59e0b';
+  const bg = dish.gi_tur === 'Menşe Adı' ? 'rgba(59,130,246,0.06)' : dish.gi_tur === 'Geleneksel Ürün Adı' ? 'rgba(16,185,129,0.06)' : 'rgba(245,158,11,0.06)';
+  const muhur = dish.gi_tur === 'Menşe Adı'
+    ? 'https://ci.turkpatent.gov.tr/uploads/images/mense_adi.png'
+    : dish.gi_tur === 'Geleneksel Ürün Adı'
+    ? 'https://ci.turkpatent.gov.tr/uploads/images/geleneksel_urun.png'
+    : 'https://ci.turkpatent.gov.tr/uploads/images/mahrec_isareti.png';
+
+  return (
+    <div onClick={onClick} style={{ cursor: 'pointer', background: 'var(--card)', border: `1px solid ${color}25`, borderRadius: 10, overflow: 'hidden', transition: 'transform 0.2s, border-color 0.2s' }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = `${color}60`; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = `${color}25`; }}>
+      <div style={{ height: 160, overflow: 'hidden', position: 'relative', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {dish.image_url
+          ? <img src={dish.image_url} alt={dish.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          : <img src={muhur} alt={dish.gi_tur} style={{ width: 80, height: 80, objectFit: 'contain', opacity: 0.5 }} />
+        }
+        <div style={{ position: 'absolute', top: 10, left: 10, background: `${color}20`, border: `1px solid ${color}40`, backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: 20, fontSize: 10, color, fontWeight: 600 }}>
+          {dish.gi_tur === 'Menşe Adı' ? 'Menşe' : dish.gi_tur === 'Geleneksel Ürün Adı' ? 'Geleneksel' : 'Mahreç'}
+        </div>
+      </div>
+      <div style={{ padding: 16 }}>
+        <h4 style={{ margin: '0 0 6px', fontSize: 15, fontWeight: 700 }}>{dish.name}</h4>
+        {dish.short_description && (
+          <p style={{ margin: '0 0 10px', fontSize: 12, color: 'var(--dim)', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {dish.short_description}
+          </p>
+        )}
+        {dish.gi_number && (
+          <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+            Tescil No: <span style={{ color, fontWeight: 600 }}>{dish.gi_number}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
